@@ -11,23 +11,12 @@
 </script>
     
 <style scoped>
-#splash_screen {
-  display: flex;
-  width: 100%;
-  height: 100vh; /* 화면 전체 높이 */
-  background-color: #5271FF;
-  text-align: center;
-  align-items: center; /* 수직 중앙 정렬 */
-  justify-content: center; /* 수평 중앙 정렬 */
-}
+@import "@/css/common.css";
 
-.splash_logo {
-  margin: 0;
+#splash_screen{
+  display: flex;
+  align-items: center;
   text-align: center;
-  color: #ffff76; /* 글자 색상 설정 */
-  font-weight: 900;
-  font-style:italic;
-  font-family: "Inter-BlackItalic", Helvetica;
-  text-shadow: 3px 3px 3px #5b5b5b;
+  justify-content: center;
 }
 </style>

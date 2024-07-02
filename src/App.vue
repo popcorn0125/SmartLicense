@@ -71,7 +71,6 @@ button {
     border: none;
     background-color: transparent;
     font-size: 1.3rem;
-    margin-left: 5px;
     cursor: pointer;
 }
 
@@ -89,7 +88,6 @@ input[type="number"] {
     padding: 5px 10px;
     border: 1px solid #aaa;
     border-radius: 5px;
-    margin-left: 5px;
     font-size: 1.3rem;
 }
 
