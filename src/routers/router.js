@@ -2,7 +2,8 @@ import { createWebHistory, createRouter } from "vue-router";
 import testcomponent from "@/components/testcomponents.vue";
 import SplashScreen from "@/components/SplashScreen.vue";
 import LoginPage from "@/SignInUp/LoginPage.vue";
-import SearchID from "@/SignInUp/SearchID.vue"
+import SearchID from "@/SignInUp/SearchID.vue";
+import UserSign from "@/components/userSignPage.vue"
 
 const routes = [
     {
@@ -24,6 +25,11 @@ const routes = [
         path: "/SearchID",
         name: "SearchID",
         component: SearchID,
+    },
+    {
+        path: "/UserSign",
+        name: "UserSign",
+        component: UserSign,
     },
 ];
 
