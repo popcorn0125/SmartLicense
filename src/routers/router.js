@@ -3,7 +3,8 @@ import testcomponent from "@/components/testcomponents.vue";
 import SplashScreen from "@/components/SplashScreen.vue";
 import LoginPage from "@/SignInUp/LoginPage.vue";
 import SearchID from "@/SignInUp/SearchID.vue";
-import UserSign from "@/components/userSignPage.vue"
+// import UserSign from "@/components/userSignPage.vue"
+import CategoryChoice from "@/ContentPage/CategoryChoice.vue";
 
 const routes = [
     {
@@ -26,10 +27,15 @@ const routes = [
         name: "SearchID",
         component: SearchID,
     },
+    // {
+    //     path: "/UserSign",
+    //     name: "UserSign",
+    //     component: UserSign,
+    // },
     {
-        path: "/UserSign",
-        name: "UserSign",
-        component: UserSign,
+        path: "/CategoryChoice",
+        name: "CategoryChoice",
+        component: CategoryChoice,
     },
 ];
 

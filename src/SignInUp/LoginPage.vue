@@ -64,7 +64,7 @@ export default {
   margin: 0;  
 }
 .id_pw > input{
-  border: solid 1px #002eff;
+  border: solid 1px #000;
   font-size: 1em;
   width: 80%;
 }
@@ -92,9 +92,6 @@ export default {
   justify-content: space-around;
   align-items: center;
   flex-direction: column;
-}
-.navy_long_btn{
-  /* margin-bottom: 3%; */
 }
 
 .footer {
