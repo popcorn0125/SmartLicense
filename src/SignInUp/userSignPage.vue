@@ -5,39 +5,39 @@
         </div>
         <div class="body">
             <div class="container">
-                <label for="id">아이디</label>
+                <p>아이디</p>
                 <div class="input-group">
-                    <input type="text" class="id" name="id" placeholder="아이디">
+                    <input type="text" class="id"  placeholder="아이디">
                     <button class="id-Btn">중복확인</button>
                 </div>
             </div>
             <div class="container space">
-                <label for="pw">비밀번호</label>
+                <p>비밀번호</p>
                 <div class="input-group">
-                    <input type="password" class="pw" name="pw" placeholder="비밀번호">
+                    <input type="password" class="pw" placeholder="비밀번호">
                 </div>
                 <text>8자리 이상 영문, 대소문자 구분, 특수기호 포함</text>
             </div>
             <div class="container space">
                 <div class="pwCheck">
-                    <label for="pw">비밀번호 확인</label>
+                    <p>비밀번호 확인</p>
                     <img :src="pwCheckImage" alt="이" />
                     <text class="pwCheckMsg">비밀번호가 일치하지 않습니다.</text>
                 </div>
                 <div class="input-group">
-                    <input type="password" class="pw" name="pw" placeholder="비밀번호 재입력">
+                    <input type="password" class="pw" placeholder="비밀번호 재입력">
                 </div>
             </div>
             <div class="container space">
-                <label for="name">이름</label>
+                <p>이름</p>
                 <div class="input-group">
-                    <input type="text" class="pw" name="name" placeholder="이름(실명 입력)">
+                    <input type="text" class="pw" placeholder="이름(실명 입력)">
                 </div>
             </div>
             <div class="container space">
-                <label for="nickname">닉네임</label>
+                <p>닉네임</p>
                 <div class="input-group">
-                    <input type="text" class="id" name="nickname" placeholder="닉네임(10자리)">
+                    <input type="text" class="id" placeholder="닉네임(10자리)">
                     <button class="id-Btn">중복확인</button>
                 </div>
             </div>
@@ -51,16 +51,16 @@
                 </div>
             </div>
             <div class="container space">
-                <label for="phoneNum">전화번호</label>
+                <p>전화번호</p>
                 <div class="input-group">
-                    <input type="text" class="id" name="phoneNum" placeholder="전화번호">
+                    <input type="text" class="id" placeholder="전화번호">
                     <button class="id-Btn">인증번호 전송</button>
                 </div>
             </div>
             <div class="container space">
-                <label for="phoneNumCheck">인증번호</label>
+                <p>인증번호</p>
                 <div class="input-group">
-                    <input type="text" class="id" name="phoneNumCheck" placeholder="인증번호">
+                    <input type="text" class="id" placeholder="인증번호">
                     <button class="id-Btn">인증번호 확인</button>
                 </div>
             </div>
@@ -112,7 +112,7 @@ export default {
     /* justify-content: center; 수평 중앙 정렬 */
 }
 
-label {
+p {
     color: #FFF;
     font-family: Inter;
     font-size: 1em;

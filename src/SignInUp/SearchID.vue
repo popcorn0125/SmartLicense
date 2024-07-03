@@ -48,6 +48,16 @@ export default {
       this.currentView = 'new-password';
     }
   },
+  created(){
+  },
+  mounted() {
+    if(this.$route.query.currentView === 'id'){
+      this.currentView = 'id';
+    } else {
+      this.currentView = 'password';
+      this.isPasswordSelected = true;
+    }
+  }
 };
 </script>
 

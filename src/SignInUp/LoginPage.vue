@@ -8,13 +8,13 @@
       <input type="password" class="Pw" placeholder="PW">
     </div>
     <div class="search_idpwsu">
-      <p>아이디 찾기</p>|
-      <p>비밀번호 찾기</p>|
-      <p>회원 가입</p>
+      <p @click="movePage('id')">아이디 찾기</p>|
+      <p @click="movePage('password')">비밀번호 찾기</p>|
+      <p @click="movePage('userSignUp')">회원 가입</p>
     </div>
     <div class="bottom_btn">
       <button class="navy_long_btn">로그인</button>
-      <button class="black_long_btn">로그인 없이 시작하기</button>
+      <button class="black_long_btn" @click="movePage('noLogin')">로그인 없이 시작하기</button>
     </div>
     <div class="footer">
       <p>로그인 없이 시작하면 문제를 푼 기록과 랭킹을 저장 또는 확인할 수 없습니다.</p>
@@ -25,6 +25,34 @@
 <script>
 export default {
   name: "LoginPage",
+  data() {
+        return {
+        }
+    },
+
+    methods: {
+        movePage(page) {
+          if (page === 'id') {
+            this.$router.push({path : '/searchid', query : { currentView : 'id'}});
+          }
+          if (page === 'password') {
+            this.$router.push({path : '/searchid', query : { currentView : 'password'}});
+          }
+          if (page === 'userSignUp') {
+            this.$router.push({path: '/userSign'});
+          }
+          if (page === 'noLogin') {
+            this.$router.push({path : '/CategoryChoice'});
+          }
+        },
+    },
+
+    created() {
+
+    },
+    mounted() {
+
+    },
 };
 </script>
 
