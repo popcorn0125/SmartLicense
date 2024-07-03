@@ -1,7 +1,7 @@
 <template>
     <div id="screen">
         <div class="header">
-            <img :src="imagePath" alt="no_image" />
+            <img :src="imagePath" alt="no_image" @click="goBack" />
         </div>
         <div class="body">
             <div class="container">
@@ -21,7 +21,7 @@
             <div class="container space">
                 <div class="pwCheck">
                     <label for="pw">비밀번호 확인</label>
-                    <img :src="pwCheckImage" alt="이"/>
+                    <img :src="pwCheckImage" alt="이" />
                     <text class="pwCheckMsg">비밀번호가 일치하지 않습니다.</text>
                 </div>
                 <div class="input-group">
@@ -44,8 +44,10 @@
             <div class="container space">
                 <text class="gender-text">성별</text>
                 <div class="input-group">
-                    <button :class="{'selected': selectedGender === '남자', 'not-selected': selectedGender !== '남자'}" class="gender-Btn" @click="selectGender('남자')">남자</button>
-                    <button :class="{'selected': selectedGender === '여자', 'not-selected': selectedGender !== '여자'}" class="gender-Btn woman" @click="selectGender('여자')">여자</button>
+                    <button :class="{ 'selected': selectedGender === '남자', 'not-selected': selectedGender !== '남자' }"
+                        class="gender-Btn" @click="selectGender('남자')">남자</button>
+                    <button :class="{ 'selected': selectedGender === '여자', 'not-selected': selectedGender !== '여자' }"
+                        class="gender-Btn woman" @click="selectGender('여자')">여자</button>
                 </div>
             </div>
             <div class="container space">
@@ -70,6 +72,7 @@
 </template>
 <script>
 export default {
+    name: "UserSign",
     data() {
         return {
             imagePath: require('@/assets/gotoback.png'),
@@ -79,6 +82,10 @@ export default {
     },
 
     methods: {
+        goBack() {
+            this.$router.go(-1); // 이전 페이지로 이동
+        },
+
         selectGender(gender) {
             this.selectedGender = gender;
         }
@@ -94,13 +101,15 @@ export default {
 </script>
 <style scoped>
 @import "@/css/common.css";
+
 #screen {
-  width: 100%;
-  height: 100vh; /* 화면 전체 높이 */
-  background-color: #5271FF;
-  /* text-align: center; */
-  /* align-items: center; 수직 중앙 정렬 */
-  /* justify-content: center; 수평 중앙 정렬 */
+    width: 100%;
+    height: 100vh;
+    /* 화면 전체 높이 */
+    background-color: #5271FF;
+    /* text-align: center; */
+    /* align-items: center; 수직 중앙 정렬 */
+    /* justify-content: center; 수평 중앙 정렬 */
 }
 
 label {
@@ -122,7 +131,7 @@ label {
     margin: 14px 0 0 11px;
 }
 
-.body{
+.body {
     width: 100%;
     height: calc(100% - 14px - 5%);
     /* border: 1px solid black; */
@@ -152,10 +161,10 @@ label {
     background-color: #fff;
     font-size: 1em;
     color: #333;
-    
+
 }
 
-.id-Btn{
+.id-Btn {
     width: auto;
     height: 29px;
     flex-shrink: 0;
@@ -173,7 +182,7 @@ label {
     margin-left: 10px;
 }
 
-.space{
+.space {
     margin-top: 15px;
 
 }
@@ -209,6 +218,7 @@ text {
     font-weight: 400;
     line-height: normal;
 }
+
 /***** 성별 선택 ****/
 .gender-text {
     color: #FFF;
@@ -235,19 +245,26 @@ text {
     font-weight: 400;
     line-height: normal;
     align-items: center;
-    justify-content: center; /* 가로 방향 가운데 정렬 */
+    justify-content: center;
+    /* 가로 방향 가운데 정렬 */
 }
+
 .woman {
     margin-left: auto;
 }
+
 .selected {
-    background-color: grey; /* 선택된 버튼의 배경색 */
-    color: white; /* 선택된 버튼의 글자색 */
+    background-color: grey;
+    /* 선택된 버튼의 배경색 */
+    color: white;
+    /* 선택된 버튼의 글자색 */
 }
 
 .not-selected {
-    background-color: black; /* 선택되지 않은 버튼의 배경색 */
-    color: white; /* 선택되지 않은 버튼의 글자색 */
+    background-color: black;
+    /* 선택되지 않은 버튼의 배경색 */
+    color: white;
+    /* 선택되지 않은 버튼의 글자색 */
 }
 
 

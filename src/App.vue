@@ -150,7 +150,7 @@ textarea{
 input[type="checkbox"]{
     width: 2em;
     height: 2em;
-    accent-color: #7755ff;
+    accent-color: #5271ff;
 }
 
 </style>
