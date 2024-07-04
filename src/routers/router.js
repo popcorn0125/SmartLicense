@@ -6,7 +6,9 @@ import SearchID from "@/SignInUp/SearchID.vue";
 import UserSign from "@/SignInUp/userSignPage.vue";
 import CategoryChoice from "@/ContentPage/CategoryChoice.vue";
 import RankingPage from "@/ContentPage/RankingPage.vue";
-import MyPage from "@/ContentPage/MyPage.vue"
+import MyPage from "@/ContentPage/MyPage.vue";
+import PracticeMode from "@/ContentPage/PracticeMode.vue";
+import ChangeInfo from "@/components/ChangeInfo.vue";
 
 const routes = [
     {
@@ -48,6 +50,16 @@ const routes = [
         path: "/MyPage",
         name: "MyPage",
         component: MyPage,
+    },
+    {
+        path: "/PracticeMode",
+        name: "PracticeMode",
+        component: PracticeMode,
+    },
+    {
+        path: "/ChangeInfo",
+        name: "ChangeInfo",
+        component: ChangeInfo,
     },
 ];
 

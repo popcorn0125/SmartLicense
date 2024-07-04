@@ -15,7 +15,7 @@
         </div>
         <div class="button_wrap">
             <button class="JYblue_btn" @click="goToChangeInfo">정보 수정</button>
-            <button class="pink_btn">로그아웃</button>
+            <button class="pink_btn" @click="goToLogin">로그아웃</button>
             <button class="red_btn">탈퇴하기</button>
         </div>
         <div class="table-container">
@@ -94,6 +94,14 @@ export default {
                 this.currentPage++;
             }
         },
+
+        goToLogin(){
+            this.$router.push('/SmartLicenseLogin'); // SmartLicenseLogin 페이지로 이동
+        },
+
+        goToChangeInfo() {
+            his.$router.push('/ChangeInfo');
+        }
     },
 
     computed: {
