@@ -1,6 +1,7 @@
 <template>
   <div id="splash_screen">
     <h1 class="splash_logo">Smart License</h1>
+    <p class="explain_text">자격증 문제 풀이 앱은 스마트 라이센스!</p>
     <div class="loading_bar_wrap">
       <div class="loading_bar"></div>
     </div>
@@ -90,5 +91,11 @@ export default {
   bottom: 5%;
   color: #FFF;
   font-weight: 900;
+}
+
+.explain_text{
+  color: #FFF;
+  font-size: 1em;
+  margin-top: 1em;
 }
 </style>

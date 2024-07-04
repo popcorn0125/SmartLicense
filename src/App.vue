@@ -102,7 +102,7 @@ input:disabled {
 
 input[type="checkbox"],
 input[type="radio"] {
-    vertical-align: sub;
+    vertical-align: middle;
 }
 
 input[type='date'] {

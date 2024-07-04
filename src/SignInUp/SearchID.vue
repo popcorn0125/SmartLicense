@@ -76,11 +76,10 @@ export default {
 }
 
 .header {
-  display: block;
-  justify-content: left;
-  align-items: center;
-  width: 100%;
-  margin: 14px 0 0 11px;
+  display: flex;
+  justify-content: flex-start;
+  width: 90%;
+  margin: 14px 11px 0px 0px; /* 상단, 우측, 하단, 좌측 마진 */
 }
 
 .options {

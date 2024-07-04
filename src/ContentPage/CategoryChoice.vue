@@ -29,26 +29,25 @@
             <button class="test_mode" :class="{ active: mode === 'test' }" @click="toggleMode('test')"
                 :disabled="mode === 'test'">시험모드</button>
         </div>
-        <div clas="subject_btn_wrap">
+        <div class="subject_wrap">
             <div>
-                <input type="checkbox"><span>1과목</span>:<span>소프트웨어 설계</span>(<span>20</span>문항)
+                <input type="checkbox" class="sub1"><span>1과목</span>:<span>소프트웨어 설계</span>(<span>20</span>문항)
             </div>
             <div>
-                <input type="checkbox"><span>2과목</span>:<span>소프트웨어 개발</span>(<span>20</span>문항)
+                <input type="checkbox" class="sub2"><span>2과목</span>:<span>소프트웨어 개발</span>(<span>20</span>문항)
             </div>
             <div>
-                <input type="checkbox"><span>3과목</span>:<span>데이터베이스 구축</span>(<span>20</span>문항)
+                <input type="checkbox" class="sub3"><span>3과목</span>:<span>데이터베이스 구축</span>(<span>20</span>문항)
             </div>
             <div>
-                <input type="checkbox"><span>4과목</span>:<span>프로그래밍 언어 활용</span>(<span>20</span>문항)
+                <input type="checkbox" class="sub4"><span>4과목</span>:<span>프로그래밍 언어 활용</span>(<span>20</span>문항)
             </div>
             <div>
-                <input type="checkbox"><span>5과목</span>:<span>정보시스템 구축관리</span>(<span>20</span>문항)
+                <input type="checkbox" class="sub5"><span>5과목</span>:<span>정보시스템 구축관리</span>(<span>20</span>문항)
             </div>
-            <button class="go_solve">문제 풀기</button>
         </div>
+        <button class="go_solve">문제 풀기</button>
     </div>
-
     <BottomBar />
 </template>
 
@@ -105,12 +104,19 @@ export default {
 }
 
 .selectbox_wrap>select {
-    width: 60%;
+    width: 55%;
+    font-size: 1em;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+}
+
+.selectbox_wrap > p{
+    font-weight: bold;
 }
 
 .mode_wrap {
     width: 100%;
-    height: 30%;
+    height: 15%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -123,7 +129,8 @@ export default {
     color: #000;
     font-size: 1em;
     width: 25%;
-    height: 15%;
+    height: 35%;
+    margin: 0em 1em;
 }
 
 .practice_mode.active,
@@ -142,11 +149,23 @@ export default {
     text-align: center;
 }
 
-.go_solve{
+.sub1,
+.sub2,
+.sub3,
+.sub4,
+.sub5 {
+    width: 1.5em;
+    height: 1.5em;
+    margin-bottom: 1em;
+    margin-right: 0.5em;
+}
+
+.go_solve {
     background-color: #5271FF;
     color: #fff;
     border-radius: 5px;
-    width: 35%;
-    height: 30%;
+    width: 40%;
+    height: 8%;
+    margin-top: 1.5em;
 }
 </style>
