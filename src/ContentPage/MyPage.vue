@@ -100,7 +100,7 @@ export default {
         },
 
         goToChangeInfo() {
-            his.$router.push('/ChangeInfo');
+            this.$router.push('/ChangeInfo');
         }
     },
 

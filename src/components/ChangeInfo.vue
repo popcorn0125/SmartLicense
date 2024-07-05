@@ -23,53 +23,46 @@
         </div>
         <text>8자리 이상 영문, 대소문자 구분, 특수기호 포함</text>
       </div>
-      <div class="pw">
+      <div class="pw-check">
         <p>비밀번호 확인</p>
         <div class="input-group">
             <input type="password" placeholder="비밀번호 입력">
         </div>
       </div>
+      <div class="phoneNum">
+        <p>전화번호</p>
+        <div class="input-group">
+          <input class="phoneNum-input" type="text" />
+          <button class="small-btn">인증번호 전송</button>
+        </div>
+      </div>
+      <div class="phoneNum-check">
+        <p>인증번호</p>
+        <div class="input-group">
+          <input class="phoneNum-input" type="text" />
+          <button class="small-btn">인증번호 확인</button>
+        </div>
+      </div>
+      <div class="nickname">
+        <p>닉네임</p>
+        <div class="input-group">
+          <input class="phoneNum-input" type="text" />
+          <button class="small-btn">중복확인</button>
+        </div>
+      </div>
 
-      <div class="wrap">
-        <div class="phoneNum">
-          <p>전화번호</p>
-          <div class="input-group">
-            <input type="text" v-model="phoneNum"/>
-            <button>인증번호 전송</button>
-          </div>
+      <div class="gender">
+        <p>성별</p>
+        <div class="input-group2">
+          <button class="gender-btn">남자</button>
+          <button class="gender-btn">여자</button>
         </div>
       </div>
-      <div class="wrap">
-        <div class="phoneNum-check">
-          <p>전화번호</p>
-          <div class="input-group">
-            <input type="text"/>
-            <button>확인</button>
-          </div>
-        </div>
-      </div>
-      <div class="wrap">
-        <div class="nickname">
-          <p>닉네임</p>
-          <div class="input-group">
-            <input type="text"/>
-            <button>중복확인</button>
-          </div>
-        </div>
-      </div>
-      <div class="wrap">
-        <div class="gender">
-          <p>성별</p>
-          <div class="gender-btn">
-            <button>남자</button>
-            <button>여자</button>
-          </div>
-        </div>
-      </div>
-      <div class="wrap">
-        <div class="select-btn">
-          <button>뒤로가기</button>
-          <button>수정하기</button>
+
+      <div class="big-btn">
+        <div class="input-group3">
+          <button class="back-btn">뒤로가기</button>
+          <button class="update-btn">수정하기</button>
         </div>
       </div>
     </div>
@@ -119,11 +112,11 @@ export default {
   height: 100%;
   border: 1px solid black;
   border-radius: 5px;
+  padding: 0 30px;
 }
 
 /** 제목 : 회원정보 */
 .title {
-  border: 1px solid black;
   width: 100%;
   height: 8%;
   text-align: center;
@@ -146,7 +139,6 @@ input {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
 }
 
 .id, .name {
@@ -159,7 +151,6 @@ input {
 .id>p, .name>p {
   font-size: 0.7em;
   color: #000000;
-  margin-bottom: 10px;
 }
 
 .id>input, .name>input {
@@ -167,25 +158,103 @@ input {
   border-radius: 5px;
   background-color: #c7c7c7;
   box-sizing: border-box;
-  font-size: 1em;
+  font-size: 0.9em;
 }
 
 /** 비밀번호 */
 .pw {
   width: 100%;
-  height: 9%;
+  height: 12%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-top: 0.8em;
 }
 .pw>text {
   font-size: 0.7em;
+
 }
 
 .input-group {
   display: flex;
   width: 100%;
   height: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
 
+/** 전화번호, 인증번호, 닉네임 */
+.pw-check, .phoneNum, .phoneNum-check, .nickname{
+  width: 100%;
+  height: 9%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.8em;
+}
+
+.phoneNum-input {
+  width: 60%;
+  height: 100%;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.small-btn {
+  background-color: #000000;
+  width: 30%;
+  height: 100%;
+  border-radius: 5px;
+  color: #FFF;
+  font-size: 0.7em;
+}
+
+/** 성별 */
+.gender {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.8em;
+}
+
+.input-group2{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gender-btn{
+  width: 40%;
+  height: 100%;
+  border-radius: 5px;
+  background: #000;
+  color: #FFF;
+  font-size: 0.7em;
+}
+
+/** 수정하기, 뒤로가기 버튼  */
+.big-btn {
+  width: 100%;
+  height: 9%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.8em;
+}
+.input-group3 {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+.back-btn, .update-btn {
+  width: 35%;
+  height: 100%;
+  border-radius: 5px;
+  background: #5271FF;
+  color: #FFF;
+  font-size: 0.9em;
 }
 </style>
