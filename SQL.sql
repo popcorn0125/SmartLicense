@@ -86,6 +86,7 @@ CREATE TABLE session_question
     examination_date VARCHAR(50) NOT NULL,
     create_date TIMESTAMP DEFAULT NOW(),
     question_idx INT
+    detail_license_name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE subject
@@ -160,3 +161,6 @@ ADD FOREIGN KEY R_12 (examination_date) REFERENCES examination_date (examination
 
 ALTER TABLE user_select_answer
 ADD FOREIGN KEY R_25 (subject_idx) REFERENCES subject (subject_idx);
+
+ALTER TABLE session_question
+ADD FOREIGN KEY R_29 (detail_license_name) REFERENCES detail_license (detail_license_name);
