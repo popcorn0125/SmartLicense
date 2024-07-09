@@ -85,7 +85,7 @@ CREATE TABLE session_question
 	session_question_idx INT AUTO_INCREMENT PRIMARY KEY,
     examination_date VARCHAR(50) NOT NULL,
     create_date TIMESTAMP DEFAULT NOW(),
-    question_idx INT
+    question_idx INT,
     detail_license_name VARCHAR(100) NOT NULL
 );
 
