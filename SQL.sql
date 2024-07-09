@@ -27,7 +27,7 @@ CREATE TABLE examination_date
 
 CREATE TABLE license
 (
-	license_name CHAR(100) NOT NULL PRIMARY KEY,
+	license_name VARCHAR(100) NOT NULL PRIMARY KEY,
     create_date TIMESTAMP DEFAULT NOW()
 );
 
@@ -105,7 +105,7 @@ CREATE TABLE user_attempt
     remaining_time VARCHAR(50),
     score INT,
     member_id VARCHAR(100) NOT NULL,
-    start_test_date CHAR(18),
+    start_test_date VARCHAR(18),
     create_date TIMESTAMP DEFAULT NOW()
 );
 
