@@ -22,7 +22,6 @@ CREATE TABLE examination_date
 (
 	examination_date VARCHAR(50) NOT NULL PRIMARY KEY,
     create_date TIMESTAMP DEFAULT NOW(),
-    detail_license_name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE license
