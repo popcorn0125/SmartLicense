@@ -90,7 +90,8 @@ CREATE TABLE session_question
 
 CREATE TABLE subject
 (
-	subject_name VARCHAR(100) NOT NULL PRIMARY KEY,
+    subject_idx INT AUTO_INCREMENT PRIMARY KEY,
+	subject_name VARCHAR(100) NOT NULL,
     subject_number INT NOT NULL,
     create_date TIMESTAMP DEFAULT NOW(),
     detail_license_name VARCHAR(100)
