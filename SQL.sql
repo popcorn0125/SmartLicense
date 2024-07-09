@@ -68,7 +68,7 @@ CREATE TABLE question
     answer TINYINT UNSIGNED NOT NULL,
     create_date TIMESTAMP DEFAULT NOW(),
     image VARCHAR(255),
-    subject_name VARCHAR(100),
+    subject_idx int,
     question_description TEXT
 );
 
@@ -118,7 +118,7 @@ CREATE TABLE user_select_answer
     start_test_date VARCHAR(50),
     member_id VARCHAR(100),
     examination_date VARCHAR(50),
-    subject_name VARCHAR(100),
+    subject_idx int,
     create_date TIMESTAMP DEFAULT NOW()
 );
 
@@ -135,7 +135,7 @@ ALTER TABLE login_log_info
 ADD FOREIGN KEY R_16 (member_id) REFERENCES member (member_id);
 
 ALTER TABLE question
-ADD FOREIGN KEY R_22 (subject_name) REFERENCES subject (subject_name);
+ADD FOREIGN KEY R_22 (subject_idx) REFERENCES subject (subject_idx);
 
 ALTER TABLE ranking
 ADD FOREIGN KEY R_27 (member_id) REFERENCES member (member_id);
@@ -159,4 +159,4 @@ ALTER TABLE user_select_answer
 ADD FOREIGN KEY R_12 (examination_date) REFERENCES examination_date (examination_date);
 
 ALTER TABLE user_select_answer
-ADD FOREIGN KEY R_25 (subject_name) REFERENCES subject (subject_name);
+ADD FOREIGN KEY R_25 (subject_idx) REFERENCES subject (subject_idx);
