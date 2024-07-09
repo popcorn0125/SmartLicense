@@ -21,7 +21,7 @@ CREATE TABLE exam_log_info
 CREATE TABLE examination_date
 (
 	examination_date VARCHAR(50) NOT NULL PRIMARY KEY,
-    create_date TIMESTAMP DEFAULT NOW(),
+    create_date TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE license
