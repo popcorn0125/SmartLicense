@@ -67,4 +67,13 @@ insert into smart_license.examination_date VALUES ('2022년 04월 24일', NOW())
 insert into smart_license.examination_date VALUES ('2022년 03월 05일', NOW());
 insert into smart_license.examination_date VALUES ('2021년 08월 14일', NOW());
 
+-- question table --
+insert into smart_license.question VALUES (1, 1, 'UML 다이어그램 중 순차 다이어그램에 대한 설명으로 틀린 것은?', '1.객체 간의 동적 상호작용을 시간 개념을 중심으로 모델링 하는 것이다.', '2.주로 시스템의 정적 측면을 모델링하기 위해 사용한다.', '3.일반적으로 다이어그램의 수직 방향이 시간의 흐름을 나타낸다.', '4.회귀 메시지(Self-Message), 제어블록(Statement block) 등으로 구성된다.', 2, NOW(), null, 1, null);
+
+-- session question table --
+insert into smart_license.session_question VALUES (1, '2022년 04월 24일', NOW(), 1, '정보처리기사');
+
+-- member table --
+insert into smart_license.member VALUES ('junji', '1234', '홍길동', '01012345678', 'hong123', 1, 1, NOW(), NOW());
+
 
