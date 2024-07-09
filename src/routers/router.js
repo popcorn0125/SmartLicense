@@ -8,6 +8,7 @@ import CategoryChoice from "@/ContentPage/CategoryChoice.vue";
 import RankingPage from "@/ContentPage/RankingPage.vue";
 import MyPage from "@/ContentPage/MyPage.vue";
 import PracticeMode from "@/ContentPage/PracticeMode.vue";
+import TestMode from "@/ContentPage/TestMode.vue";
 import ChangeInfo from "@/SignInUp/ChangeInfo.vue";
 import PracticeResult from "@/ContentPage/PracticeResult.vue";
 import TestResult from "@/ContentPage/TestResult.vue";
@@ -57,6 +58,11 @@ const routes = [
         path: "/PracticeMode",
         name: "PracticeMode",
         component: PracticeMode,
+    },
+    {
+        path: "/TestMode",
+        name: "TestMode",
+        component: TestMode,
     },
     {
         path: "/ChangeInfo",
