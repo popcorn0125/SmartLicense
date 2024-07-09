@@ -8,7 +8,7 @@ import CategoryChoice from "@/ContentPage/CategoryChoice.vue";
 import RankingPage from "@/ContentPage/RankingPage.vue";
 import MyPage from "@/ContentPage/MyPage.vue";
 import PracticeMode from "@/ContentPage/PracticeMode.vue";
-import ChangeInfo from "@/components/ChangeInfo.vue";
+import ChangeInfo from "@/SignInUp/ChangeInfo.vue";
 
 const routes = [
     {

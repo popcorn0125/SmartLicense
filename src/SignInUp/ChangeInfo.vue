@@ -99,6 +99,7 @@ export default {
     /* 전체 높이에서 상단바와 하단바 높이 제외 */
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
     /* 세로 중앙 정렬 (필요에 따라 조정) */
     width: 100%;
@@ -108,7 +109,7 @@ export default {
 }
 
 .container {
-  width: 100%;
+  width: 95%;
   height: 100%;
   border: 1px solid black;
   border-radius: 5px;
@@ -155,6 +156,7 @@ input {
 
 .id>input, .name>input {
   width: 100%;
+  height: 100%;
   border-radius: 5px;
   background-color: #c7c7c7;
   box-sizing: border-box;
@@ -193,7 +195,7 @@ input {
 
 .phoneNum-input {
   width: 60%;
-  height: 100%;
+  height: 60%;
   border-radius: 5px;
   box-sizing: border-box;
 }
@@ -201,7 +203,7 @@ input {
 .small-btn {
   background-color: #000000;
   width: 30%;
-  height: 100%;
+  height: 60%;
   border-radius: 5px;
   color: #FFF;
   font-size: 0.7em;
@@ -226,7 +228,7 @@ input {
 
 .gender-btn{
   width: 40%;
-  height: 100%;
+  height: 70%;
   border-radius: 5px;
   background: #000;
   color: #FFF;
@@ -251,7 +253,7 @@ input {
 }
 .back-btn, .update-btn {
   width: 35%;
-  height: 100%;
+  height: 80%;
   border-radius: 5px;
   background: #5271FF;
   color: #FFF;
