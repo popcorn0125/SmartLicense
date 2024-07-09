@@ -68,7 +68,8 @@ CREATE TABLE question
     answer TINYINT UNSIGNED NOT NULL,
     create_date TIMESTAMP DEFAULT NOW(),
     image VARCHAR(255),
-    subject_name VARCHAR(100)
+    subject_name VARCHAR(100),
+    question_description TEXT
 );
 
 CREATE TABLE ranking
