@@ -128,9 +128,6 @@ ADD FOREIGN KEY R_9 (license_name) REFERENCES license (license_name);
 ALTER TABLE exam_log_info
 ADD FOREIGN KEY R_17 (member_id) REFERENCES member (member_id);
 
-ALTER TABLE examination_date
-ADD FOREIGN KEY R_28 (detail_license_name) REFERENCES detail_license (detail_license_name);
-
 ALTER TABLE login_log_info
 ADD FOREIGN KEY R_16 (member_id) REFERENCES member (member_id);
 
