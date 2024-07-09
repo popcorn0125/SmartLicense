@@ -9,6 +9,8 @@ import RankingPage from "@/ContentPage/RankingPage.vue";
 import MyPage from "@/ContentPage/MyPage.vue";
 import PracticeMode from "@/ContentPage/PracticeMode.vue";
 import ChangeInfo from "@/SignInUp/ChangeInfo.vue";
+import PracticeResult from "@/ContentPage/PracticeResult.vue";
+import TestResult from "@/ContentPage/TestResult.vue";
 
 const routes = [
     {
@@ -60,6 +62,16 @@ const routes = [
         path: "/ChangeInfo",
         name: "ChangeInfo",
         component: ChangeInfo,
+    },
+    {
+        path: "/PracticeResult",
+        name: "PracticeResult",
+        component: PracticeResult,
+    },
+    {
+        path: "/TestResult",
+        name: "TestResult",
+        component: TestResult,
     },
 ];
 
