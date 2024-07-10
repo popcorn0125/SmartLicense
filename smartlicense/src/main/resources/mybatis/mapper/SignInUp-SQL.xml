@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	작성일 : 2024.07.10
+	작성자 : 김준식
+	내용 : 화원가입, 로그인 입니다.
+ -->
+<mapper namespace="SmartLicense.smartlicense.SignInUp.Dao.LoginDao">
+
+    <!--
+	작성일 : 2024.07.10
+	작성자 : 김준식
+	내용 : 사용자가 입력한 아이디 존재여부
+    -->
+    <select id="userIdCheck" parameterType="Object" resultType="int">
+        SELECT COUNT(member_id)
+        FROM member
+        WHERE member_id = #{param}
+    </select>
+
+    <!--
+	작성일 : 2024.07.10
+	작성자 : 김준식
+	내용 : 비밀번호 가져오기
+    -->
+    <select id="getUserPw" parameterType="HashMap" resultType="String">
+        SELECT password
+        FROM member
+        WHERE member_id = #{userId}
+    </select>
+
+</mapper>
