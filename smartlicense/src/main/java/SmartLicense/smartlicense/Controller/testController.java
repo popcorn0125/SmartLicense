@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api2")
 public class testController {
     @GetMapping("/test")
     public void test() {
