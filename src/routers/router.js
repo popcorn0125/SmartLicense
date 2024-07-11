@@ -12,12 +12,18 @@ import TestMode from "@/ContentPage/TestMode.vue";
 import ChangeInfo from "@/SignInUp/ChangeInfo.vue";
 import PracticeResult from "@/ContentPage/PracticeResult.vue";
 import TestResult from "@/ContentPage/TestResult.vue";
+import testComponent2 from "@/ContentPage/testComponents2.vue";
 
 const routes = [
     {
         path: "/test",  // TestComponent.vue로 이동할 Path
         name: "testComponent",  // router name
         component: testComponent,  // Path로 이동될 Component
+    },
+    {
+        path: "/test2",  // TestComponent.vue로 이동할 Path
+        name: "testComponent2",  // router name
+        component: testComponent2,  // Path로 이동될 Component
     },
     {
         path: "/",
