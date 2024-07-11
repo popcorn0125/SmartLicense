@@ -7,77 +7,96 @@
             <div class="container">
                 <p>아이디</p>
                 <div class="input-group">
-                    <input type="text" class="id"  placeholder="아이디">
-                    <button class="id-Btn">중복확인</button>
+                    <input type="text" class="id"  placeholder="아이디" v-model="form.id" @blur="checkIdUnique">
+                    <button class="id-Btn" @click="checkIdUnique">중복확인</button>
                 </div>
+                <span v-if="errors.id">{{ errors.id }}</span>
             </div>
             <div class="container space">
                 <p>비밀번호</p>
                 <div class="input-group">
-                    <input type="password" class="pw" placeholder="비밀번호">
+                    <input type="password" class="pw" placeholder="비밀번호" v-model="form.password">
                 </div>
                 <text>8자리 이상 영문, 대소문자 구분, 특수기호 포함</text>
+                <span v-if="errors.password">{{ errors.password }}</span>
             </div>
             <div class="container space">
                 <div class="pwCheck">
                     <p>비밀번호 확인</p>
                     <img :src="pwCheckImage" alt="이" />
-                    <text class="pwCheckMsg">비밀번호가 일치하지 않습니다.</text>
+                    <text class="pwCheckMsg" v-if="form.password !== form.passwordConfirm">비밀번호가 일치하지 않습니다.</text>
                 </div>
                 <div class="input-group">
-                    <input type="password" class="pw" placeholder="비밀번호 재입력">
+                    <input type="password" class="pw" placeholder="비밀번호 재입력" v-model="form.passwordConfirm">
                 </div>
             </div>
             <div class="container space">
                 <p>이름</p>
                 <div class="input-group">
-                    <input type="text" class="pw" placeholder="이름(실명 입력)">
+                    <input type="text" class="pw" placeholder="이름(실명 입력)" v-model="form.name">
                 </div>
+                <span v-if="errors.name">{{ errors.name }}</span>
             </div>
             <div class="container space">
                 <p>닉네임</p>
                 <div class="input-group">
-                    <input type="text" class="id" placeholder="닉네임(10자리)">
-                    <button class="id-Btn">중복확인</button>
+                    <input type="text" class="id" placeholder="닉네임(10자리)" v-model="form.nickname">
+                    <button class="id-Btn" @click="checkNicknameUnique">중복확인</button>
                 </div>
+                <span v-if="errors.nickname">{{ errors.nickname }}</span>
             </div>
             <div class="container space">
                 <text class="gender-text">성별</text>
                 <div class="input-group">
-                    <button :class="{ 'selected': selectedGender === '남자', 'not-selected': selectedGender !== '남자' }"
-                        class="gender-Btn" @click="selectGender('남자')">남자</button>
-                    <button :class="{ 'selected': selectedGender === '여자', 'not-selected': selectedGender !== '여자' }"
-                        class="gender-Btn woman" @click="selectGender('여자')">여자</button>
+                    <button :class="{ 'selected': form.gender === '1', 'not-selected': form.gender !== '1' }"
+                        class="gender-Btn" @click="selectGender('1')">남자</button>
+                    <button :class="{ 'selected': form.gender === '0', 'not-selected': form.gender !== '0' }"
+                        class="gender-Btn woman" @click="selectGender('0')">여자</button>
                 </div>
+                <span v-if="errors.gender">{{ errors.gender }}</span>
             </div>
             <div class="container space">
                 <p>전화번호</p>
                 <div class="input-group">
-                    <input type="text" class="id" placeholder="전화번호">
-                    <button class="id-Btn">인증번호 전송</button>
+                    <input type="text" class="id" placeholder="전화번호" v-model="form.phone">
+                    <button class="id-Btn" @click="sendVerificationCode">인증번호 전송</button>
                 </div>
+                <span v-if="errors.phone">{{ errors.phone }}</span>
             </div>
             <div class="container space">
                 <p>인증번호</p>
                 <div class="input-group">
-                    <input type="text" class="id" placeholder="인증번호">
-                    <button class="id-Btn">인증번호 확인</button>
+                    <input type="text" class="id" placeholder="인증번호" v-model="form.verificationCode">
+                    <button class="id-Btn" @click="verifyCode">인증번호 확인</button>
                 </div>
+                <span v-if="errors.verificationCode">{{ errors.verificationCode }}</span>
             </div>
             <div class="container space">
-                <button class="black_long_btn">회원가입</button>
+                <button class="black_long_btn" @click="register">회원가입</button>
             </div>
         </div>
     </div>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
     name: "UserSign",
     data() {
         return {
             imagePath: require('@/assets/gotoback.png'),
             pwCheckImage: require('@/assets/pwcheck.png'),
-            selectedGender: "" // 성별 선택 여부
+            form:{
+                id: '',
+                password: '',
+                passwordConfirm: '',
+                name: '',
+                nickname: '',
+                gender: '',
+                phone: '',
+                verificationCode: '',
+            },
+            errors: {}
         }
     },
 
@@ -87,7 +106,91 @@ export default {
         },
 
         selectGender(gender) {
-            this.selectedGender = gender;
+            this.form.gender = gender;
+        },
+
+        async checkIdUnique(){
+            //아이디 중복 확인 기능
+            try{
+                const response = await axios.post('/api/check-id', {id: this.form.id});
+                if (!response.data.unique){
+                    this.errors.id= '아이디가 중복됩니다.';
+                } else{
+                    this.errors.id='';
+                }
+            } catch (error){
+                console.error(error);
+            }
+        },
+
+        async checkNicknameUnique(){
+            //닉네임 중복 확인 기능
+            try{
+                const response =await axios.post('/api/check-nickname', {nickname: this.form.nickname});
+                if(!response.data.unique){
+                    this.errors.nickname='닉네임이 중복됩니다.';
+                } else {
+                    this.errors.nickname='';
+                }
+            } catch (error){
+                console.error(error);
+            }
+        },
+
+        async sendVerificationCode(){
+            //인증번호 전송 기능
+            try{
+                const response = await axios.post('/api/send-code', {phone:this.form.phone});
+                if (response.data.success){
+                    //인증번호 전송 성공
+                } else{
+                    this.errors.phone = '인증번호 전송 실패';
+                }
+            } catch (error){
+                console.error(error);
+            }
+        },
+
+        async verifyCode(){
+            //인증번호 확인 기능
+            try{
+                const response = await axios.post('/api/verify-code', {phone:this.form.phone, code:this.form.verificationCode});
+                if (response.data.verified){
+                    this.errors.verificationCode='';
+                } else{
+                    this.errors.verificationCode='인증번호가 틀렸습니다';
+                }
+            } catch (error){
+                console.error(error);
+            }
+        },
+
+        async register(){
+            //회원가입 기능
+            this.errors={}; //이전 에러기록 클리어
+            if(!this.form.id) this.errors.id ='아이디를 입력하세요.';
+            if(!this.form.password) this.errors.password ='비밀번호를 입력하세요.';
+            if(this.form.password !== this.form.passwordConfirm) this.errors.passwordConfirm ='비밀번호가 일치하지 않습니다.';
+            if(!this.form.name) this.errors.name ='이름를 입력하세요.';
+            if(!this.form.nickname) this.errors.nickname ='닉네임를 입력하세요.';
+            if(!this.form.gender) this.errors.gender ='성별을 선택하세요.';
+            if(!this.form.phone) this.errors.phone ='전화번호를 입력하세요.';
+            if(!this.form.verificationCode) this.errors.verificationCode ='인증번호를 입력하세요.';
+
+            if (Object.keys(this.errors).length === 0){
+                try{
+                    const response = await axios.post('/api/register', this.form);
+                    if (response.data.success){
+                        //회원가입 성공
+                        this.$router.push('/SmartLicenseLogin');
+                    } else{
+                        //회원가입 실패 처리
+                        this.errors = response.data.errors;
+                    }
+                } catch (error){
+                    console.error(error);
+                }
+            }
         }
     },
 
@@ -104,7 +207,7 @@ export default {
 
 #screen {
     width: 100%;
-    height: 100vh;
+    height: 130vh;
     /* 화면 전체 높이 */
     background-color: #5271FF;
     /* text-align: center; */
