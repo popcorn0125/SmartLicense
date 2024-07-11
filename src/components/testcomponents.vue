@@ -44,8 +44,8 @@ export default {
 
 <style scoped>
 .login-container {
-  background-color: #2f2f2f;
-  /* box-shadow: rgb(31 31 31 / 17%) 0px -23px 25px 0px inset,
+  /* background-color: #ffffff; */
+  /* box-shadow: rgba(255, 255, 255, 0.17) 0px -23px 25px 0px inset,
     rgb(108 108 108 / 23%) 0px -36px 30px 0px inset,
     rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
     rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
@@ -63,14 +63,14 @@ export default {
 }
 
 .heading {
-  color: #ffffff;
+  color: #000000;
   font-weight: 500;
   font-size: 40px;
   margin-bottom: 5px;
 }
 
 .paragraph {
-  color: #ffffff;
+  color: #000000;
   font-weight: 400;
   font-size: 15px;
   margin-bottom: 15px;
@@ -86,9 +86,9 @@ export default {
   padding: 15px 23px;
   font-size: 16px;
   border-radius: 8px;
-  color: #fff;
+  color: #000000;
   width: 100%;
-  box-shadow: rgb(136 136 136 / 17%) 0px -23px 25px 0px inset,
+  box-shadow: rgba(255, 255, 255, 0.95) 0px -23px 25px 0px inset,
     rgb(81 81 81 / 23%) 0px -36px 30px 0px inset,
     rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
     rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
@@ -121,7 +121,7 @@ button:hover {
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
-  color: #ffffff;
+  color: #000000;
   font-size: 15px;
   font-weight: 400;
 }
