@@ -36,6 +36,7 @@ body {
   height: 100vh;
   margin: 0;
   width: 100%;
+  background-color: #2f2f2f;
 }
 
 
