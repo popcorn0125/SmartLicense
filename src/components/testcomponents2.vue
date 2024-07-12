@@ -1,140 +1,185 @@
 <template>
-    <div class="login-container">
-      <form class="login-form">
-        <p class="heading">Sign up</p>
-        <p class="paragraph">Login to your account</p>
-        <div class="input-group">
-          <input required="" placeholder="Username" id="username name=" type="text" />
+  <TopBar />
+  <div class="login-container">
+    <form class="login-form">
+      <p class="heading">회원가입</p>
+      <div class="input-group btn_posi">
+        <input placeholder="아이디" id="username" name="username" type="text" />
+        <button type="button">중복확인</button>
+      </div>
+
+      <div class="input-group">
+        <input placeholder="비밀번호" name="password" id="password" type="password" />
+      </div>
+      <div class="input-group">
+        <input placeholder="비밀번호 재확인" name="password" id="password" type="password" />
+      </div>
+      <div class="input-group">
+        <input placeholder="이름" name="password" id="password" type="password" />
+      </div>
+      <div class="input-group btn_posi">
+        <input placeholder="닉네임" name="password" id="password" type="password" />
+        <button type="button">중복확인</button>
+      </div>
+      <div class="gender-selection">
+        <div class="gender-option">
+          <input type="radio" id="male" name="gender" v-model="gender" value="남">
+          <label for="male">남</label>
         </div>
-        <div class="input-group">
-          <input required="" placeholder="Password" name="password" id="password" type="password" />
+        <div class="gender-option">
+          <input type="radio" id="female" name="gender" v-model="gender" value="여">
+          <label for="female">여</label>
         </div>
-        <button type="submit">Login</button>
-        <div class="bottom-text">
-          <p>Don't have an account? <a href="#">Sign Up</a></p>
-          <p><a href="#">Forgot password?</a></p>
-        </div>
-      </form>
-    </div>
-  
-  </template>
-  
-  <script>
-  export default {
-    name: "PracticeMode",
-    components: {
-    },
-    data() {
-      return {
-  
-      }
-    },
-    methods: {
-  
-    },
-  
-    created() {
-  
-    },
-    mounted() {
-  
-    },
-  }
-  </script>
-  
-  <style scoped>
-  .login-container {
-    background-color: #2f2f2f;
-    /* box-shadow: rgb(31 31 31 / 17%) 0px -23px 25px 0px inset,
-      rgb(108 108 108 / 23%) 0px -36px 30px 0px inset,
-      rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
-      rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
-      rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px; */
-    padding: 40px;
-    max-width: 800px;
-    width: 100%;
-    text-align: center;
-    margin: 0 auto;
-  }
-  
-  .login-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .heading {
-    color: #ffffff;
-    font-weight: 500;
-    font-size: 40px;
-    margin-bottom: 5px;
-  }
-  
-  .paragraph {
-    color: #ffffff;
-    font-weight: 400;
-    font-size: 15px;
-    margin-bottom: 15px;
-  }
-  
-  .input-group {
-    margin-bottom: 20px;
-  }
-  
-  .input-group input {
-    background: none;
-    border: 1px solid #353535;
-    padding: 15px 23px;
-    font-size: 16px;
-    border-radius: 8px;
-    color: #fff;
-    width: 100%;
-    box-shadow: rgb(136 136 136 / 17%) 0px -23px 25px 0px inset,
-      rgb(81 81 81 / 23%) 0px -36px 30px 0px inset,
-      rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
-      rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
-      rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
-  }
-  
-  .input-group input:focus {
-    border-color: #0173ed;
-    outline: none;
-  }
-  
-  button {
-    padding: 15px;
-    border: none;
-    border-radius: 8px;
-    background-color: #0173ed;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #0173ed;
-  }
-  
-  .bottom-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 400;
-  }
-  
-  .bottom-text a {
-    color: #0173ed;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  .bottom-text a:hover {
-    color: #3f95f2;
-  }
-  
-  </style>
-  
+      </div>
+      <div class="input-group btn_posi">
+        <input placeholder="전화번호" name="password" id="password" type="password" />
+        <button type="button">인증번호 전송</button>
+      </div>
+      <div class="input-group btn_posi">
+        <input placeholder="인증번호" name="password" id="password" type="password" />
+        <button type="button">확인</button>
+      </div>
+      <button type="submit">Sign up</button>
+      <div class="bottom-text">
+      </div>
+    </form>
+  </div>
+
+</template>
+
+<script>
+import TopBar from '@/components/TopBar.vue';
+
+export default {
+  name: "PracticeMode",
+  components: {
+    TopBar,
+  },
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+
+  },
+
+  created() {
+
+  },
+  mounted() {
+
+  },
+}
+</script>
+
+<style scoped>
+.login-container {
+  position: relative;
+  top: 6%;
+  padding: 1em 2.5em 0em 2.5em;
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  height: 88%;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  color: #000000;
+  font-weight: 500;
+  font-size: 1.7em;
+  margin-bottom: 1em;
+}
+
+
+.input-group {
+  margin-bottom: 20px;
+  height: 2em;
+}
+
+.btn_posi {
+  display: flex;
+}
+
+.btn_posi>input {
+  width: 60%;
+}
+
+.btn_posi>button {
+  width: 40%;
+  padding: 0;
+  font-size: .7em;
+  margin-left: .5em;
+
+}
+
+.input-group input {
+  background: none;
+  border: 1px solid #d1d1d1;
+  padding: 0.7em 1em;
+  font-size: 0.7em;
+  border-radius: 8px;
+  color: #000000;
+  width: 100%;
+}
+
+button {
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #5271ff;
+  color: #ffffff;
+  font-size: 0.7em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 1px 1px,
+    rgba(0, 0, 0, 0.09) 0px 1px 1px, rgba(0, 0, 0, 0.09) 0px 1px 2px,
+    rgba(0, 0, 0, 0.09) 0px 1px 4px, rgba(0, 0, 0, 0.09) 0px 1px 8px;
+
+}
+
+
+.bottom-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  color: #000000;
+  font-size: .8em;
+  font-weight: 400;
+}
+
+.bottom-text a {
+  color: #0173ed;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.gender-selection {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: #f0f8ff;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  border: .5px solid #d1d1d1;
+}
+
+.gender-option {
+  display: flex;
+  align-items: center;
+  color: #0173ed;
+  font-weight: bold;
+}
+
+.gender-option input {
+  margin-right: 5px;
+}
+</style>

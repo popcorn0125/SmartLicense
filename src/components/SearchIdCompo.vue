@@ -1,77 +1,43 @@
 <template>
-    <div class="search_id_compo">
-        <p>전화번호</p>
-        <input type="text" class="phone_box">
-        <button class="check_num_send">인증번호 전송</button>
-
-        <p>인증번호</p>
-        <input type="text" class="check_num">
-        <button class="check_btn">확인</button>
-
-        <button class="black_long_btn" @click="verifyId()">아이디 찾기</button>
-        <div class="id_is" v-if="showId">
-            <p>아이디는 <span>hong123 </span>입니다.</p>
-        </div>
+    <TopBar />
+    <div class="login-container">
+        <form class="login-form">
+            <p class="heading">로그인</p>
+            <br>
+            <div class="input-group">
+                <input required="" placeholder="아이디" id="username name=" type="text" />
+            </div>
+            <div class="input-group">
+                <input required="" placeholder="비밀번호" name="password" id="password" type="password" />
+            </div>
+            <button type="submit">로그인</button>
+            <div class="bottom-text">
+                <p>계정이 없으신가요? <a href="#">회원가입</a></p>
+                <p><a href="#" class="idhref">아이디 찾기</a><a href="#" class="pwhref">비밀번호 찾기</a></p>
+            </div>
+            <br />
+            <hr>
+            <br>
+            <button class="withoutlogin" type="button" @click="goToCC">로그인 없이 시작</button>
+        </form>
     </div>
 </template>
 <script>
+import TopBar from '@/components/TopBar.vue';
 
 export default {
     name: "SearchIdCompo",
-    data(){
-        return{
-            showId:false,
+    components: {
+        TopBar,
+    },
+    data() {
+        return {
+
         }
     },
-    methods:{
-        verifyId(){
-            // 아이디 검증 로직 짜야됨
-            this.showId=true;
-        }
+    methods: {
+
     }
 }
 </script>
-<style scoped>
-.search_id_compo {
-    position: fixed;
-    width: 100%;
-    margin-left: 10%;
-    margin-top: 25%;
-}
-
-.check_num_send,
-.check_btn {
-    background-color: #000;
-    color: #fff;
-    border-radius: 5px;
-    font-size: 0.7em;
-    width: 30%;
-    height: 35px;
-}
-
-.phone_box{
-    margin-bottom: 5%;
-}
-
-.phone_box,
-.check_num {
-    width: 50%;
-    margin-right: 5%;
-
-}
-
-.black_long_btn {
-    width: 85%;
-    margin-top: 10%;
-    margin-bottom: 5%;
-}
-
-.id_is{
-    margin-left: 15%;
-}
-
-.id_is span{
-    color: #000;
-    font-weight: 900;
-}
-</style>
+<style scoped></style>

@@ -1,28 +1,35 @@
 <template>
+  <TopBar />
   <div class="login-container">
     <form class="login-form">
-      <p class="heading">Login</p>
-      <p class="paragraph">Login to your account</p>
+      <p class="heading">로그인</p>
+      <br>
       <div class="input-group">
-        <input required="" placeholder="Username" id="username name=" type="text" />
+        <input required="" placeholder="아이디" id="username name=" type="text" />
       </div>
       <div class="input-group">
-        <input required="" placeholder="Password" name="password" id="password" type="password" />
+        <input required="" placeholder="비밀번호" name="password" id="password" type="password" />
       </div>
-      <button type="submit">Login</button>
+      <button type="submit">로그인</button>
       <div class="bottom-text">
-        <p>Don't have an account? <a href="#">Sign Up</a></p>
-        <p><a href="#">Forgot password?</a></p>
+        <p>계정이 없으신가요? <a href="/test2">회원가입</a></p>
+        <p><a href="test3" class="idhref">아이디 찾기</a><a href="test4" class="pwhref">비밀번호 찾기</a></p>
       </div>
+      <br />
+      <hr>
+      <br>
+      <button class="withoutlogin" type="button" @click="goToCC">로그인 없이 시작</button>
     </form>
   </div>
-
 </template>
 
 <script>
+import TopBar from '@/components/TopBar.vue';
+
 export default {
   name: "PracticeMode",
   components: {
+    TopBar,
   },
   data() {
     return {
@@ -30,7 +37,9 @@ export default {
     }
   },
   methods: {
-
+    goToCC() {
+      this.$router.push({ name: 'CategoryChoice' });
+    }
   },
 
   created() {
@@ -43,18 +52,19 @@ export default {
 </script>
 
 <style scoped>
+.bottom-text>p:nth-child(odd) {
+  margin-bottom: 0.5em;
+}
+
 .login-container {
-  /* background-color: #ffffff; */
-  /* box-shadow: rgba(255, 255, 255, 0.17) 0px -23px 25px 0px inset,
-    rgb(108 108 108 / 23%) 0px -36px 30px 0px inset,
-    rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
-    rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
-    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px; */
-  padding: 40px;
+  position: relative;
+  top: 6%;
+  padding: 1em 2.5em 0em 2.5em;
   max-width: 800px;
   width: 100%;
   text-align: center;
   margin: 0 auto;
+  height: 88%;
 }
 
 .login-form {
@@ -65,34 +75,27 @@ export default {
 .heading {
   color: #000000;
   font-weight: 500;
-  font-size: 40px;
+  font-size: 1.7em;
   margin-bottom: 5px;
-}
-
-.paragraph {
-  color: #000000;
-  font-weight: 400;
-  font-size: 15px;
-  margin-bottom: 15px;
 }
 
 .input-group {
   margin-bottom: 20px;
+
 }
 
 .input-group input {
   background: none;
-  border: 1px solid #353535;
+  border: 1px solid #d1d1d1;
   padding: 15px 23px;
   font-size: 16px;
   border-radius: 8px;
   color: #000000;
   width: 100%;
-  box-shadow: rgba(255, 255, 255, 0.95) 0px -23px 25px 0px inset,
-    rgb(81 81 81 / 23%) 0px -36px 30px 0px inset,
-    rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
-    rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
-    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+  /* box-shadow: rgba(0, 0, 0, 0.06) 0px 1px 1px,
+    rgba(0, 0, 0, 0.09) 0px 1px 1px, rgba(0, 0, 0, 0.09) 0px 1px 2px,
+    rgba(0, 0, 0, 0.09) 0px 1px 4px, rgba(0, 0, 0, 0.09) 0px 1px 8px; */
+  height: 2em;
 }
 
 .input-group input:focus {
@@ -104,16 +107,15 @@ button {
   padding: 15px;
   border: none;
   border-radius: 8px;
-  background-color: #0173ed;
+  background-color: #5271ff;
   color: #ffffff;
-  font-size: 16px;
+  font-size: 0.7em;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0173ed;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 1px 1px,
+    rgba(0, 0, 0, 0.09) 0px 1px 1px, rgba(0, 0, 0, 0.09) 0px 1px 2px,
+    rgba(0, 0, 0, 0.09) 0px 1px 4px, rgba(0, 0, 0, 0.09) 0px 1px 8px;
 }
 
 .bottom-text {
@@ -122,18 +124,30 @@ button:hover {
   align-items: center;
   margin-top: 20px;
   color: #000000;
-  font-size: 15px;
+  font-size: .7em;
   font-weight: 400;
 }
 
 .bottom-text a {
-  color: #0173ed;
+  color: #5271ff;
   text-decoration: none;
   transition: color 0.3s ease;
+
 }
 
-.bottom-text a:hover {
-  color: #3f95f2;
+.bottom-text p {
+  margin-top: 0.5em;
 }
 
+.withoutlogin {
+  background-color: #353535;
+}
+
+.idhref {
+  margin-right: .5em;
+}
+
+.pwhref {
+  margin-left: .5em;
+}
 </style>
