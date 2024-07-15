@@ -1,9 +1,10 @@
 CREATE TABLE detail_license
 (
-	detail_license_name VARCHAR(100) NOT NULL PRIMARY KEY,
+    detail_license_idx INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	detail_license_name VARCHAR(100),
     create_date TIMESTAMP DEFAULT NOW(),
     detail_license_description VARCHAR(255),
-    license_name VARCHAR(100)
+    license_idx INT
 );
 
 CREATE TABLE exam_log_info
@@ -18,15 +19,10 @@ CREATE TABLE exam_log_info
     member_id VARCHAR(100)
 );
 
-CREATE TABLE examination_date
-(
-	examination_date VARCHAR(50) NOT NULL PRIMARY KEY,
-    create_date TIMESTAMP DEFAULT NOW()
-);
-
 CREATE TABLE license
 (
-	license_name VARCHAR(100) NOT NULL PRIMARY KEY,
+    license_idx INT AUTO_INCREMENT PRIMARY KEY,
+	license_name VARCHAR(100) NOT NULL,
     create_date TIMESTAMP DEFAULT NOW()
 );
 
@@ -37,19 +33,17 @@ CREATE TABLE login_log_info
     ip VARCHAR(50),
     device VARCHAR(100),
     browser_name VARCHAR(50),
-    event_type VARCHAR(100),
-    event_type_info VARCHAR(255),
     member_id VARCHAR(100)
 );
 
 CREATE TABLE member
 (
 	member_id VARCHAR(100) NOT NULL PRIMARY KEY,
-    password VARCHAR(255) NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    phone_number VARCHAR(50) NOT NULL,
-    nickname VARCHAR(50) NOT NULL,
-    gender CHAR(1) NOT NULL,
+    member_password VARCHAR(255) NOT NULL,
+    member_name VARCHAR(50) NOT NULL,
+    member_phone_number VARCHAR(50) NOT NULL,
+    member_nickname VARCHAR(50) NOT NULL,
+    member_gender CHAR(1) NOT NULL,
     is_active CHAR(1) NOT NULL DEFAULT '1',
     registration_date TIMESTAMP DEFAULT NOW(),
     update_date TIMESTAMP DEFAULT NOW()
@@ -71,21 +65,12 @@ CREATE TABLE question
     question_description TEXT
 );
 
-CREATE TABLE ranking
-(
-	ranking_idx INT AUTO_INCREMENT PRIMARY KEY,
-    score INT,
-    member_id VARCHAR(100),
-    create_date TIMESTAMP DEFAULT NOW()
-);
-
 CREATE TABLE session_question
 (
 	session_question_idx INT AUTO_INCREMENT PRIMARY KEY,
-    examination_date VARCHAR(50) NOT NULL,
+    exam_date VARCHAR(50) NOT NULL,
     create_date TIMESTAMP DEFAULT NOW(),
-    question_idx INT,
-    detail_license_name VARCHAR(100) NOT NULL
+    question_idx INT
 );
 
 CREATE TABLE subject
@@ -94,19 +79,18 @@ CREATE TABLE subject
 	subject_name VARCHAR(100) NOT NULL,
     subject_number INT NOT NULL,
     create_date TIMESTAMP DEFAULT NOW(),
-    detail_license_name VARCHAR(100)
+    detail_license_idx int
 );
 
-CREATE TABLE user_attempt
+CREATE TABLE exam_record
 (
-	user_attempt_idx INT AUTO_INCREMENT PRIMARY KEY,
-    detail_license_name VARCHAR(100) NOT NULL,
-    examination_date VARCHAR(50),
+	exam_record_idx INT AUTO_INCREMENT PRIMARY KEY,
     mode CHAR(1) NOT NULL,
     remaining_time VARCHAR(50),
     score INT,
+    start_test_date VARCHAR(50),
     member_id VARCHAR(100) NOT NULL,
-    start_test_date VARCHAR(18),
+    session_question_idx INT,
     create_date TIMESTAMP DEFAULT NOW()
 );
 
@@ -117,16 +101,21 @@ CREATE TABLE user_select_answer
     select_answer INT,
     start_test_date VARCHAR(50),
     member_id VARCHAR(100),
-    examination_date VARCHAR(50),
-    subject_idx int,
+    question_idx int,
     create_date TIMESTAMP DEFAULT NOW()
 );
 
 ALTER TABLE detail_license
-ADD FOREIGN KEY R_9 (license_name) REFERENCES license (license_name);
+ADD FOREIGN KEY R_9 (license_idx) REFERENCES license (license_idx);
 
 ALTER TABLE exam_log_info
 ADD FOREIGN KEY R_17 (member_id) REFERENCES member (member_id);
+
+ALTER TABLE exam_record
+ADD FOREIGN KEY R_20 (member_id) REFERENCES member (member_id);
+
+ALTER TABLE exam_record
+ADD FOREIGN KEY R_32 (session_question_idx) REFERENCES session_question (session_question_idx);
 
 ALTER TABLE login_log_info
 ADD FOREIGN KEY R_16 (member_id) REFERENCES member (member_id);
@@ -134,29 +123,14 @@ ADD FOREIGN KEY R_16 (member_id) REFERENCES member (member_id);
 ALTER TABLE question
 ADD FOREIGN KEY R_22 (subject_idx) REFERENCES subject (subject_idx);
 
-ALTER TABLE ranking
-ADD FOREIGN KEY R_27 (member_id) REFERENCES member (member_id);
-
-ALTER TABLE session_question
-ADD FOREIGN KEY R_23 (examination_date) REFERENCES examination_date (examination_date);
-
 ALTER TABLE session_question
 ADD FOREIGN KEY R_26 (question_idx) REFERENCES question (question_idx);
 
 ALTER TABLE subject
-ADD FOREIGN KEY R_10 (detail_license_name) REFERENCES detail_license (detail_license_name);
-
-ALTER TABLE user_attempt
-ADD FOREIGN KEY R_20 (member_id) REFERENCES member (member_id);
+ADD FOREIGN KEY R_10 (detail_license_idx) REFERENCES detail_license (detail_license_idx);
 
 ALTER TABLE user_select_answer
 ADD FOREIGN KEY R_11 (member_id) REFERENCES member (member_id);
 
 ALTER TABLE user_select_answer
-ADD FOREIGN KEY R_12 (examination_date) REFERENCES examination_date (examination_date);
-
-ALTER TABLE user_select_answer
-ADD FOREIGN KEY R_25 (subject_idx) REFERENCES subject (subject_idx);
-
-ALTER TABLE session_question
-ADD FOREIGN KEY R_29 (detail_license_name) REFERENCES detail_license (detail_license_name);
+ADD FOREIGN KEY R_30 (question_idx) REFERENCES question (question_idx);
