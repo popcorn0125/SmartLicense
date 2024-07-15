@@ -14,23 +14,31 @@
     </div>
     <div class="current_Q">
       <p>{{ Qnumber }}. {{ Question }}</p>
+      <img src="@/assets/testimg.png">
     </div>
-    <div class="radio-input">
+    <span class="toggle-btn" @click="toggleBottomSheet"></span>
+    <div class="radio-input" :class="{ 'is-visible': isBottomSheetVisible }">
       <div class="info">
         <span class="steps" @click="showExplanation">해설보기</span>
+        <span class="close-explanation" @click="toggleBottomSheet">&times;</span>
       </div>
-      <input type="radio" id="value-1" name="value-radio" value="value-1">
-      <label for="value-1">{{ Option1 }}</label>
-      <input type="radio" id="value-2" name="value-radio" value="value-2">
-      <label for="value-2">{{ Option2 }}</label>
-      <input type="radio" id="value-3" name="value-radio" value="value-3">
-      <label for="value-3">{{ Option3 }}</label>
-      <input type="radio" id="value-4" name="value-radio" value="value-4">
-      <label for="value-4">{{ Option4 }}</label>
-      <span class="result success">정답입니다.</span>
-      <span class="result error">오답입니다.</span>
-      <div class="btn_collection">
+      <div class="scrollable">
+        <input type="radio" id="value-1" name="value-radio" value="value-1" @click="checkAnswer(1)">
+        <label for="value-1">{{ Option1 }}</label>
+        <input type="radio" id="value-2" name="value-radio" value="value-2" @click="checkAnswer(2)">
+        <label for="value-2">{{ Option2 }}</label>
+        <input type="radio" id="value-3" name="value-radio" value="value-3" @click="checkAnswer(3)">
+        <label for="value-3">{{ Option3 }}</label>
+        <input type="radio" id="value-4" name="value-radio" value="value-4" @click="checkAnswer(4)">
+        <label for="value-4">{{ Option4 }}</label>
+      </div>
+      <!-- <span class="result success" v-if="displayCorrectAnswer">정답입니다.</span>
+      <span class="result error" v-if="displayWrongAnswer">오답입니다.</span> -->
+      <div class="btn_collection" @click="verifyAnswer" v-if="Qnumber<20">
         다음 문제 >
+      </div>
+      <div class="btn_collection" @click="verifyAnswer" v-if="Qnumber==20">
+        {{ Subject }} 점수 보기
       </div>
     </div>
     <div class="last_Q" v-if="Qnumber == 20">
@@ -69,34 +77,41 @@ export default {
       Description: "순차 다이어그램은 행위 다이어그램이므로 동적이고, 순차적인 표현을 위한 다이어그램이다.",
       correctAnswer: 2, // 정답 번호
       selectedOption: null,
-      displayWrongAnswer: false,
-      displayCorrectAnswer: false,
+      // displayWrongAnswer: false,
+      // displayCorrectAnswer: false,
       showCorrectAnswer: false,
       isModalVisivle: false,
+      isBottomSheetVisible: true,
     }
   },
   methods: {
     checkAnswer(option) {
       this.selectedOption = option;
-      this.showCorrectAnswer = false;
+      // this.showCorrectAnswer = false;
+      // this.displayWrongAnswer=true;
+      // this.displayCorrectAnswer = true;
     },
 
-    verifyAnswer() {
-      this.showCorrectAnswer = true;
-      if (this.selectedOption === this.correctAnswer) {
-        this.displayCorrectAnswer = true;
-        this.displayWrongAnswer = false;
-      } else {
-        this.displayCorrectAnswer = false;
-        this.displayWrongAnswer = true;
-      }
-    },
+    // verifyAnswer() {
+    //   this.showCorrectAnswer = true;
+    //   if (this.selectedOption === this.correctAnswer) {
+    //     this.displayCorrectAnswer = true;
+    //     this.displayWrongAnswer = false;
+    //   } else {
+    //     this.displayCorrectAnswer = false;
+    //     this.displayWrongAnswer = true;
+    //   }
+    // },
 
     showExplanation() {
       this.isModalVisivle = true;
     },
     closeModal() {
       this.isModalVisivle = false;
+    },
+
+    toggleBottomSheet() {
+      this.isBottomSheetVisible = !this.isBottomSheetVisible;
     },
   },
 
@@ -111,15 +126,21 @@ export default {
 
 <style scoped>
 .practive_mode_container {
-  top: 7%;
+  top: 6%;
   position: fixed;
-  height: calc(100% - 16%);
+  height: 94%;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
-
+.scrollable{
+  overflow-y: auto;
+  
+}
+.scrollable::-webkit-scrollbar{
+  display: none;
+}
 .select_test {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -134,15 +155,9 @@ export default {
 .current_Q {
   margin: 0.7em;
   padding: 0.3em;
-  border: solid 1px #000;
-  border-radius: 5px;
   box-sizing: border-box;
-}
-
-.current_A {
-  display: flex;
-  flex-direction: column;
-  z-index: 1;
+  height: 95%;
+  z-index: 0;
 }
 
 .A_wrap {
@@ -162,6 +177,9 @@ export default {
 }
 
 .last_Q {
+  position: fixed;
+  right: 1em;
+  top: .7em;
   color: red;
   font-weight: bold;
   animation: blink-effect 1s ease-in-out infinite;
@@ -170,9 +188,14 @@ export default {
 .btn_collection {
   display: flex;
   width: 100%;
+  border-radius: 5px;
   align-items: center;
   justify-content: center;
   text-align: center;
+  background-color: #353535;
+  color: #fff;
+  padding: 10px;
+  margin-top: 10px;
 }
 
 /* 모달 스타일 */
@@ -208,14 +231,16 @@ export default {
 /* COMMON STYLES*/
 .popup-container {
   display: flex;
-  height: 10%;
+  height: 5%;
+  align-items: center;
+  margin-top: .5em;
 }
 
 .popup {
   margin: 0em .5em 0em .5em;
   box-shadow: 4px 4px 10px -10px rgba(0, 0, 0, 1);
   width: auto;
-  height: 50%;
+  height: 70%;
   padding: .3em;
   justify-content: left;
   align-items: center;
@@ -252,7 +277,18 @@ export default {
   color: #000;
   border-radius: 10px;
   box-shadow: 0px 87px 78px -39px rgba(0, 0, 0, 0.4);
-  width: 320px;
+  width: 100%;
+  position: fixed;
+  bottom: -100%;
+  transition: bottom .5s ease-in-out;
+  height: 53%;
+  /* overflow-y: auto; */
+  box-shadow: 0px -1px 1px 0px rgba(0, 0, 0, 0.1);
+
+}
+
+.radio-input.is-visible {
+  bottom: 0;
 }
 
 .info {
@@ -260,6 +296,31 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.toggle-btn {
+  position: relative;
+  width: 3em;
+  height: 3em;
+  margin-right: 2.7em;
+  margin-bottom: 1em;
+}
+
+.toggle-btn::after {
+  position: absolute;
+  left: 35px;
+  top: 20px;
+  content: '';
+  width: 1em;
+  /* 사이즈 */
+  height: 1em;
+  /* 사이즈 */
+  border-top: 5px solid #000;
+  /* 선 두께 */
+  border-right: 5px solid #000;
+  /* 선 두께 */
+  transform: rotate(315deg);
+  /* 각도 */
 }
 
 .question {
