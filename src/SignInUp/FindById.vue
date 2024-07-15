@@ -19,11 +19,11 @@
             <div class="bottom-text" v-show="isShow">
                 <div v-show="success_message">
                     <p><span>아이디는 </span><strong>{{ userId }}</strong><span> 입니다.</span></p>
-                    <p><a href="/test" class="idhref">로그인</a><a href="/test4" class="pwhref">비밀번호 찾기</a></p>
+                    <p><a href="/login" class="idhref">로그인</a><a href="/findbypw" class="pwhref">비밀번호 찾기</a></p>
                 </div>
                 <div v-show="fail_message">
                     <p><span>아이디가 존재하지 않습니다.</span></p>
-                    <p><a href="#" class="idhref">회원가입</a></p>
+                    <p><a href="/signup" class="idhref">회원가입</a></p>
                 </div>
             </div>
         </form>
@@ -33,7 +33,7 @@
 import TopBar from '@/components/TopBar.vue';
 
 export default {
-    name: "testComponent3",
+    name: "FindByIdPage",
     components: {
         TopBar,
     },

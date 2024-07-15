@@ -22,7 +22,7 @@
 import TopBar from '@/components/TopBar.vue';
 
 export default {
-    name: "testComponent3",
+    name: "ResettingPwPage",
     components: {
         TopBar,
     },

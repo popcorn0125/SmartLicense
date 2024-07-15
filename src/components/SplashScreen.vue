@@ -22,7 +22,7 @@ export default {
           this.loadingPercentage = percentage;
         } else {
           clearInterval(interval);
-          this.$router.push({ name: 'CategoryChoice' });
+          this.$router.push({ name: 'LoginPage' });
         }
       }, 10); // 10 > 1초 // 100 > 10초
     }

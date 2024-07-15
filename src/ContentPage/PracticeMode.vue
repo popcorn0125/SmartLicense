@@ -3,10 +3,10 @@
   <div class="practive_mode_container">
     <div class="popup-container">
       <div class="popup info-popup">
-        <div class="info-message">{{DetailLicense}}</div>
+        <div class="info-message">{{ DetailLicense }}</div>
       </div>
       <div class="popup info-popup">
-        <div class="info-message">{{TestDate}}</div>
+        <div class="info-message">{{ TestDate }}</div>
       </div>
       <div class="popup info-popup">
         <div class="info-message">{{ Subject }}</div>
@@ -16,27 +16,27 @@
       <p>{{ Qnumber }}. {{ Question }}</p>
     </div>
     <div class="radio-input">
-  <div class="info">
-  <span class="steps" @click="showExplanation">해설보기</span>
-   </div>
-  <input type="radio" id="value-1" name="value-radio" value="value-1">
-  <label for="value-1">{{Option1}}</label>
-  <input type="radio" id="value-2" name="value-radio" value="value-2">
-  <label for="value-2">{{ Option2 }}</label>
-  <input type="radio" id="value-3" name="value-radio" value="value-3">
-  <label for="value-3">{{ Option3 }}</label>
-  <input type="radio" id="value-4" name="value-radio" value="value-4">
-  <label for="value-4">{{ Option4 }}</label>
-   <span class="result success">정답입니다.</span>
-   <span class="result error">오답입니다.</span>
-   <div class="btn_collection">
-      다음 문제 >
+      <div class="info">
+        <span class="steps" @click="showExplanation">해설보기</span>
+      </div>
+      <input type="radio" id="value-1" name="value-radio" value="value-1">
+      <label for="value-1">{{ Option1 }}</label>
+      <input type="radio" id="value-2" name="value-radio" value="value-2">
+      <label for="value-2">{{ Option2 }}</label>
+      <input type="radio" id="value-3" name="value-radio" value="value-3">
+      <label for="value-3">{{ Option3 }}</label>
+      <input type="radio" id="value-4" name="value-radio" value="value-4">
+      <label for="value-4">{{ Option4 }}</label>
+      <span class="result success">정답입니다.</span>
+      <span class="result error">오답입니다.</span>
+      <div class="btn_collection">
+        다음 문제 >
+      </div>
     </div>
-</div>
     <div class="last_Q" v-if="Qnumber == 20">
       <p>마지막 문제입니다.</p>
     </div>
-    
+
   </div>
 
   <!---------해설보기 모달 창--------->
@@ -149,47 +149,6 @@ export default {
   display: flex;
 }
 
-.raDio,
-.opTion {
-  margin: 0.5em;
-}
-
-.opTion>label {
-  font-size: 1em;
-}
-
-.raDio {
-  padding-top: 0.3em;
-}
-
-.correct {
-  color: #2E8B57;
-  font-weight: bold;
-}
-
-.wrongimg {
-  width: 190px;
-  height: 190px;
-  position: relative;
-  top: -350%;
-  left: -200%;
-  opacity: 0.5;
-  z-index: 0;
-}
-
-.collectimg {
-  position: relative;
-  top: -400%;
-  left: -300%;
-  opacity: 0.5;
-  z-index: 0;
-}
-
-.OX {
-  width: 10%;
-  height: 10%
-}
-
 @keyframes blink-effect {
 
   0%,
@@ -214,19 +173,6 @@ export default {
   align-items: center;
   justify-content: center;
   text-align: center;
-}
-
-.check_btn,
-.explain_btn,
-.next_btn,
-.submit_btn {
-  border-radius: 5px;
-  color: #fff;
-  background-color: #5271ff;
-  margin: .7em;
-  width: 35%;
-  height: 3em;
-  font-size: 1em;
 }
 
 /* 모달 스타일 */
@@ -260,10 +206,11 @@ export default {
 
 
 /* COMMON STYLES*/
-.popup-container{
+.popup-container {
   display: flex;
   height: 10%;
 }
+
 .popup {
   margin: 0em .5em 0em .5em;
   box-shadow: 4px 4px 10px -10px rgba(0, 0, 0, 1);
@@ -304,7 +251,7 @@ export default {
   background: #fff;
   color: #000;
   border-radius: 10px;
-  box-shadow: 0px 87px 78px -39px rgba(0,0,0,0.4);
+  box-shadow: 0px 87px 78px -39px rgba(0, 0, 0, 0.4);
   width: 320px;
 }
 
@@ -332,7 +279,7 @@ export default {
   font-weight: 600;
 }
 
-.radio-input  label {
+.radio-input label {
   display: flex;
   background-color: #fff;
   padding: 14px;
@@ -346,7 +293,7 @@ export default {
   transition: .3s ease;
 }
 
-.radio-input  label:hover {
+.radio-input label:hover {
   background-color: rgba(24, 24, 24, 0.13);
   border: 1px solid #bbb;
 }
@@ -367,12 +314,12 @@ export default {
   color: red;
 }
 
-.radio-input input:checked + label {
+.radio-input input:checked+label {
   border-color: red;
   color: red;
 }
 
-.radio-input input[value="value-2"]:checked + label {
+.radio-input input[value="value-2"]:checked+label {
   border-color: rgb(22, 245, 22);
   color: rgb(16, 184, 16);
 }
@@ -381,7 +328,7 @@ export default {
   display: flex;
 }
 
-.radio-input:has(input:not([value="value-2"]):checked ) .result.error {
+.radio-input:has(input:not([value="value-2"]):checked) .result.error {
   display: flex;
 }
 </style>

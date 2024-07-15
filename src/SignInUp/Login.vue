@@ -12,8 +12,8 @@
       </div>
       <button type="submit">로그인</button>
       <div class="bottom-text">
-        <p>계정이 없으신가요? <a href="/test2">회원가입</a></p>
-        <p><a href="test3" class="idhref">아이디 찾기</a><a href="test4" class="pwhref">비밀번호 찾기</a></p>
+        <p>계정이 없으신가요? <a href="/signup">회원가입</a></p>
+        <p><a href="/findbyid" class="idhref">아이디 찾기</a><a href="/findbypw" class="pwhref">비밀번호 찾기</a></p>
       </div>
       <br />
       <hr>
@@ -27,7 +27,7 @@
 import TopBar from '@/components/TopBar.vue';
 
 export default {
-  name: "PracticeMode",
+  name: "LoginPage",
   components: {
     TopBar,
   },

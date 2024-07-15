@@ -51,7 +51,7 @@
 import TopBar from '@/components/TopBar.vue';
 
 export default {
-  name: "PracticeMode",
+  name: "SignUpPage",
   components: {
     TopBar,
   },

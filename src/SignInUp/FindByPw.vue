@@ -18,7 +18,7 @@
             <button type="button" @click="findId">비밀번호 찾기</button>
             <div class="bottom-text" v-show="isShow">
                 <p><span>아이디를 다시 입력해주세요.</span></p>
-                <p><a href="#" class="idhref">아이디 찾기</a></p>
+                <p><a href="/findbyid" class="idhref">아이디 찾기</a></p>
             </div>
         </form>
     </div>
@@ -27,7 +27,7 @@
 import TopBar from '@/components/TopBar.vue';
 
 export default {
-    name: "testComponent3",
+    name: "FindByPwPage",
     components: {
         TopBar,
     },
@@ -42,7 +42,7 @@ export default {
             if(this.userId == '') {
                this.isShow = true;
             } else{
-                this.$router.push({ name : 'testComponent5'});
+                this.$router.push({ name : 'FindByPwPage'});
 
             }
         }
