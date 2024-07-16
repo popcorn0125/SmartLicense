@@ -1,12 +1,34 @@
 package SmartLicense.smartlicense.SignInUp.DTO;
 
+/*******************
+ * 날짜 : 2024.07.15
+ * 이름 : 김준식
+ * 내용 : 사용자 DTO
+ * *****************/
 public class MemberDTO {
-    private String userid;
-    private String pw;
-    private String name;
-    private String phoneNumber;
-    private String nickname;
-    private char gender;
+    private String userid; // 아이디
+    private String pw; // 비밀번호
+    private String name; // 이름
+    private String phonenumber; // 전화번호
+    private String nickname; // 닉네임
+    private char gender; // 성별
+
+    public MemberDTO(String userid, String pw, String name, String phonenumber, String nickname, char gender) {
+        this.userid = userid;
+        this.pw = pw;
+        this.name = name;
+        this.phonenumber = phonenumber;
+        this.nickname = nickname;
+        this.gender = gender;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
 
     public String getUserid() {
         return userid;
@@ -32,13 +54,7 @@ public class MemberDTO {
         this.name = name;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public String getNickname() {
         return nickname;

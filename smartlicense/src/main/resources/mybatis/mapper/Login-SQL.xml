@@ -4,7 +4,7 @@
 <!--
 	작성일 : 2024.07.10
 	작성자 : 김준식
-	내용 : 화원가입, 로그인 입니다.
+	내용 : 로그인 입니다.
  -->
 <mapper namespace="SmartLicense.smartlicense.SignInUp.Dao.LoginDao">
 

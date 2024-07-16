@@ -2,6 +2,7 @@ package SmartLicense.smartlicense.SignInUp.Controller;
 
 import SmartLicense.smartlicense.SignInUp.Service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +27,8 @@ public class LoginController {
      * 내용 : 로그인
      * *****************/
     @PostMapping("/verify")
-    public HashMap<String, Object> login(@RequestBody HashMap<String, Object> params) {
+    public ResponseEntity<HashMap<String, Object>> login(@RequestBody HashMap<String, Object> params) {
         System.out.println("login Controller 실행");
-        return loginService.smartLicenselogin(params);
+        return ResponseEntity.ok(loginService.smartLicenselogin(params));
     }
 }

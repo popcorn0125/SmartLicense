@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	작성일 : 2024.07.15
+	작성자 : 김준식
+	내용 : 화원가입 입니다.
+ -->
+<mapper namespace="SmartLicense.smartlicense.SignInUp.Dao.MemberDao">
+    <!--
+	작성일 : 2024.07.15
+	작성자 : 김준식
+	내용 : 아이디 중복 확인
+    -->
+    <select id="isDuplicateId" parameterType="Object" resultType="int">
+        SELECT COUNT(member_id)
+        FROM member
+        WHERE member_id = #{userid}
+    </select>
+
+    <!--
+	작성일 : 2024.07.15
+	작성자 : 김준식
+	내용 : 닉네임 중복 확인
+    -->
+    <select id="isDuplicateNickName" parameterType="HashMap" resultType="int">
+        SELECT COUNT(member_nickname)
+        FROM member
+        WHERE member_nickname = #{nickname}
+    </select>
+
+    <!--
+	작성일 : 2024.07.15
+	작성자 : 김준식
+	내용 : 아이디, 비밀번호, 이름, 닉네임, 성별 등 저장
+    -->
+    <insert id="memberRegister" parameterType="SmartLicense.smartlicense.SignInUp.DTO.MemberDTO" >
+        INSERT INTO member( member_id, member_password, member_name, member_phone_number, member_nickname, member_gender)
+        VALUES (#{userid}, #{pw}, #{name}, #{phonenumber}, #{nickname}, #{gender})
+    </insert>
+
+
+</mapper>
