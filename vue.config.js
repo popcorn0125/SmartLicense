@@ -10,7 +10,7 @@ module.exports = defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true
       },
-      '/login': {
+      '/memberLogin': {
         target: 'http://localhost:8080',
         changeOrigin: true
       }
