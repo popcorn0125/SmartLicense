@@ -5,12 +5,14 @@
       <p class="heading">로그인</p>
       <br>
       <div class="input-group">
-        <input required="" placeholder="아이디" id="username name=" type="text" />
+        <input @input="changeId()" v-model="userId" required="" placeholder="아이디" id="username name=" type="text" />
+        <text v-show="showIdMsg" id="userID" class="infoMessage">아이디를 입력하세요.</text>
       </div>
       <div class="input-group">
-        <input required="" placeholder="비밀번호" name="password" id="password" type="password" />
+        <input @input="changePw()" v-model="userPw" required="" placeholder="비밀번호" name="password" id="password" type="password" />
+        <text v-show="showPwMsg" id="userPW" class="infoMessage">비밀번호를 입력하세요.</text>
       </div>
-      <button type="submit">로그인</button>
+      <button type="button" @click="login()">로그인</button>
       <div class="bottom-text">
         <p>계정이 없으신가요? <a href="/signup">회원가입</a></p>
         <p><a href="/findbyid" class="idhref">아이디 찾기</a><a href="/findbypw" class="pwhref">비밀번호 찾기</a></p>
@@ -18,14 +20,24 @@
       <br />
       <hr>
       <br>
-      <button class="withoutlogin" type="button" @click="goToCC">로그인 없이 시작</button>
+      <button class="withoutlogin" type="button" @click="goToCC()">로그인 없이 시작</button>
     </form>
+  </div>
+
+  <!---------알림 모달 창--------->
+  <div class="modal" v-if="isModalVisivle">
+    <div class="modal-content">
+      <p>{{ Description }}</p>
+      <div class="btn_collection" @click="closeModal()">
+        확인
+    </div>
+    </div>
   </div>
 </template>
 
 <script>
 import TopBar from '@/components/TopBar.vue';
-
+import axios from 'axios';
 export default {
   name: "LoginPage",
   components: {
@@ -33,25 +45,103 @@ export default {
   },
   data() {
     return {
+      Description : '',
+      isModalVisivle : false, // 모달창 열기 여부
+      showIdMsg : false, // 아이디를 입력하세요 메세지  (true : 보임, false : 안보임)
+      showPwMsg : false, // 비밀번호를 입력하세요 메세지 (true : 보임, false : 안보임)
+      userId : "", // 사용자 ID
+      userPw : "", // 사용자 PW
 
     }
   },
   methods: {
+    closeModal() {
+      this.isModalVisivle = false;
+    },
+    // 아이디 입력을 감지 했을 경우
+    changeId() {
+      this.showIdMsg = false;
+    },
+
+    // 비밀번호 입력을 감지 했을 경우
+    changePw() {
+      this.showPwMsg = false;
+    },
+
     goToCC() {
       this.$router.push({ name: 'CategoryChoice' });
-    }
+    },
+
+    // 로그인
+    login() {
+      const vm = this;
+      if(vm.userId == '' && vm.userPw == '') {
+        vm.showIdMsg = true;
+        vm.showPwMsg = true;
+        return;
+      }
+      if(vm.userId == '') {
+        vm.showIdMsg = true;
+        return;
+      }
+      if(vm.userPw == '') {
+        vm.showPwMsg = true;
+        return ;
+      }
+      let dt = {
+        userId : vm.userId,
+        userPw : vm.userPw
+      };
+      console.log(dt);
+      axios({
+        method : 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/memberLogin/verify",
+        data: dt,
+      })
+        .then(function(response){
+          if(response.data.result == 0) {
+            vm.Description = response.data.message;
+            vm.isModalVisivle = true;
+            return;
+          }
+          if(response.data.result == 1) {
+            this.$router.push({ name: 'CategoryChoice' });
+          }
+        })
+        .catch(function(){
+          vm.Description = '죄송하지만 예기치 않은 오류가 발생했습니다. 나중에 다시 시도해주세요.'
+          vm.isModalVisivle = true;
+        });
+    },
+
   },
 
   created() {
 
   },
   mounted() {
-
+    if(this.$cookies.get('USER_ID') != null ){
+      this.$router.push({ name: 'CategoryChoice' });
+    }
   },
 }
 </script>
 
 <style scoped>
+.infoMessage {
+  display: block;
+  color: #F00;
+  -webkit-text-stroke-width: 1;
+  -webkit-text-stroke-color: #000;
+  font-family: Inter;
+  font-size: 0.7em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: left;
+}
+
 .bottom-text>p:nth-child(odd) {
   margin-bottom: 0.5em;
 }
@@ -149,5 +239,46 @@ button {
 
 .pwhref {
   margin-left: .5em;
+}
+
+/* 모달 스타일 */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: block;
+  text-align: center;
+}
+
+.btn_collection {
+  display: flex;
+  width: 50%;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #353535;
+  color: #fff;
+  padding: 10px;
+  margin: 10px auto;
 }
 </style>

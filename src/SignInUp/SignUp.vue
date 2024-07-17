@@ -56,9 +56,9 @@
         <text id="phone" class="infoMessage">{{ phoneMsg }}</text>
       </div>
 
-      <div class="include-msg">
+      <div class="include-msg" v-show="showVerificationCode">
         <div class="input-group btn_posi">
-          <input @input="checknumberChange()" v-model="checknumber" placeholder="인증번호"   type="text" maxlength="6" />
+          <input @input="checknumberChange()" v-model="checknumber" placeholder="인증번호"   type="text" maxlength="6"  />
           <button type="button" @click="numberCheck()">확인</button>
         </div>
         <text id="checknumber" class="infoMessage">{{pnCheckMsg}}</text>
@@ -104,6 +104,7 @@ export default {
       phoneMsg : '', // 전화번호 메세지
       pnCheckMsg : '', // 인증번호 확인 메세지
 
+      showVerificationCode : false, // 전화번호를 입력 후 인증번호 요청 클릭시 인증번호를 입력하는 input이 나오기 위한 변수.
 
 
 
@@ -294,6 +295,9 @@ export default {
         url: "/api/sendSMS",
       })
         .then(function(response) {
+          vm.showVerificationCode = true;
+          vm.pnCheckMsg = '';
+          vm.phoneMsg = '';
           alert("인증 번호는 " + response.data + " 입니다.");
         })
         .catch(function(error){
@@ -383,6 +387,9 @@ export default {
         vm.phoneMsg = '전화번호를 입력해주세요.';
         console.log('9');
         result = false;
+      } else if(vm.showVerificationCode === false && vm.isPhoneNumCheck === false) {
+        document.getElementById('phone').style.color = '#F00';
+        vm.phoneMsg = '인증번호를 발급받고 인증을 진행해주세요.';
       }
       if(vm.checknumber == '') {
         document.getElementById('checknumber').style.color = '#F00';
@@ -452,6 +459,7 @@ export default {
         vm.phoneMsg = '전화번호를 입력해주세요.';
         return;
       }
+      
       if(vm.isPhoneNumCheck === false) {
         document.getElementById('checknumber').style.color = '#F00';
         vm.pnCheckMsg = '인증번호를 입력하고 확인을 진행 해주세요.';
