@@ -1,143 +1,516 @@
 <template>
-    <TopBar />
-    <div class="practive_mode_container">
-      <div class="select_test">
-        <span>{{ DetailLicense }}</span><span>{{ TestDate }}</span>
+  <TopBar />
+  <div class="results-summary-container">
+    <div :class="['confetti',resultClass]">
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+      <div class="confetti-piece"></div>
+    </div>
+    <div :class="['results-summary-container__result', resultClass]">
+      <div :class="['result-box', resultClass]">
+        <div :class="['heading-primary', resultClass]">{{ corretCount }}</div>
+        <p :class="['result', resultClass]">of {{ totalQuestionCount }}</p>
       </div>
-      <div class="current_sub">
-        <p>{{ Subject }}</p>
-      </div>
-      <div class="current_info">
-        <p>총 문항 갯수 : {{ totalQuestionCount }}</p>
-        <p>정답 갯수 : {{ corretCount }}</p>
-        <p>오답 갯수 : {{ wrongCount }}</p>
-      </div>
-      <div class="msg">
-        <p id="msgColor">{{ resultMessage }} 기준입니다.</p>
-      </div>
-      <div class="next-btn">
-        <button>{{ buttonName }}</button>
+      <div class="result-text-box">
+        <div :class="['heading-secondary', resultClass]">{{ resultMessage }}</div>
       </div>
     </div>
+    <div class="results-summary-container__options">
+      <div class="heading-secondary heading-secondary--blue">{{ Subject }}</div>
+      <div class="summary-result-options">
+        <div class="result-option result-option-memory">
+          <div class="icon-box">
 
+            <span class="reaction-icon-text">총 문항 갯수</span>
+          </div>
+          <div class="result-box"><span>{{ totalQuestionCount }}</span></div>
+        </div>
+        <div class="result-option result-option-verbal">
+          <div class="icon-box">
 
-     
-  
-    <BottomBar />
-  </template>
-  
-  <script>
-  import TopBar from '@/components/TopBar.vue';
-  import BottomBar from '@/components/BottomBar.vue'
-  export default {
-    name: "PracticeResult",
-    components: {
-      TopBar, BottomBar
-    },
-    data() {
-      return {
-        DetailLicense: "정보처리기사",
-        TestDate: "2020년 4월 24일",
-        Subject: "1과목 : 소프트웨어 설계",
-        buttonName: "다음 과목 풀기", // 버튼 이름
-        totalQuestionCount : 20, // 총 문항 갯수
-        corretCount : 13, // 정답 갯수
-        wrongCount : 5, // 오답 갯수
-        resultMessage : "합격", // 결과 메세지 ex) 합격 or 불합격
+            <span class="memory-icon-text">정답 갯수</span>
+          </div>
+          <div class="result-box"><span>{{corretCount}}</span></div>
+        </div>
+        <div class="result-option result-option-reaction">
+          <div class="icon-box">
 
-      }
-    },
-    methods: {
-      // 합격 불합격 기준입니다. 글 색상 변경.
-      messageColor() {
-        let vm = this;
-        let p = document.querySelector("#msgColor");
-        console.log(p);
-        if(vm.corretCount < 8) {
-          vm.resultMessage = "과락";
-          p.style.color = "red"; // 빨간색
-          return ;
+            <span class="verbal-icon-text">오답 갯수</span>
+          </div>
+          <div class="result-box"><span>{{wrongCount}}</span></div>
+        </div>
+        <div class="summary__cta">
+          <button class="btn btn__continue" @click="btnClick()">{{ buttonText }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <BottomBar />
+</template>
+
+<script>
+import TopBar from '@/components/TopBar.vue';
+import BottomBar from '@/components/BottomBar.vue'
+export default {
+  name: "PracticeResult",
+  components: {
+    TopBar, BottomBar
+  },
+  data() {
+    return {
+      DetailLicense: "정보처리기사",
+      TestDate: "2020년 4월 24일",
+      Subject: "1과목 : 소프트웨어 설계",
+      totalQuestionCount: 20, // 총 문항 갯수
+      corretCount: 15, // 정답 갯수
+      wrongCount: 5, // 오답 갯수
+    }
+  },
+  methods: {
+      btnClick(){
+        if(this.buttonText == '마이페이지로 가기'){
+          this.$router.push({ name : 'MyPage'});
         }
-        if(vm.corretCount < 12) {
-          vm.resultMessage = "불합격";
-          p.style.color = "red"; // 빨간색
-          return ;
-        }
       }
-      
+  },
+
+  computed: {
+    passed(){
+      return this.corretCount >= this.totalQuestionCount * 0.4;
     },
-  
-    created() {
-  
+    resultClass() {
+      return this.passed ? 'passed' : 'failed';
     },
-    mounted() {
-      this.messageColor();
+    resultMessage() {
+      return this.passed ? '합격 기준입니다.' : '불합격 기준입니다.';
     },
-  }
-  </script>
-  
-  <style scoped>
-  .practive_mode_container {
-    top: 7%;
-    position: fixed;
-    height: calc(100% - 16%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .select_test {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    font-size: 1.5em;
-    font-weight: 500;
-  }
-  
-  .current_sub {
-    font-size: 1.2em;
-  }
-  
-  .current_info {
-    margin-top: 0.5em;
-    margin-bottom: 2em;
-    font-size: 1.1em;
+    buttonText(){
+      return this.Subject.startsWith('5과목') ? '마이페이지로 가기' : '다음 과목 풀기';
+    }
+  },
+  mounted() {
+
+  },
+}
+</script>
+
+<style scoped>
+.results-summary-container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 6%;
+  width: 100%;
+  height: 88%;
+  backface-visibility: hidden;
+}
+
+.heading-primary,
+.heading-secondary,
+.heading-tertiary {
+  color: #49862C;
+  text-transform: capitalize;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.heading-primary {
+  font-size: 36px;
+  font-weight: 700;
+  background-color: #49862C;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+  transform: scale(1.4);
+}
+
+.heading-secondary {
+  font-size: 1.1em;
+  font-weight: 900;
+  margin-top: 15px;
+}
+
+.heading-secondary--blue {
+  color: #000;
+}
+
+.heading-tertiary {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: #000
+}
+
+.paragraph {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #000
+}
+
+.paragraph-text-box {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.margin-1 {
+  margin-bottom: 10px;
+}
+
+.results-summary-container__result {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  border-radius: 10px 10px 0 0;
+}
+
+.results-summary-container__result .result-box.passed {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #EBFBEE;
+  border: 10px solid #70CA77;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.results-summary-container__result .result-box.failed {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #fdcccc;
+  border: 10px solid #f94d4d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.results-summary-container__result .result.passed {
+  margin-top: -12px;
+  font-size: 14px;
+  font-weight: 550;
+  color: #49862C;
+}
+
+.results-summary-container__result .result.failed {
+  margin-top: -12px;
+  font-size: 14px;
+  font-weight: 550;
+  color: #f94d4d;
+}
+
+.results-summary-container__options {
+  padding: 0 16px;
+}
+
+.summary-result-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.result-option {
+  width: 100%;
+  height: 40px;
+  background-color: hsl(0, 100%, 97%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.result-option-memory {
+  background-color: hsl(39, 100%, 97%);
+}
+
+.result-option-verbal {
+  background-color: hsl(166, 100%, 97%);
+}
+
+.result-option-Visual {
+  background-color: hsl(234, 85%, 97%);
+}
+
+.icon-box {
+  display: flex;
+  font-size: 16px;
+  align-items: center;
+  gap: 2px;
+}
+
+.reaction-icon-text {
+  color: hsl(39, 100%, 56%);
+}
+
+.memory-icon-text {
+  color: hsl(166, 100%, 37%);
+}
+
+.verbal-icon-text {
+  color: hsl(0, 100%, 67%);
+}
+
+.result-box {
+  font-size: 14px;
+  color: hsl(241, 100%, 89%);
+  font-weight: 700;
+}
+
+.result-box span {
+  font-size: 14px;
+  color: hsl(224, 30%, 27%);
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  color: #ffffff;
+  background-color: #353535;
+  border: none;
+  border-radius: 3px;
+  font-size: 17px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 15px 0 30px 0;
+  transition: all 0.3s;
+}
+
+.confetti.passed {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 360px;
+  height: 50%;
+  overflow: hidden;
+  z-index: 1000;
+}
+.confetti.failed {
+  visibility: hidden;
+}
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 20px;
+  background-color: hsl(39, 100%, 56%);
+  top: 0;
+  opacity: 0;
+  animation: makeItRain 3000ms infinite ease-in-out;
+}
+
+.confetti-piece:nth-child(1) {
+  left: 7%;
+  transform: rotate(-10deg);
+  animation-delay: 182ms;
+  animation-duration: 2000ms;
+}
+
+.confetti-piece:nth-child(2) {
+  left: 14%;
+  transform: rotate(20deg);
+  animation-delay: 161ms;
+  animation-duration: 2076ms;
+}
+
+.confetti-piece:nth-child(3) {
+  left: 21%;
+  transform: rotate(-51deg);
+  animation-delay: 481ms;
+  animation-duration: 2103ms;
+}
+
+.confetti-piece:nth-child(4) {
+  left: 28%;
+  transform: rotate(61deg);
+  animation-delay: 334ms;
+  animation-duration: 1008ms;
+}
+
+.confetti-piece:nth-child(5) {
+  left: 35%;
+  transform: rotate(-52deg);
+  animation-delay: 302ms;
+  animation-duration: 1776ms;
+}
+
+.confetti-piece:nth-child(6) {
+  left: 42%;
+  transform: rotate(38deg);
+  animation-delay: 180ms;
+  animation-duration: 1168ms;
+}
+
+.confetti-piece:nth-child(7) {
+  left: 49%;
+  transform: rotate(11deg);
+  animation-delay: 395ms;
+  animation-duration: 1200ms;
+}
+
+.confetti-piece:nth-child(8) {
+  left: 56%;
+  transform: rotate(49deg);
+  animation-delay: 14ms;
+  animation-duration: 1887ms;
+}
+
+.confetti-piece:nth-child(9) {
+  left: 63%;
+  transform: rotate(-72deg);
+  animation-delay: 149ms;
+  animation-duration: 1805ms;
+}
+
+.confetti-piece:nth-child(10) {
+  left: 70%;
+  transform: rotate(10deg);
+  animation-delay: 351ms;
+  animation-duration: 2059ms;
+}
+
+.confetti-piece:nth-child(11) {
+  left: 77%;
+  transform: rotate(4deg);
+  animation-delay: 307ms;
+  animation-duration: 1132ms;
+}
+
+.confetti-piece:nth-child(12) {
+  left: 84%;
+  transform: rotate(42deg);
+  animation-delay: 464ms;
+  animation-duration: 1776ms;
+}
+
+.confetti-piece:nth-child(13) {
+  left: 91%;
+  transform: rotate(-72deg);
+  animation-delay: 429ms;
+  animation-duration: 1818ms;
+}
+
+.confetti-piece:nth-child(14) {
+  left: 94%;
+  transform: rotate(-72deg);
+  animation-delay: 429ms;
+  animation-duration: 818ms;
+}
+
+.confetti-piece:nth-child(15) {
+  left: 96%;
+  transform: rotate(-72deg);
+  animation-delay: 429ms;
+  animation-duration: 2818ms;
+}
+
+.confetti-piece:nth-child(16) {
+  left: 98%;
+  transform: rotate(-72deg);
+  animation-delay: 429ms;
+  animation-duration: 2818ms;
+}
+
+.confetti-piece:nth-child(17) {
+  left: 50%;
+  transform: rotate(-72deg);
+  animation-delay: 429ms;
+  animation-duration: 2818ms;
+}
+
+.confetti-piece:nth-child(18) {
+  left: 60%;
+  transform: rotate(-72deg);
+  animation-delay: 429ms;
+  animation-duration: 1818ms;
+}
+
+.confetti-piece:nth-child(odd) {
+  background-color: hsl(0, 100%, 67%);
+}
+
+.confetti-piece:nth-child(even) {
+  z-index: 1;
+}
+
+.confetti-piece:nth-child(4n) {
+  width: 6px;
+  height: 14px;
+  animation-duration: 4000ms;
+  background-color: #c33764;
+}
+
+.confetti-piece:nth-child(5n) {
+  width: 3px;
+  height: 10px;
+  animation-duration: 4000ms;
+  background-color: #b06ab3;
+}
+
+.confetti-piece:nth-child(3n) {
+  width: 4px;
+  height: 12px;
+  animation-duration: 2500ms;
+  animation-delay: 3000ms;
+  background-color: #dd2476;
+}
+
+.confetti-piece:nth-child(3n-7) {
+  background-color: hsl(166, 100%, 37%);
+}
+
+@keyframes makeItRain {
+  from {
+    opacity: 0;
   }
 
-  .current_info>p {
-    margin: 0.5em;
+  50% {
+    opacity: 1;
   }
 
-  .msg {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2em;
+  to {
+    transform: translateY(200px);
   }
+}
 
-  .next-btn {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .next-btn>button {
-    width: 50%;
-    height: 25%;
-    background: #5271FF;
-    color: #FFF;
-    border-radius: 5px;
-    padding: 0 0.8em;
-    font-size: 1.1em;
-  }
-  
-  #msgColor {
-    color: rgb(116, 216, 116);
-    font-weight: 900;
-  }
-  </style>
-  
+.passed{
+  color: #49862C;
+}
+.failed{
+  color: #FF0000;
+}
+.heading-primary.passed {
+  background-color: #49862C;
+}
+.heading-primary.failed {
+  background-color: #FF0000;
+}
+</style>

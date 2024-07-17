@@ -97,13 +97,13 @@ const routes = [
         path: "/PracticeResult",
         name: "PracticeResult",
         component: PracticeResult,
-        meta: { title: '결과', showBackButton: false }
+        meta: { title: '연습 결과', showBackButton: false }
     },
     {
         path: "/TestResult",
         name: "TestResult",
         component: TestResult,
-        meta: { title: '결과', showBackButton: false }
+        meta: { title: '시험 결과', showBackButton: false }
     },
 ];
 

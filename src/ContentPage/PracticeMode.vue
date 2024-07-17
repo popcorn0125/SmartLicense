@@ -34,10 +34,10 @@
       </div>
       <!-- <span class="result success" v-if="displayCorrectAnswer">정답입니다.</span>
       <span class="result error" v-if="displayWrongAnswer">오답입니다.</span> -->
-      <div class="btn_collection" @click="verifyAnswer" v-if="Qnumber<20">
+      <div class="btn_collection" v-if="Qnumber<20">
         다음 문제 >
       </div>
-      <div class="btn_collection" @click="verifyAnswer" v-if="Qnumber==20">
+      <div class="btn_collection" @click="viewResult" v-if="Qnumber==20">
         {{ Subject }} 점수 보기
       </div>
     </div>
@@ -68,7 +68,7 @@ export default {
       DetailLicense: "정보처리기사",
       TestDate: "2020년 4월 24일",
       Subject: "소프트웨어 설계",
-      Qnumber: "10",
+      Qnumber: "20",
       Question: "UML 다이어그램 중 순차 다이어그램에 대한 설명으로 틀린 것은?",
       Option1: "1. 객제 간의 동적 상호작용을 시간 개념을 중심으로 모델링 하는 것이다.",
       Option2: "2. 주로 시스템의 정적 측면을 모델링하기 위해 사용한다.",
@@ -113,6 +113,10 @@ export default {
     toggleBottomSheet() {
       this.isBottomSheetVisible = !this.isBottomSheetVisible;
     },
+
+    viewResult(){
+      this.$router.push({name : 'PracticeResult'})
+    }
   },
 
   created() {
@@ -281,7 +285,7 @@ export default {
   position: fixed;
   bottom: -100%;
   transition: bottom .5s ease-in-out;
-  height: 53%;
+  /* height: 53%; */
   /* overflow-y: auto; */
   box-shadow: 0px -1px 1px 0px rgba(0, 0, 0, 0.1);
 
