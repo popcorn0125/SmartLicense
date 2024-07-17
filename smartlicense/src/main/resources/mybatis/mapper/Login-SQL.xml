@@ -13,10 +13,10 @@
 	작성자 : 김준식
 	내용 : 사용자가 입력한 아이디 존재여부
     -->
-    <select id="userIdCheck" parameterType="Object" resultType="int">
+    <select id="userIdCheck" parameterType="String" resultType="int">
         SELECT COUNT(member_id)
         FROM member
-        WHERE member_id = #{param}
+        WHERE member_id = #{userId}
     </select>
 
     <!--
@@ -25,7 +25,7 @@
 	내용 : 비밀번호 가져오기
     -->
     <select id="getUserPw" parameterType="HashMap" resultType="String">
-        SELECT password
+        SELECT member_password
         FROM member
         WHERE member_id = #{userId}
     </select>

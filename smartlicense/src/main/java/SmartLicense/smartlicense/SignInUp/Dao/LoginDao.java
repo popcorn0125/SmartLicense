@@ -17,7 +17,7 @@ public interface LoginDao {
      * 이름 : 김준식
      * 내용 : 아이디 확인
      * *****************/
-    int userIdCheck(Object param);
+    int userIdCheck(String userId);
 
     /*******************
      * 날짜 : 2024.07.10
