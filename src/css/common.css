@@ -47,6 +47,7 @@
     position: fixed;
     left: 0;
     top: 0;
+    z-index: 1;
 }
 
 .back_button > img {
@@ -67,6 +68,7 @@
     bottom: 0;
     justify-content: space-around;
     align-items: center;
+    z-index: 10;
 }
 
 #home_icon, #ranking_icon{

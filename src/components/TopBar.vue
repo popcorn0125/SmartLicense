@@ -9,16 +9,6 @@
 </template>
 <script>
 export default {
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    showBackButton: {
-      type: Boolean,
-      default: false,
-    },
-  },
   methods: {
     goBack() {
       this.$router.go(-1); // 뒤로가기

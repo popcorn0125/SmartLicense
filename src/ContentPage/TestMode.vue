@@ -59,7 +59,7 @@ export default {
       DetailLicense: "정보처리기사",
       TestDate: "2020년 4월 24일",
       Subject: "소프트웨어 설계",
-      Qnumber: 10,
+      Qnumber: 20,
       Question: "UML 다이어그램 중 순차 다이어그램에 대한 설명으로 틀린 것은?",
       Option1: "1. 객제 간의 동적 상호작용을 시간 개념을 중심으로 모델링 하는 것이다.",
       Option2: "2. 주로 시스템의 정적 측면을 모델링하기 위해 사용한다.",
@@ -137,12 +137,12 @@ export default {
 
 .practive_mode_container {
   top: 6%;
-  position: fixed;
   height: 94%;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  position: relative;
 }
 
 .scrollable {
@@ -190,12 +190,13 @@ export default {
 }
 
 .last_Q {
-  margin-left: 1.5em;
-  position: fixed;
-  top: .7em;
+  margin-left: -1.7em;
+  position: absolute;
+  top: -1.9em;
   color: red;
   font-weight: bold;
   animation: blink-effect 1s ease-in-out infinite;
+  z-index: 10;
 }
 
 .btn_collection {
@@ -338,8 +339,8 @@ export default {
 }
 
 .radio-input label:hover {
-  background-color: rgba(24, 24, 24, 0.13);
-  border: 1px solid #bbb;
+  background-color: #eff6ff;
+  border: solid 1px #1d4ed8;
 }
 
 .result {
@@ -349,12 +350,12 @@ export default {
   display: none;
   transition: display .4s ease;
 }
-
-.timer {
-  position: fixed;
+.timer-container{
+  position: absolute;
   right: 1em;
-  top: .7em;
+  top: -1.9em;
   color: black;
   font-weight: bold;
+  z-index: 10;
 }
 </style>

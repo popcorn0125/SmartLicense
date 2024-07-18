@@ -115,7 +115,7 @@ export default {
   position: fixed;
   display: flex;
   flex-direction: column;
-  top: 6%;
+  top: 20%;
   width: 100%;
   height: 88%;
   backface-visibility: hidden;
@@ -182,7 +182,6 @@ export default {
   text-align: center;
   align-items: center;
   justify-content: center;
-  padding: 20px 10px;
   border-radius: 10px 10px 0 0;
 }
 
@@ -308,9 +307,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  width: 360px;
+  position: fixed;
+  width: 100%;
   height: 50%;
+  top: 2.5em;
   overflow: hidden;
   z-index: 1000;
 }

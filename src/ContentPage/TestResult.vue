@@ -292,9 +292,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  width: 360px;
+  position: fixed;
+  width: 100%;
   height: 50%;
+  top: 2.5em;
   overflow: hidden;
   z-index: 1000;
 }

@@ -137,6 +137,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  position: relative;
 }
 .scrollable{
   overflow-y: auto;
@@ -181,12 +182,13 @@ export default {
 }
 
 .last_Q {
-  position: fixed;
+  position: absolute;
   right: 1em;
-  top: .7em;
+  top: -1.9em;
   color: red;
   font-weight: bold;
   animation: blink-effect 1s ease-in-out infinite;
+  z-index: 10;
 }
 
 .btn_collection {

@@ -17,6 +17,7 @@ import TestMode from "@/ContentPage/TestMode.vue";
 import ChangeInfo from "@/SignInUp/ChangeInfo.vue";
 import PracticeResult from "@/ContentPage/PracticeResult.vue";
 import TestResult from "@/ContentPage/TestResult.vue";
+import UserCheck from "@/SignInUp/UserCheck.vue";
 
 
 
@@ -67,13 +68,13 @@ const routes = [
         path: "/RankingPage",
         name: "RankingPage",
         component: RankingPage,
-        meta: { title: '랭킹', showBackButton: false }
+        meta: { title: '기록', showBackButton: false }
     },
     {
         path: "/MyPage",
         name: "MyPage",
         component: MyPage,
-        meta: { title: '내 정보', showBackButton: false }
+        meta: { title: '마이페이지', showBackButton: false }
     },
     {
         path: "/PracticeMode",
@@ -91,7 +92,7 @@ const routes = [
         path: "/ChangeInfo",
         name: "ChangeInfo",
         component: ChangeInfo,
-        meta: { title: '내 정보 수정', showBackButton: false }
+        meta: { title: '마이페이지', showBackButton: true }
     },
     {
         path: "/PracticeResult",
@@ -104,6 +105,12 @@ const routes = [
         name: "TestResult",
         component: TestResult,
         meta: { title: '시험 결과', showBackButton: false }
+    },
+    {
+        path: "/UserCheck",
+        name: "UserCheck",
+        component: UserCheck,
+        meta: { title: '본인 확인', showBackButton: true }
     },
 ];
 
