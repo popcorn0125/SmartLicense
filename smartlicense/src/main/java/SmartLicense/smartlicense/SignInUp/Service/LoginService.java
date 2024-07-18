@@ -58,13 +58,11 @@ public class LoginService {
                 return result;
             }
 
-            // 토큰 추가
-//            String token = makeAccessJWTToken(params.get("userId").toString());
-//            System.out.println("token : "+ token);
+
             HttpSession session = request.getSession();
             session.setAttribute("loginUser", params.get("userId").toString());
-            session.setMaxInactiveInterval(30*60); // 30분
-            System.out.println("세션 생성 성공");
+            session.setMaxInactiveInterval(24*60*60); // 24시간
+            cookieCreate(response, "JSESSIONID", session.getId());
             cookieCreate(response, "USER_ID", params.get("userId").toString());
 
             result.put("result", 1);
@@ -84,9 +82,9 @@ public class LoginService {
      * *****************/
     public void cookieCreate(HttpServletResponse response, String cookieName, String cookieValue ) {
         Cookie cookie = new Cookie(cookieName, cookieValue);
-        cookie.setMaxAge(30*60);
+        cookie.setMaxAge(24*60*60); // 쿠키 수명 24시간 (시간*분*초)
+        cookie.setPath("/");
         response.addCookie(cookie);
-        System.out.println("쿠키 생성 성공");
     }
 
     /*******************
@@ -117,7 +115,7 @@ public class LoginService {
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
             for( Cookie cookie : cookies) {
-                if(cookie.getName().equals("USER_ID")){
+                if(cookie.getName().equals("USER_ID") || cookie.getName().equals("JSESSIONID")){
                     // 쿠키에 USER_ID가 있을 경우
                     cookie.setMaxAge(0);
                     response.addCookie(cookie);
@@ -127,38 +125,4 @@ public class LoginService {
         }
     }
 
-    /*******************
-     * 날짜 : 2024.07.10
-     * 이름 : 김준식
-     * 내용 : access 토큰 생성
-     * *****************/
-//    public String makeAccessJWTToken(String param) {
-//        Date current_date = new Date();
-//
-//        return Jwts.builder()
-//                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-//                .setIssuer("access")
-//                .setIssuedAt(current_date)
-//                .setExpiration(new Date(current_date.getTime() + Duration.ofMinutes(30).toMillis()))
-//                .claim("id", param)
-//                .signWith(SignatureAlgorithm.RS256, keyPair.getPrivate())
-//                .compact();
-//    }
-    /*******************
-     * 날짜 : 2024.07.10
-     * 이름 : 김준식
-     * 내용 : refresh 토큰 생성
-     * *****************/
-//    public String makeRefreshJWTToken(String param) {
-//        Date current_date = new Date();
-//
-//        return Jwts.builder()
-//                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-//                .setIssuer("refresh")
-//                .setIssuedAt(current_date)
-//                .setExpiration(new Date(current_date.getTime() + Duration.ofMinutes(60).toMillis()))
-//                .claim("nickname", param)
-//                .signWith(SignatureAlgorithm.HS256, "secret")
-//                .compact();
-//    }
 }
