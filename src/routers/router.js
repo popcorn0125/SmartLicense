@@ -10,7 +10,7 @@ import FindByPwPage from "@/SignInUp/FindByPw.vue";
 import ResettingPwPage from "@/SignInUp/ResettingPw.vue";
 
 import CategoryChoice from "@/ContentPage/CategoryChoice.vue";
-import RankingPage from "@/ContentPage/RankingPage.vue";
+import MyHistoryPage from "@/ContentPage/MyHistoryPage.vue";
 import MyPage from "@/ContentPage/MyPage.vue";
 import PracticeMode from "@/ContentPage/PracticeMode.vue";
 import TestMode from "@/ContentPage/TestMode.vue";
@@ -65,9 +65,9 @@ const routes = [
         meta: { title: 'Smart License', showBackButton: false }
     },
     {
-        path: "/RankingPage",
-        name: "RankingPage",
-        component: RankingPage,
+        path: "/MyHistoryPage",
+        name: "MyHistoryPage",
+        component: MyHistoryPage,
         meta: { title: '기록', showBackButton: false }
     },
     {
