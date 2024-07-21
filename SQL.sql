@@ -39,11 +39,11 @@ CREATE TABLE login_log_info
 CREATE TABLE member
 (
 	member_id VARCHAR(100) NOT NULL PRIMARY KEY,
-    member_password VARCHAR(255) NOT NULL,
-    member_name VARCHAR(50) NOT NULL,
-    member_phone_number VARCHAR(50) NOT NULL,
-    member_nickname VARCHAR(50) NOT NULL,
-    member_gender CHAR(1) NOT NULL,
+    member_password VARCHAR(255),
+    member_name VARCHAR(50),
+    member_phone_number VARCHAR(50),
+    member_nickname VARCHAR(50),
+    member_gender CHAR(1),
     is_active CHAR(1) NOT NULL DEFAULT '1',
     registration_date TIMESTAMP DEFAULT NOW(),
     update_date TIMESTAMP DEFAULT NOW()
