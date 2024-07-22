@@ -78,6 +78,8 @@ CREATE TABLE subject
     subject_idx INT AUTO_INCREMENT PRIMARY KEY,
 	subject_name VARCHAR(100) NOT NULL,
     subject_number INT NOT NULL,
+    question_total_count INT,
+    exam_duration INT,
     create_date TIMESTAMP DEFAULT NOW(),
     detail_license_idx int
 );
