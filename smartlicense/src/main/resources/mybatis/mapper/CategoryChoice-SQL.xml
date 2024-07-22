@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	작성일 : 2024.07.10
+	작성자 : 김준식
+	내용 : 로그인 입니다.
+ -->
+<mapper namespace="SmartLicense.smartlicense.SolveProblem.Dao.CategoryChoiceDao">
+    <select id="loadLicense" resultType="HashMap">
+        SELECT license_name
+        FROM license
+        order by license_name ASC
+    </select>
+
+    <select id="loadDetailLicense" parameterType="String" resultType="HashMap">
+        SELECT detail_license_name
+        FROM detail_license
+        WHERE license_idx = (SELECT license_idx FROM license WHERE license_name = #{licenseName})
+    </select>
+
+
+</mapper>
