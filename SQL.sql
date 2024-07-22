@@ -52,7 +52,6 @@ CREATE TABLE member
 CREATE TABLE question
 (
 	question_idx INT AUTO_INCREMENT PRIMARY KEY,
-    question_number TINYINT UNSIGNED NOT NULL,
     question TEXT NOT NULL,
     option1 TEXT NOT NULL,
     option2 TEXT NOT NULL,
@@ -69,6 +68,7 @@ CREATE TABLE session_question
 (
 	session_question_idx INT AUTO_INCREMENT PRIMARY KEY,
     exam_date VARCHAR(50) NOT NULL,
+    question_number TINYINT UNSIGNED NOT NULL,
     create_date TIMESTAMP DEFAULT NOW(),
     question_idx INT
 );
