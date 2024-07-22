@@ -30,7 +30,7 @@
             </div>
             <p>시험 일정을 선택하세요.</p>
             <div class="select">
-                <div class="selected" @click="toggleDropdown('third')" >
+                <div class="selected" @click="toggleDropdown('third')">
                     {{ selectedOption3 }}
                     <svg xmlns="http://www.w3.org/2000/svg" class="arrow">
                         <path d="M7 5l5 5 5-5H7z" />
@@ -83,7 +83,7 @@
 <script>
 import TopBar from '@/components/TopBar.vue';
 import BottomBar from '@/components/BottomBar.vue'
-
+import axios from 'axios';
 export default {
     name: "CategoryChoice",
     components: {
@@ -96,8 +96,8 @@ export default {
             selectedOption1: '선택',
             selectedOption2: '선택',
             selectedOption3: '선택',
-            options1: ['기사', '기능사', '산업기사'],
-            options2: ['정보처리기사', '정보보안기사', '가스기사'],
+            options1: [],
+            options2: [],
             options3: ['2022년4월24일', '2022년3월05일', '2021년8월14일', '2021년5월15일', '2021년3월07일'],
             isShow: false,
         };
@@ -116,6 +116,7 @@ export default {
         selectOption(option, dropdown) {
             if (dropdown === 'first') {
                 this.selectedOption1 = option;
+                this.loadDetailLicense(option); // 자격을 선택할 때 세부 자격을 로드
             } else if (dropdown === 'second') {
                 this.selectedOption2 = option;
             } else if (dropdown === 'third') {
@@ -124,21 +125,61 @@ export default {
             this.dropdownOpen = null;
         },
 
+        loadLicense() {
+            axios({
+                method: 'post',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                url: "/solveProblem/loadLicense",
+            })
+                .then(response => {
+                    console.log(response.data);
+                    this.options1 = response.data.map(item => item.license_name);  // 여기에 데이터 매핑을 추가
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        loadDetailLicense(license) {
+            axios({
+                method: 'post',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                url: "/solveProblem/loadDetailLicense",
+                data: { license: license }
+            })
+                .then(response => {
+                    console.log(response.data);
+                    this.options2 = response.data.map(item => item.detail_license_name);  // 여기에 데이터 매핑을 추가
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+
+
+
     },
     watch: {
-        selectedOption3(){
-            this.isShow=true;
+        selectedOption3() {
+            this.isShow = true;
         }
-    }
-};
+    },
+
+    mounted() {
+        this.loadLicense();
+    },
+}
+
+
 </script>
 
 
 
 <style scoped>
-.subject_wrap{
+.subject_wrap {
     height: 35%;
 }
+
 .content_container {
     top: 6%;
     position: fixed;
@@ -277,14 +318,16 @@ export default {
     border-color: #2260ff;
     box-shadow: 0 0 0 4px #b5c9fc;
 }
-.mydict{
+
+.mydict {
     height: 10%;
 }
+
 .mydict div {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    
+
 }
 
 .mydict input[type="radio"] {
