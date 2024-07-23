@@ -68,7 +68,7 @@ CREATE TABLE session_question
 (
 	session_question_idx INT AUTO_INCREMENT PRIMARY KEY,
     exam_date VARCHAR(50) NOT NULL,
-    question_number TINYINT UNSIGNED NOT NULL,
+    total_question_number INT,
     create_date TIMESTAMP DEFAULT NOW(),
     question_idx INT
 );
