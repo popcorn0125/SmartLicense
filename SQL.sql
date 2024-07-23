@@ -57,9 +57,9 @@ CREATE TABLE question
     option2 TEXT NOT NULL,
     option3 TEXT NOT NULL,
     option4 TEXT NOT NULL,
-    answer TINYINT UNSIGNED NOT NULL,
+    answer TEXT NOT NULL,
     create_date TIMESTAMP DEFAULT NOW(),
-    image VARCHAR(255),
+    image VARCHAR(255) DEFAULT NULL,
     subject_idx int,
     question_description TEXT
 );
