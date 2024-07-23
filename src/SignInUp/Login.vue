@@ -21,6 +21,7 @@
       <hr>
       <br>
       <button class="withoutlogin" type="button" @click="goToCC()">로그인 없이 시작</button>
+      <text class="noLoginMessage">로그인 없이 시작하면 문제를 푼 기록과 랭킹을 저장 또는 확인할 수 없습니다.</text>
     </form>
   </div>
 
@@ -69,6 +70,9 @@ export default {
     },
 
     goToCC() {
+      const currentDate = new Date();
+      const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}_${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+      sessionStorage.setItem("GUEST", 'Guest_' + formattedDate);
       this.$router.push({ name: 'CategoryChoice' });
     },
 
@@ -103,10 +107,9 @@ export default {
           if(response.data.result == 0) {
             vm.Description = response.data.message;
             vm.isModalVisivle = true;
-            return;
           }
           if(response.data.result == 1) {
-            this.$router.push({ name: 'CategoryChoice' });
+            vm.$router.push({ name: 'CategoryChoice' });
           }
         })
         .catch(function(){
@@ -121,7 +124,7 @@ export default {
 
   },
   mounted() {
-    if(this.$cookies.get('USER_ID') != null ){
+    if( (this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)){
       this.$router.push({ name: 'CategoryChoice' });
     }
   },
@@ -239,6 +242,20 @@ button {
 
 .pwhref {
   margin-left: .5em;
+}
+
+.noLoginMessage {
+  display: block;
+  color: rgb(26, 26, 26);
+  -webkit-text-stroke-width: 1;
+  -webkit-text-stroke-color: #000;
+  font-family: Inter;
+  font-size: 0.7em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: left;
+  margin-top: 1em;
 }
 
 /* 모달 스타일 */

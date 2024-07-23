@@ -498,7 +498,9 @@ export default {
 
   },
   mounted() {
-
+    if(this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null ){
+      this.$router.push({ name: 'CategoryChoice' });
+    }
   },
 }
 </script>

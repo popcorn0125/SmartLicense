@@ -19,12 +19,24 @@
             <path d="M12,14a9.01,9.01,0,0,0-9,9,1,1,0,0,0,2,0,7,7,0,0,1,14,0,1,1,0,0,0,2,0A9.01,9.01,0,0,0,12,14Z" />
         </svg>
     </div>
+    <!---------알림 모달 창--------->
+    <div class="modal" v-if="isShowModal">
+        <div class="modal-content">
+        <p>로그인 후 이용 가능한 기능입니다.</p>
+        <p>로그인 페이지로 이동할까요?</p>
+        <div class="del-btn-wrap">
+            <button class="ok" @click="isShowModal = false">취소</button>
+            <button class="cancel" @click="goToLogin()">확인</button>
+        </div>
+        </div>
+    </div>
 </template>
 
 <script>
 export default {
     data() {
         return {
+            isShowModal : false,
             homesvg: 'gray',
             ranksvg: 'gray',
             mysvg: 'gray',
@@ -49,10 +61,24 @@ export default {
             this.$router.push('/CategoryChoice'); // CategoryChoice 페이지로 이동
         },
         goToMyHistoryPage() {
-            this.$router.push('/MyHistoryPage'); // MyHistoryPage 페이지로 이동
+            if(sessionStorage.getItem('GUEST') != null ) {
+                this.isShowModal = true;
+            }
+            if(this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null) {
+                this.$router.push({name : 'MyHistoryPage'}); // MyHistoryPage 페이지로 이동
+            }
         },
         goToMyPage() {
-            this.$router.push('/MyPage'); // MyPage 페이지로 이동
+            if(sessionStorage.getItem('GUEST') != null ) {
+                this.isShowModal = true;
+            }
+            if(this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null) {
+                this.$router.push({name : 'MyPage'}); // MyPage 페이지로 이동
+            }
+        },
+
+        goToLogin() {
+            this.$router.push({name: 'LoginPage'});// MyPage 페이지로 이동
         }
     },
 }
@@ -70,5 +96,79 @@ export default {
     position: fixed;
     left: 0;
     bottom: 0;
+}
+
+/* 모달 스타일 */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 15px;
+  border: 1px solid #888;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  height: 30%;
+}
+
+.modal-content > p{
+  font-size: .7em;
+  height: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content > p > strong{
+  color: #F00;
+}
+
+.del-btn-wrap{
+  height: 50%;
+  width: 100%;
+}
+.del-btn-wrap > button{
+  margin-top: 2em;
+  width: 30%;
+  height: 45%;
+  padding: 5px;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.7em;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 1px 1px,
+    rgba(0, 0, 0, 0.09) 0px 1px 1px, rgba(0, 0, 0, 0.09) 0px 1px 2px,
+    rgba(0, 0, 0, 0.09) 0px 1px 4px, rgba(0, 0, 0, 0.09) 0px 1px 8px;
+
+}
+.ok{
+  text-align: center;
+  background-color: #888;
+  vertical-align: middle;
+  margin-right: 1em;
+}
+.cancel{
+  text-align: center;
+  background-color: #000;
+  vertical-align: middle;
+  margin-left: 1em;
 }
 </style>
