@@ -59,7 +59,7 @@ CREATE TABLE question
     option4 TEXT NOT NULL,
     answer TEXT NOT NULL,
     create_date TIMESTAMP DEFAULT NOW(),
-    image VARCHAR(255),
+    image VARCHAR(255) DEFAULT NULL,
     subject_idx int,
     question_description TEXT
 );
