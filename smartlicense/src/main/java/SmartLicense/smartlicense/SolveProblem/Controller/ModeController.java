@@ -25,13 +25,26 @@ public class ModeController {
     ModeService modeService;
 
     /*******************
-     * 날짜 : 2024.07.10
+     * 날짜 : 2024.07.24
      * 이름 : 김준식
      * 내용 : 시험모드 문제 데이터 반환
      * *****************/
     @PostMapping("/testModeLoadExam")
     public ResponseEntity<List<Map<String, Object>>> testModeLoadExam(@RequestBody HashMap<String, Object> params) {
         System.out.println("testModeLoadExam 실행");
+        System.out.println("params : " + params);
+        System.out.println("subjects : " + params.get("subject").getClass().getName());
         return ResponseEntity.ok(modeService.testModeLoadExam(params));
+    }
+
+    /*******************
+     * 날짜 : 2024.07.24
+     * 이름 : 김준식
+     * 내용 : 사용자가 선택한 답을 저장
+     * *****************/
+    @PostMapping("/userSelectAnswer")
+    public ResponseEntity<Integer> usreSelectAnswer(@RequestBody HashMap<String, Object> params) {
+        System.out.println("userChoiceAnswer 실행");
+        return ResponseEntity.ok(modeService.userSelectAnswer(params));
     }
 }

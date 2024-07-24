@@ -17,4 +17,8 @@ public class ModeService {
     public List<Map<String, Object>> testModeLoadExam(HashMap<String, Object> params) {
         return modeDao.testModeLoadExam(params);
     }
+
+    public int userSelectAnswer(HashMap<String, Object> params) {
+        return modeDao.userSelectAnswer(params);
+    }
 }

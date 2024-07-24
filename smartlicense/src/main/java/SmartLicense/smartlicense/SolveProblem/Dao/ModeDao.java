@@ -10,4 +10,6 @@ import java.util.Map;
 public interface ModeDao {
 
     List<Map<String, Object>> testModeLoadExam(HashMap<String, Object> params);
+
+    int userSelectAnswer(HashMap<String, Object> params);
 }
