@@ -17,6 +17,10 @@ module.exports = defineConfig({
       '/solveProblem': {
         target: 'http://localhost:8080',
         changeOrigin: true
+      },
+      '/mode': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
       }
     }
   }
