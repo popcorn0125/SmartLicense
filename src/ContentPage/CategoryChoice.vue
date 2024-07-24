@@ -147,17 +147,17 @@ export default {
         goSolve() {
 
             if (this.mode === 'practice') {
-                sessionStorage.setItem('selectedOption1', this.selectedOption1);
-                sessionStorage.setItem('selectedOption2', this.selectedOption2);
-                sessionStorage.setItem('selectedOption3', this.selectedOption3);
+                sessionStorage.setItem('license', this.selectedOption1);
+                sessionStorage.setItem('detail_license', this.selectedOption2);
+                sessionStorage.setItem('exam_date', this.selectedOption3);
                 sessionStorage.setItem('mode', this.mode);
                 sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
                 this.$router.push({ name: 'PracticeMode' });
 
             } else if (this.mode === 'test') {
-                sessionStorage.setItem('selectedOption1', this.selectedOption1);
-                sessionStorage.setItem('selectedOption2', this.selectedOption2);
-                sessionStorage.setItem('selectedOption3', this.selectedOption3);
+                sessionStorage.setItem('license', this.selectedOption1);
+                sessionStorage.setItem('detail_license', this.selectedOption2);
+                sessionStorage.setItem('exam_date', this.selectedOption3);
                 sessionStorage.setItem('mode', this.mode);
                 sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
                 this.$router.push({ name: 'TestMode' });
@@ -223,7 +223,6 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log(response.data)
                     this.subjects = response.data; // 과목 정보를 subjects 배열에 저장
                     this.selectedSubjects = response.data.map(item => item.subject_name);
                     this.isShow = this.subjects.length > 0; // 과목 정보가 있을 때만 표시

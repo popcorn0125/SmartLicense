@@ -3,10 +3,10 @@
   <div class="practive_mode_container">
     <div class="popup-container">
       <div class="popup info-popup">
-        <div class="info-message">{{ DetailLicense }}</div>
+        <div class="info-message">{{ selectedOption2 }}</div>
       </div>
       <div class="popup info-popup">
-        <div class="info-message">{{ TestDate }}</div>
+        <div class="info-message">{{ selectedOption3 }}</div>
       </div>
       <div class="popup info-popup">
         <div class="info-message">{{ Subject }}</div>
@@ -68,7 +68,7 @@ export default {
       DetailLicense: "정보처리기사",
       TestDate: "2020년 4월 24일",
       Subject: "소프트웨어 설계",
-      Qnumber: "20",
+      Qnumber: "1",
       Question: "UML 다이어그램 중 순차 다이어그램에 대한 설명으로 틀린 것은?",
       Option1: "1. 객제 간의 동적 상호작용을 시간 개념을 중심으로 모델링 하는 것이다.",
       Option2: "2. 주로 시스템의 정적 측면을 모델링하기 위해 사용한다.",
@@ -128,9 +128,9 @@ export default {
 
   },
   mounted() {
-    this.selectedOption1 = sessionStorage.getItem('selectedOption1');
-    this.selectedOption2 = sessionStorage.getItem('selectedOption2');
-    this.selectedOption3 = sessionStorage.getItem('selectedOption3');
+    this.selectedOption1 = sessionStorage.getItem('license');
+    this.selectedOption2 = sessionStorage.getItem('detail_license');
+    this.selectedOption3 = sessionStorage.getItem('exam_date');
     this.mode = sessionStorage.getItem('mode');
     const selectedSubjects = sessionStorage.getItem('selectedSubjects');
     this.selectedSubjects = JSON.parse(selectedSubjects);
