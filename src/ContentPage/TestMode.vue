@@ -14,7 +14,7 @@
     </div>
     <div class="current_Q">
       <p>{{ Qnumber }}. {{ Question }}</p>
-      <img src="@/assets/testimg.png">
+      <img :src="imagePath">
     </div>
     <span class="toggle-btn" @click="toggleBottomSheet"></span>
     <div class="radio-input" :class="{ 'is-visible': isBottomSheetVisible }">
@@ -22,23 +22,25 @@
         <span class="close-explanation" @click="toggleBottomSheet">&times;</span>
       </div>
       <div class="scrollable">
-        <input type="radio" id="value-1" name="value-radio" value="value-1">
-        <label for="value-1">{{ Option1 }}</label>
-        <input type="radio" id="value-2" name="value-radio" value="value-2">
-        <label for="value-2">{{ Option2 }}</label>
-        <input type="radio" id="value-3" name="value-radio" value="value-3">
-        <label for="value-3">{{ Option3 }}</label>
-        <input type="radio" id="value-4" name="value-radio" value="value-4">
-        <label for="value-4">{{ Option4 }}</label>
+        <input type="radio" id="value-1" name="value-radio" :value="Option1" v-model="selectedOption">
+        <label for="value-1" ><div v-if="imgCheckOP1">{{ Option1 }}</div><img v-else :src="Option1"></label>
+        <input type="radio" id="value-2" name="value-radio" :value="Option2" v-model="selectedOption">
+        <label for="value-2"><div v-if="imgCheckOP2">{{ Option2 }}</div><img v-else :src="Option2"></label>
+        <input type="radio" id="value-3" name="value-radio" :value="Option3" v-model="selectedOption">
+        <label for="value-3"><div v-if="imgCheckOP3">{{ Option3 }}</div><img v-else :src="Option3"></label>
+        <input type="radio" id="value-4" name="value-radio" :value="Option4" v-model="selectedOption">
+        <label for="value-4"><div v-if="imgCheckOP4">{{ Option4 }}</div><img v-else :src="Option4"></label>
+        <input type="radio" id="value-4" name="value-radio" value="잘 모르겠어요" v-model="selectedOption">
+        <label for="value-4">잘 모르겠어요.</label>
       </div>
-      <div class="btn_collection" v-if="Qnumber < 20" @click="nextQuestion">
+      <div class="btn_collection" v-if="Qnumber < 100" @click="nextQuestion">
         다음 문제 >
       </div>
-      <div class="btn_collection" @click="viewResult" v-if="Qnumber == 20">
+      <div class="btn_collection" @click="viewResult" v-if="Qnumber == 100">
         제출하고 결과보기
       </div>
     </div>
-    <div class="last_Q" v-if="Qnumber == 20">
+    <div class="last_Q" v-if="Qnumber == 100">
       <p>마지막 문제입니다.</p>
     </div>
     <div class="timer-container">
@@ -49,6 +51,7 @@
 
 <script>
 import TopBar from '@/components/TopBar.vue';
+import axios from 'axios';
 export default {
   name: "TestMode",
   components: {
@@ -56,25 +59,31 @@ export default {
   },
   data() {
     return {
-      DetailLicense: "정보처리기사",
-      TestDate: "2020년 4월 24일",
-      Subject: "소프트웨어 설계",
-      Qnumber: 20,
-      Question: "UML 다이어그램 중 순차 다이어그램에 대한 설명으로 틀린 것은?",
-      Option1: "1. 객제 간의 동적 상호작용을 시간 개념을 중심으로 모델링 하는 것이다.",
-      Option2: "2. 주로 시스템의 정적 측면을 모델링하기 위해 사용한다.",
-      Option3: "3. 일반적으로 다이어그램의 수직 방향이 시간의 흐름을 나타낸다.",
-      Option4: "4. 회귀 메시지(Self-Message), 제어블록(Statement block) 등으로 구성된다.",
-      Description: "순차 다이어그램은 행위 다이어그램이므로 동적이고, 순차적인 표현을 위한 다이어그램이다.",
-      correctAnswer: 2,
-      selectedOption: null,
-      isModalVisivle: false,
+      imgCheckOP1 : true,
+      imgCheckOP2 : true,
+      imgCheckOP3 : true,
+      imgCheckOP4 : true,
+      imagePath : '', // 문제 이미지 경로
+      totalQuestionList : [], // DB에서 불러온 총 문제 
+      DetailLicense: "", // 자격명
+      TestDate: "", // 시험 시작 날짜 및 시간 
+      Subject: "", // 과목명
+      Qnumber: '', // 문항 (ex. 1,2,3 ...)
+      Question: "", // 문제
+      Option1: "", // 보기1
+      Option2: "", // 보기2
+      Option3: "", // 보기3
+      Option4: "", // 보기4
+      selectedOption: null, // 사용자가 선택한 답
+      isModalVisivle: false, // 모달창 열기 여부
       isBottomSheetVisible: true,
+      isCorret : 0,
       timeRemaining: 150 * 60, // 150분을 초로 변환 (9000)
       timer: null,
     }
   },
   computed: {
+
     formattedTime() {
       const hours = Math.floor(this.timeRemaining / 3600);
       const minutes = Math.floor((this.timeRemaining % 3600) / 60);
@@ -95,18 +104,78 @@ export default {
     }
   },
   methods: {
+    imgCheck(img) {
+      if(img.includes("https://ifh.cc")) {return false;}
+      else {
+        return true;}
+    },
+
     toggleBottomSheet() {
       this.isBottomSheetVisible = !this.isBottomSheetVisible;
     },
+    // 결과페이지 이동 버튼 클릭
     viewResult() {
       clearInterval(this.timer);
       this.$router.push({ name: 'TestResult' });
     },
+    // 다음문제 버튼 클릭
     nextQuestion() {
-      if (this.Qnumber < 20) {
-        this.Qnumber++;
+      const vm = this;
+      if(vm.selectedOption === null) {
+        return;
       }
+      if(vm.totalQuestionList[vm.Qnumber -1 ].answer == vm.selectedOption){
+        vm.isCorret = 1; // 정답일때
+      } else {
+        vm.isCorret = 0; // 오답일때
+      }
+      const postData = {
+        select_answer : vm.selectedOption,
+        member_id : vm.$cookies.get('USER_ID'),
+        question_idx : vm.totalQuestionList[vm.Qnumber - 1].question_idx,
+        is_correct : vm.isCorret,
+        start_test_date : sessionStorage.getItem("startTestDate")
+      }
+      console.log('postData', postData);
+      axios({
+        method : 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/mode/userSelectAnswer",
+        data : postData,
+      })
+        .then(response => {
+          if(response.data) {
+            console.log('저장 성공');
+          } else {
+            console.log('저장 실패');
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      
+      vm.Qnumber += 1; // 문제번호
+      vm.Question = vm.totalQuestionList[vm.Qnumber-1].question;
+      vm.Option1 = vm.totalQuestionList[vm.Qnumber-1].option1;
+      vm.imgCheckOP1 = vm.Option1.startsWith("https://ifh") ? false : true;
+      vm.Option2 = vm.totalQuestionList[vm.Qnumber-1].option2;
+      vm.imgCheckOP2 = vm.Option2.startsWith("https://ifh") ? false : true;
+      vm.Option3 = vm.totalQuestionList[vm.Qnumber-1].option3;
+      vm.imgCheckOP3 = vm.Option3.startsWith("https://ifh") ? false : true;
+      vm.Option4 = vm.totalQuestionList[vm.Qnumber-1].option4;
+      vm.imgCheckOP4 = vm.Option4.startsWith("https://ifh") ? false : true;
+      if(vm.Option4.startsWith("https://ifh")){
+        vm.imgCheckOP4 = false;
+      }
+      if(vm.totalQuestionList[vm.Qnumber-1].subject_name !== vm.Subject) {
+        vm.Subject = vm.totalQuestionList[vm.Qnumber-1].subject_name
+      }
+      vm.imagePath = vm.totalQuestionList[vm.Qnumber -1].image;
+      vm.selectedOption = null;
+      return ;
     },
+
+    // 타이머 시작
     startTimer() {
       this.timer = setInterval(() => {
         if (this.timeRemaining > 0) {
@@ -117,11 +186,52 @@ export default {
         }
       }, 1000);
     },
+
+    // 시험 문제 불러오는 함수
+    loadExam() {
+      this.DetailLicense = sessionStorage.getItem("detail_license");
+      this.TestDate = sessionStorage.getItem("exam_date");
+      const data = {
+        detail_license_name : this.DetailLicense,
+        exam_date : this.TestDate,
+        subject : sessionStorage.getItem("selectedSubjects")
+      };
+      axios({
+        method : 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/mode/testModeLoadExam",
+        data: data,
+      })
+        .then(response => {
+          this.totalQuestionList = response.data;
+          this.Subject =  this.totalQuestionList[0].subject_name; // 과목명
+          this.Qnumber = 1; // 문제번호
+          this.Question = this.totalQuestionList[0].question;
+          this.Option1 = this.totalQuestionList[0].option1;
+          this.imgCheckOP1 = this.Option1.startsWith("https://ifh") ? false : true;
+          this.Option2 = this.totalQuestionList[0].option2;
+          this.imgCheckOP2 = this.Option2.startsWith("https://ifh") ? false : true;
+          this.Option3 = this.totalQuestionList[0].option3;
+          this.imgCheckOP3 = this.Option3.startsWith("https://ifh") ? false : true;
+          this.Option4 = this.totalQuestionList[0].option4;
+          this.imgCheckOP4 = this.Option4.startsWith("https://ifh") ? false : true;
+          this.totalQNumber = this.totalQuestionList.length;
+          this.imagePath = this.totalQuestionList[0].image;
+          this.startTimer();
+          const currentDate = new Date();
+          const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+          sessionStorage.setItem("startTestDate", formattedDate);
+          // console.log(response.data);
+        })
+        .catch(function(error){
+          console.log(error);
+        });
+    }
     
   },
   mounted() {
-    this.startTimer();
-
+    // 시험 문제 불러오기
+    this.loadExam();
   },
   beforeUnmount() {
     clearInterval(this.timer);
@@ -336,6 +446,10 @@ export default {
   border: 1px solid rgba(187, 187, 187, 0.164);
   color: #000;
   transition: .3s ease;
+}
+
+.radio-input img {
+  margin: auto;
 }
 
 .radio-input label:hover {
