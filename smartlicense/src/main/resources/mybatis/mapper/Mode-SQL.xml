@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	작성일 : 2024.07.23
+	작성자 : 김준식
+	내용 : Mode 입니다.
+ -->
+<mapper namespace="SmartLicense.smartlicense.SolveProblem.Dao.ModeDao">
+
+    <!--
+	작성일 : 2024.07.23
+	작성자 : 김준식
+	내용 : 시험모드에서 응시할 문제 로드
+    -->
+    <select id="testModeLoadExam" parameterType="HashMap" resultType="Map">
+        SELECT s.subject_name as subject_name,
+               q.question_idx as question_idx, q.question as question,
+               q.option1 as option1, q.option2 as option2, q.option3 as option3, q.option4 as option4,
+               q.answer as answer, q.image as image
+        FROM detail_license dl
+            JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
+            JOIN question q ON s.subject_idx = q.subject_idx
+            JOIN session_question sq ON q.question_idx = sq.question_idx
+        WHERE dl.detail_license_name = #{detail_license}
+            AND sq.exam_date = #{session_question}
+    </select>
+
+
+</mapper>
