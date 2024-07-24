@@ -11,4 +11,8 @@ public interface CategoryChoiceDao {
     List<HashMap<String, Object>> loadLicense();
 
     List<HashMap<String, Object>> loadDetailLicense(@Param("licenseName") String licenseName);
+
+    List<HashMap<String, Object>> loadSessionQuestion(@Param("examDate") String examDate);
+
+    List<HashMap<String, Object>> loadSubjects(HashMap<String, Object> params);
 }

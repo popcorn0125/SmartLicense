@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!--
-	작성일 : 2024.07.10
-	작성자 : 김준식
-	내용 : 로그인 입니다.
- -->
 <mapper namespace="SmartLicense.smartlicense.SolveProblem.Dao.CategoryChoiceDao">
     <select id="loadLicense" resultType="HashMap">
         SELECT license_name
@@ -19,5 +14,33 @@
         WHERE license_idx = (SELECT license_idx FROM license WHERE license_name = #{licenseName})
     </select>
 
+    <select id="loadSessionQuestion" parameterType="String" resultType="HashMap">
+        SELECT distinct sq.exam_date as exam_date
+        FROM license l
+                 JOIN detail_license dl ON l.license_idx = dl.license_idx
+                 JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
+                 JOIN question q ON s.subject_idx = q.subject_idx
+                 JOIN session_question sq ON q.question_idx = sq.question_idx
+        WHERE dl.detail_license_name = #{examDate};
+    </select>
+
+    <select id="loadSubjects" parameterType="HashMap" resultType="HashMap">
+        SELECT distinct
+            s.subject_number, s.subject_name, s.question_total_count, s.exam_duration
+        FROM
+            license l
+                JOIN
+            detail_license dl ON l.license_idx = dl.license_idx
+                JOIN
+            subject s ON s.detail_license_idx = dl.detail_license_idx
+                JOIN
+            question q ON q.subject_idx = s.subject_idx
+                JOIN
+            session_question sq ON sq.question_idx = q.question_idx
+        WHERE
+            l.license_name = #{license_name} AND
+            dl.detail_license_name = #{detail_license_name} AND
+            sq.exam_date = #{exam_date}
+    </select>
 
 </mapper>

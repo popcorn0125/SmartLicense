@@ -18,7 +18,6 @@ public class CategoryChoiceController {
 
     @PostMapping("/loadLicense")
     public List<HashMap<String, Object>> loadLicense(){
-        System.out.println("잘 됐나요?");
         return categoryChoiceService.loadLicense();
     }
 
@@ -26,5 +25,16 @@ public class CategoryChoiceController {
     public List<HashMap<String, Object>> loadDetailLicense(@RequestBody HashMap<String, Object> params){
         String licenseName = params.get("license").toString();
         return categoryChoiceService.loadDetailLicense(licenseName);
+    }
+
+    @PostMapping("/loadSessionQuestion")
+    public List<HashMap<String, Object>> loadSessionQuestion(@RequestBody HashMap<String, Object> params){
+        String examDate = params.get("detailLicense").toString();
+        return categoryChoiceService.loadSessionQuestion(examDate);
+    }
+
+    @PostMapping("/getSubjects")
+    public List<HashMap<String, Object>> loadSubjects(@RequestBody HashMap<String, Object> params){
+        return categoryChoiceService.loadSubjects(params);
     }
 }
