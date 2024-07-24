@@ -42,7 +42,7 @@
                 </ul>
             </div>
         </div>
-        <div class="mydict" v-show="isShow">
+        <div class="mydict" v-if="isShow">
             <div>
                 <label>
                     <input type="radio" name="radio">
@@ -57,20 +57,10 @@
             </div>
         </div>
         <div class="subject_wrap" v-show="isShow">
-            <div>
-                <input type="checkbox" class="sub1"><span>1과목</span>:<span>소프트웨어 설계</span>(<span>20</span>문항)
-            </div>
-            <div>
-                <input type="checkbox" class="sub2"><span>2과목</span>:<span>소프트웨어 개발</span>(<span>20</span>문항)
-            </div>
-            <div>
-                <input type="checkbox" class="sub3"><span>3과목</span>:<span>데이터베이스 구축</span>(<span>20</span>문항)
-            </div>
-            <div>
-                <input type="checkbox" class="sub4"><span>4과목</span>:<span>프로그래밍 언어 활용</span>(<span>20</span>문항)
-            </div>
-            <div>
-                <input type="checkbox" class="sub5"><span>5과목</span>:<span>정보시스템 구축관리</span>(<span>20</span>문항)
+            <div v-for="(subject, index) in subjects" :key="index">
+                <input type="checkbox" :class="'sub' + (index + 1)" :value="subject.subject_number">
+                <span>{{ index+1 }}과목 </span>: <span>{{ subject.subject_name }}</span>(<span>{{
+                    subject.question_total_count }}</span>문항)
             </div>
         </div>
         <button class="go_solve" v-show="isShow">문제 풀기</button>
@@ -98,7 +88,8 @@ export default {
             selectedOption3: '선택',
             options1: [],
             options2: [],
-            options3: ['2022년4월24일', '2022년3월05일', '2021년8월14일', '2021년5월15일', '2021년3월07일'],
+            options3: [],
+            subjects: [],
             isShow: false,
         };
     },
@@ -116,11 +107,25 @@ export default {
         selectOption(option, dropdown) {
             if (dropdown === 'first') {
                 this.selectedOption1 = option;
+                this.selectedOption2 = '선택'; // 세부 자격 초기화
+                this.selectedOption3 = '선택'; // 시험 일정 초기화
+                this.options2 = []; // 세부 자격 옵션 초기화
+                this.options3 = []; // 시험 일정 옵션 초기화
+                this.subjects = []; // 과목 정보 초기화
+                this.isShow = false; // 과목 정보 표시 여부 초기화
+                this.mode = null; // 연습모드, 시험모드 초기화
                 this.loadDetailLicense(option); // 자격을 선택할 때 세부 자격을 로드
             } else if (dropdown === 'second') {
                 this.selectedOption2 = option;
+                this.selectedOption3 = '선택'; // 시험 일정 초기화
+                this.options3 = []; // 시험 일정 옵션 초기화
+                this.subjects = []; // 과목 정보 초기화
+                this.isShow = false; // 과목 정보 표시 여부 초기화
+                this.mode = null; // 연습모드, 시험모드 초기화
+                this.loadSessionQuestion(option); // 세부자격을 선택할 때 시험 일정을 로드
             } else if (dropdown === 'third') {
                 this.selectedOption3 = option;
+                this.loadSubjects(); // 시험 일정을 선택할 때 과목 정보를 로드
             }
             this.dropdownOpen = null;
         },
@@ -132,7 +137,6 @@ export default {
                 url: "/solveProblem/loadLicense",
             })
                 .then(response => {
-                    console.log(response.data);
                     this.options1 = response.data.map(item => item.license_name);  // 여기에 데이터 매핑을 추가
                 })
                 .catch(error => {
@@ -148,20 +152,59 @@ export default {
                 data: { license: license }
             })
                 .then(response => {
-                    console.log(response.data);
                     this.options2 = response.data.map(item => item.detail_license_name);  // 여기에 데이터 매핑을 추가
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        loadSessionQuestion(detailLicense) {
+            axios({
+                method: 'post',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                url: "/solveProblem/loadSessionQuestion",
+                data: { detailLicense: detailLicense }
+            })
+                .then(response => {
+                    this.options3 = response.data.map(item => item.exam_date);  // 여기에 데이터 매핑을 추가
+                    this.subjects = response.data; // subjects 배열을 업데이트
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        loadSubjects() {
+            axios({
+                method: 'post',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                url: "/solveProblem/getSubjects",
+                data: {
+                    license_name: this.selectedOption1,
+                    detail_license_name: this.selectedOption2,
+                    exam_date: this.selectedOption3
+                }
+            })
+                .then(response => {
+                    this.subjects = response.data; // 과목 정보를 subjects 배열에 저장
+                    this.isShow = this.subjects.length > 0; // 과목 정보가 있을 때만 표시
                 })
                 .catch(error => {
                     console.log(error);
                 });
         }
 
-
-
     },
     watch: {
+        selectedOption1() {
+            this.isShow = false;
+        },
+        selectedOption2() {
+            this.isShow = false;
+        },
         selectedOption3() {
-            this.isShow = true;
+            this.isShow = false;
         }
     },
 
