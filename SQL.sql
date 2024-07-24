@@ -99,8 +99,8 @@ CREATE TABLE exam_record
 CREATE TABLE user_select_answer
 (
 	user_select_answer_idx INT AUTO_INCREMENT PRIMARY KEY,
-    is_correct CHAR(1),
-    select_answer INT,
+    is_correct TINYINT(1) NOT NULL,
+    select_answer TEXT,
     start_test_date VARCHAR(50),
     member_id VARCHAR(100),
     question_idx int,
