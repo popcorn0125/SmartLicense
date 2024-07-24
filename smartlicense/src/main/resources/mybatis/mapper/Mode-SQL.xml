@@ -22,8 +22,21 @@
             JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
             JOIN question q ON s.subject_idx = q.subject_idx
             JOIN session_question sq ON q.question_idx = sq.question_idx
-        WHERE dl.detail_license_name = #{detail_license}
-            AND sq.exam_date = #{session_question}
+        WHERE dl.detail_license_name = #{detail_license_name}
+            AND sq.exam_date = #{exam_date}
+<!--            <foreach collection="subject" item="subject_name" open="(" separator="," close=")">-->
+<!--                AND s.subject_name = #{subject_name}-->
+<!--            </foreach>-->
+    </select>
+
+    <!--
+	작성일 : 2024.07.24
+	작성자 : 김준식
+	내용 : 사용자가 선택한 답 저장
+    -->
+    <select id="userSelectAnswer" parameterType="HashMap" resultType="int">
+        INSERT INTO user_select_answer (select_answer, is_correct, start_test_date, member_id, question_idx)
+        VALUES (#{select_answer}, #{is_correct}, #{start_test_date}, #{member_id}, #{question_idx})
     </select>
 
 
