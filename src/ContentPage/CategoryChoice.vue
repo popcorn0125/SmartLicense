@@ -45,12 +45,12 @@
         <div class="mydict" v-if="isShow">
             <div>
                 <label>
-                    <input type="radio" name="radio">
+                    <input type="radio" name="radio" value="practice" v-model="mode">
                     <span>연습 모드</span>
                 </label>
 
                 <label>
-                    <input type="radio" name="radio">
+                    <input type="radio" name="radio" value="test" v-model="mode">
                     <span>시험 모드</span>
                 </label>
 
@@ -58,12 +58,17 @@
         </div>
         <div class="subject_wrap" v-show="isShow">
             <div v-for="(subject, index) in subjects" :key="index">
-                <input type="checkbox" :class="'sub' + (index + 1)" :value="subject.subject_number">
-                <span>{{ index+1 }}과목 </span>: <span>{{ subject.subject_name }}</span>(<span>{{
+                <input 
+                    type="checkbox" 
+                    :class="'sub' + (index + 1)" 
+                    :value="subject.subject_name"
+                    :checked="selectedSubjects.includes(subject.subject_name)"
+                    @change="toggleSubject(subject.subject_name)">
+                <span>{{ subject.subject_number }}과목 </span>: <span>{{ subject.subject_name }}</span>(<span>{{
                     subject.question_total_count }}</span>문항)
             </div>
         </div>
-        <button class="go_solve" v-show="isShow">문제 풀기</button>
+        <button class="go_solve" v-show="isShow" @click="goSolve">문제 풀기</button>
     </div>
     <BottomBar />
 </template>
@@ -91,6 +96,7 @@ export default {
             options3: [],
             subjects: [],
             isShow: false,
+            selectedSubjects: []
         };
     },
     methods: {
@@ -128,6 +134,36 @@ export default {
                 this.loadSubjects(); // 시험 일정을 선택할 때 과목 정보를 로드
             }
             this.dropdownOpen = null;
+        },
+
+        toggleSubject(subjectName) {
+            if (this.selectedSubjects.includes(subjectName)) {
+                this.selectedSubjects = this.selectedSubjects.filter(sub => sub !== subjectName);
+            } else {
+                this.selectedSubjects.push(subjectName);
+            }
+        },
+
+        goSolve() {
+
+            if (this.mode === 'practice') {
+                sessionStorage.setItem('selectedOption1', this.selectedOption1);
+                sessionStorage.setItem('selectedOption2', this.selectedOption2);
+                sessionStorage.setItem('selectedOption3', this.selectedOption3);
+                sessionStorage.setItem('mode', this.mode);
+                sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
+                this.$router.push({ name: 'PracticeMode' });
+
+            } else if (this.mode === 'test') {
+                sessionStorage.setItem('selectedOption1', this.selectedOption1);
+                sessionStorage.setItem('selectedOption2', this.selectedOption2);
+                sessionStorage.setItem('selectedOption3', this.selectedOption3);
+                sessionStorage.setItem('mode', this.mode);
+                sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
+                this.$router.push({ name: 'TestMode' });
+            } else {
+                alert('모드를 선택해 주세요.');
+            }
         },
 
         loadLicense() {
@@ -187,7 +223,9 @@ export default {
                 }
             })
                 .then(response => {
+                    console.log(response.data)
                     this.subjects = response.data; // 과목 정보를 subjects 배열에 저장
+                    this.selectedSubjects = response.data.map(item => item.subject_name);
                     this.isShow = this.subjects.length > 0; // 과목 정보가 있을 때만 표시
                 })
                 .catch(error => {

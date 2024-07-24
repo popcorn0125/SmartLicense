@@ -82,6 +82,11 @@ export default {
       showCorrectAnswer: false,
       isModalVisivle: false,
       isBottomSheetVisible: true,
+      selectedOption1: '',
+      selectedOption2: '',
+      selectedOption3: '',
+      mode: '',
+      selectedSubjects: []
     }
   },
   methods: {
@@ -123,7 +128,12 @@ export default {
 
   },
   mounted() {
-
+    this.selectedOption1 = sessionStorage.getItem('selectedOption1');
+    this.selectedOption2 = sessionStorage.getItem('selectedOption2');
+    this.selectedOption3 = sessionStorage.getItem('selectedOption3');
+    this.mode = sessionStorage.getItem('mode');
+    const selectedSubjects = sessionStorage.getItem('selectedSubjects');
+    this.selectedSubjects = JSON.parse(selectedSubjects);
   },
 }
 </script>
