@@ -1,6 +1,7 @@
 package SmartLicense.smartlicense.SolveProblem.Controller;
 
 import SmartLicense.smartlicense.SolveProblem.Service.ModeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +22,13 @@ public class ModeController {
     ModeService modeService;
 
     @PostMapping("/testModeLoadExam")
-    public ResponseEntity<List<Map<String, Object>>> testModeLoadExam(@RequestBody HashMap<String, Object> params) {
+    public ResponseEntity<List<Map<String, Object>>> testModeLoadExam(@RequestBody HashMap<String, Object> params) throws JsonProcessingException {
         System.out.println("testModeLoadExam 실행");
-        System.out.println("params : " + params);
-        System.out.println("subjects : " + params.get("subject").getClass().getName());
         return ResponseEntity.ok(modeService.testModeLoadExam(params));
     }
 
     @PostMapping("/userSelectAnswer")
-    public ResponseEntity<Integer> usreSelectAnswer(@RequestBody HashMap<String, Object> params) {
+    public ResponseEntity<HashMap<String, Object>> usreSelectAnswer(@RequestBody HashMap<String, Object> params) {
         System.out.println("userChoiceAnswer 실행");
         return ResponseEntity.ok(modeService.userSelectAnswer(params));
     }
