@@ -199,19 +199,6 @@ export default {
 
     // 타이머 시작
     startTimer() {
-      // 과목별 총 시험 시간 가져오기
-      // axios({
-      //   method : 'post',
-      //   header: { 'Content-Type': 'application/json; charset=UTF-8' },
-      //   url: "/mode/examTime",
-      // })
-      //   .then(response => {
-      //     this.timeRemaining = response.data;
-          
-      //   })
-      //   .catch(error =>{
-      //     console.log(error);
-      //   })
       this.timer = setInterval(() => {
         if (this.timeRemaining > 0) {
           this.timeRemaining--;
@@ -238,7 +225,7 @@ export default {
         data: data,
       })
         .then(response => {
-          this.totalQuestionList = response.data;
+          this.totalQuestionList = response.data.exam;
           this.Subject =  this.totalQuestionList[0].subject_name; // 과목명
           this.Qnumber = 1; // 문제번호
           this.Question = this.totalQuestionList[0].question;
@@ -255,6 +242,9 @@ export default {
           const currentDate = new Date();
           const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
           sessionStorage.setItem("startTestDate", formattedDate);
+          this.timeRemaining = response.data.timeRemaining * 60; // 
+          // 타이머
+          this.startTimer();
           // console.log(response.data);
         })
         .catch(function(error){
@@ -266,8 +256,8 @@ export default {
   mounted() {
     // 시험 문제 불러오기
     this.loadExam();
-    // 타이머
-    this.startTimer();
+    // // 타이머
+    // this.startTimer();
   },
   beforeUnmount() {
     clearInterval(this.timer);
