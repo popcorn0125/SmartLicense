@@ -112,6 +112,10 @@ const routes = [
         component: UserCheck,
         meta: { title: '본인 확인', showBackButton: true }
     },
+    {
+        path: "/:catchAll(.*)",
+        redirect: "/"
+    }
 ];
 
 const router = createRouter({

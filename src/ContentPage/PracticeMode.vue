@@ -9,39 +9,48 @@
         <div class="info-message">{{ selectedOption3 }}</div>
       </div>
       <div class="popup info-popup">
-        <div class="info-message">{{ Subject }}</div>
+        <div class="info-message">{{ currentProblem.subject_name }}</div>
       </div>
     </div>
     <div class="current_Q">
-      <p>{{ Qnumber }}. {{ Question }}</p>
-      <img src="@/assets/testimg.png">
+      <p>{{ currentProblemIndex + 1 }}. {{ currentProblem.question }}</p>
+      <img src="">
     </div>
     <span class="toggle-btn" @click="toggleBottomSheet"></span>
     <div class="radio-input" :class="{ 'is-visible': isBottomSheetVisible }">
-      <div class="info">
-        <span class="steps" @click="showExplanation">해설보기</span>
-        <span class="close-explanation" @click="toggleBottomSheet">&times;</span>
-      </div>
-      <div class="scrollable">
-        <input type="radio" id="value-1" name="value-radio" value="value-1" @click="checkAnswer(1)">
-        <label for="value-1">{{ Option1 }}</label>
-        <input type="radio" id="value-2" name="value-radio" value="value-2" @click="checkAnswer(2)">
-        <label for="value-2">{{ Option2 }}</label>
-        <input type="radio" id="value-3" name="value-radio" value="value-3" @click="checkAnswer(3)">
-        <label for="value-3">{{ Option3 }}</label>
-        <input type="radio" id="value-4" name="value-radio" value="value-4" @click="checkAnswer(4)">
-        <label for="value-4">{{ Option4 }}</label>
-      </div>
-      <!-- <span class="result success" v-if="displayCorrectAnswer">정답입니다.</span>
-      <span class="result error" v-if="displayWrongAnswer">오답입니다.</span> -->
-      <div class="btn_collection" v-if="Qnumber<20">
-        다음 문제 >
-      </div>
-      <div class="btn_collection" @click="viewResult" v-if="Qnumber==20">
-        {{ Subject }} 점수 보기
-      </div>
-    </div>
-    <div class="last_Q" v-if="Qnumber == 20">
+  <div class="info">
+    <span class="steps" @click="showExplanation">해설보기</span>
+    <span class="close-explanation" @click="toggleBottomSheet">&times;</span>
+  </div>
+  <div class="scrollable">
+    <input type="radio" id="value-1" name="value-radio" value="value-1" @change="checkAnswer('value-1')">
+    <label :class="{ 'correct': selectedAnswer === 'value-1' && isCorrectAnswer, 'incorrect': selectedAnswer === 'value-1' && !isCorrectAnswer }" for="value-1">
+      {{ currentProblem.option1 }}
+    </label>
+
+    <input type="radio" id="value-2" name="value-radio" value="value-2" @change="checkAnswer('value-2')">
+    <label :class="{ 'correct': selectedAnswer === 'value-2' && isCorrectAnswer, 'incorrect': selectedAnswer === 'value-2' && !isCorrectAnswer }" for="value-2">
+      {{ currentProblem.option2 }}
+    </label>
+
+    <input type="radio" id="value-3" name="value-radio" value="value-3" @change="checkAnswer('value-3')">
+    <label :class="{ 'correct': selectedAnswer === 'value-3' && isCorrectAnswer, 'incorrect': selectedAnswer === 'value-3' && !isCorrectAnswer }" for="value-3">
+      {{ currentProblem.option3 }}
+    </label>
+
+    <input type="radio" id="value-4" name="value-radio" value="value-4" @change="checkAnswer('value-4')">
+    <label :class="{ 'correct': selectedAnswer === 'value-4' && isCorrectAnswer, 'incorrect': selectedAnswer === 'value-4' && !isCorrectAnswer }" for="value-4">
+      {{ currentProblem.option4 }}
+    </label>
+  </div>
+  <div class="btn_collection" v-if="currentProblemIndex + 1 < 20" @click="nextQuestion">
+    다음 문제 >
+  </div>
+  <div class="btn_collection" @click="viewResult" v-if="currentProblemIndex + 1 == 20">
+    {{ Subject }} 점수 보기
+  </div>
+</div>
+    <div class="last_Q" v-if="currentProblemIndex + 1 == 20">
       <p>마지막 문제입니다.</p>
     </div>
 
@@ -58,6 +67,8 @@
 
 <script>
 import TopBar from '@/components/TopBar.vue';
+import axios from 'axios';
+
 export default {
   name: "PracticeMode",
   components: {
@@ -65,67 +76,85 @@ export default {
   },
   data() {
     return {
-      DetailLicense: "정보처리기사",
-      TestDate: "2020년 4월 24일",
-      Subject: "소프트웨어 설계",
-      Qnumber: "1",
-      Question: "UML 다이어그램 중 순차 다이어그램에 대한 설명으로 틀린 것은?",
-      Option1: "1. 객제 간의 동적 상호작용을 시간 개념을 중심으로 모델링 하는 것이다.",
-      Option2: "2. 주로 시스템의 정적 측면을 모델링하기 위해 사용한다.",
-      Option3: "3. 일반적으로 다이어그램의 수직 방향이 시간의 흐름을 나타낸다.",
-      Option4: "4. 회귀 메시지(Self-Message), 제어블록(Statement block) 등으로 구성된다.",
-      Description: "순차 다이어그램은 행위 다이어그램이므로 동적이고, 순차적인 표현을 위한 다이어그램이다.",
-      correctAnswer: 2, // 정답 번호
-      selectedOption: null,
-      // displayWrongAnswer: false,
-      // displayCorrectAnswer: false,
-      showCorrectAnswer: false,
-      isModalVisivle: false,
-      isBottomSheetVisible: true,
+      problems: [],
+      currentProblemIndex: 0,
+      currentSubjectIndex: 0,
       selectedOption1: '',
       selectedOption2: '',
       selectedOption3: '',
       mode: '',
-      selectedSubjects: []
-    }
+      selectedSubjects: [],
+      isBottomSheetVisible: true,
+      isModalVisible: false,
+      currentProblem: [],
+
+      correctAnswer: '', // 정답을 저장
+      selectedAnswer: '', // 사용자가 선택한 답변
+      isCorrectAnswer: false, // 정답 여부
+      isAnswerSelected: false, // 답변이 선택되었는지 여부
+    };
   },
   methods: {
-    checkAnswer(option) {
-      this.selectedOption = option;
-      // this.showCorrectAnswer = false;
-      // this.displayWrongAnswer=true;
-      // this.displayCorrectAnswer = true;
+    loadProblems() {
+      const criteria = {
+        detail_license_name: this.selectedOption2,
+        exam_date: this.selectedOption3,
+        subject_name: this.selectedSubjects[this.currentSubjectIndex]
+      };
+
+      axios.post('/mode/practiceModeLoadExam', criteria)
+        .then(response => {
+          console.log(response.data);
+          this.problems = response.data;
+          console.log(this.problems[0].question);
+          this.currentProblemIndex = 0;
+          this.loadCurrentProblem();
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
-
-    // verifyAnswer() {
-    //   this.showCorrectAnswer = true;
-    //   if (this.selectedOption === this.correctAnswer) {
-    //     this.displayCorrectAnswer = true;
-    //     this.displayWrongAnswer = false;
-    //   } else {
-    //     this.displayCorrectAnswer = false;
-    //     this.displayWrongAnswer = true;
-    //   }
-    // },
-
+    loadCurrentProblem() {
+      if (this.problems.length > 0) {
+        this.currentProblem = this.problems[this.currentProblemIndex];
+        this.correctAnswer = this.currentProblem.answer; // 서버에서 가져온 정답
+        this.selectedAnswer = ''; // 새 문제를 로드할 때 선택된 답변 초기화
+        this.isAnswerSelected = false;
+        this.isCorrectAnswer = false;
+      }
+    },
+    nextQuestion() {
+      if (this.currentProblemIndex < this.problems.length - 1) {
+        this.currentProblemIndex++;
+        this.loadCurrentProblem();
+      } else {
+        this.viewResult();
+      }
+    },
+    viewResult() {
+      if (this.currentSubjectIndex < this.selectedSubjects.length - 1) {
+        this.currentSubjectIndex++;
+        this.loadProblems();
+      } else {
+        this.$router.push({ name: 'PracticeResult' });
+      }
+    },
+    checkAnswer(option) {
+      this.selectedAnswer = option;
+      this.isAnswerSelected = true;
+      // 정답 비교 로직
+      this.isCorrectAnswer = option === this.currentProblem.answer; // 정답과 비교
+      this.showExplanation();
+    },
     showExplanation() {
-      this.isModalVisivle = true;
+      this.isModalVisible = true;
     },
     closeModal() {
-      this.isModalVisivle = false;
+      this.isModalVisible = false;
     },
-
     toggleBottomSheet() {
       this.isBottomSheetVisible = !this.isBottomSheetVisible;
-    },
-
-    viewResult(){
-      this.$router.push({name : 'PracticeResult'})
     }
-  },
-
-  created() {
-
   },
   mounted() {
     this.selectedOption1 = sessionStorage.getItem('license');
@@ -134,8 +163,10 @@ export default {
     this.mode = sessionStorage.getItem('mode');
     const selectedSubjects = sessionStorage.getItem('selectedSubjects');
     this.selectedSubjects = JSON.parse(selectedSubjects);
-  },
-}
+    this.currentSubjectIndex = 0;
+    this.loadProblems();
+  }
+};
 </script>
 
 <style scoped>
@@ -149,13 +180,16 @@ export default {
   width: 100%;
   position: relative;
 }
-.scrollable{
+
+.scrollable {
   overflow-y: auto;
-  
+
 }
-.scrollable::-webkit-scrollbar{
+
+.scrollable::-webkit-scrollbar {
   display: none;
 }
+
 .select_test {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -375,37 +409,44 @@ export default {
   border: 1px solid #bbb;
 }
 
-.result {
-  margin-top: 10px;
-  font-weight: 600;
-  font-size: 12px;
-  display: none;
-  transition: display .4s ease;
-}
-
-.result.success {
-  color: green;
-}
-
-.result.error {
-  color: red;
-}
-
-.radio-input input:checked+label {
-  border-color: red;
-  color: red;
-}
-
-.radio-input input[value="value-2"]:checked+label {
+/* 정답 및 오답 스타일 */
+.correct {
   border-color: rgb(22, 245, 22);
   color: rgb(16, 184, 16);
 }
 
-.radio-input:has(input[value="value-2"]:checked) .result.success {
-  display: flex;
+.incorrect {
+  border-color: red;
+  color: red;
 }
 
-.radio-input:has(input:not([value="value-2"]):checked) .result.error {
+.radio-input input:checked + label.correct {
+  border-color: rgb(22, 245, 22);
+  color: rgb(16, 184, 16);
+}
+
+.radio-input input:checked + label.incorrect {
+  border-color: red;
+  color: red;
+}
+
+/* 라디오 버튼 스타일 */
+.radio-input label {
   display: flex;
+  background-color: #fff;
+  padding: 14px;
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid rgba(187, 187, 187, 0.164);
+  color: #000;
+  transition: .3s ease;
+}
+
+.radio-input label:hover {
+  background-color: rgba(24, 24, 24, 0.13);
+  border: 1px solid #bbb;
 }
 </style>
