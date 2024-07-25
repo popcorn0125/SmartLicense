@@ -15,10 +15,15 @@ public class ModeService {
     @Autowired
     ModeDao modeDao;
 
-    public List<Map<String, Object>> testModeLoadExam(HashMap<String, Object> params) throws JsonProcessingException {
+    public HashMap<String, Object> testModeLoadExam(HashMap<String, Object> params) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         params.put("subject", objectMapper.readValue(params.get("subject").toString(), List.class));
-        return modeDao.testModeLoadExam(params);
+
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("exam", modeDao.testModeLoadExam(params));
+        System.out.println("sumTime : " + modeDao.getExamDuration(params));
+        result.put("timeRemaining", modeDao.getExamDuration(params));
+        return result;
     }
 
     public HashMap<String, Object> userSelectAnswer(HashMap<String, Object> params) {

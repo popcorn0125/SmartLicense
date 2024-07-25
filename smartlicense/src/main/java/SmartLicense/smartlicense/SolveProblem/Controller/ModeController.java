@@ -22,7 +22,7 @@ public class ModeController {
     ModeService modeService;
 
     @PostMapping("/testModeLoadExam")
-    public ResponseEntity<List<Map<String, Object>>> testModeLoadExam(@RequestBody HashMap<String, Object> params) throws JsonProcessingException {
+    public ResponseEntity<HashMap<String, Object>> testModeLoadExam(@RequestBody HashMap<String, Object> params) throws JsonProcessingException {
         System.out.println("testModeLoadExam 실행");
         return ResponseEntity.ok(modeService.testModeLoadExam(params));
     }
