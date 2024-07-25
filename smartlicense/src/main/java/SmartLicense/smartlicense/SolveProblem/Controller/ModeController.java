@@ -1,6 +1,7 @@
 package SmartLicense.smartlicense.SolveProblem.Controller;
 
 import SmartLicense.smartlicense.SolveProblem.Service.ModeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,10 +31,8 @@ public class ModeController {
      * 내용 : 시험모드 문제 데이터 반환
      * *****************/
     @PostMapping("/testModeLoadExam")
-    public ResponseEntity<List<Map<String, Object>>> testModeLoadExam(@RequestBody HashMap<String, Object> params) {
+    public ResponseEntity<List<Map<String, Object>>> testModeLoadExam(@RequestBody HashMap<String, Object> params) throws JsonProcessingException {
         System.out.println("testModeLoadExam 실행");
-        System.out.println("params : " + params);
-        System.out.println("subjects : " + params.get("subject").getClass().getName());
         return ResponseEntity.ok(modeService.testModeLoadExam(params));
     }
 
@@ -43,7 +42,7 @@ public class ModeController {
      * 내용 : 사용자가 선택한 답을 저장
      * *****************/
     @PostMapping("/userSelectAnswer")
-    public ResponseEntity<Integer> usreSelectAnswer(@RequestBody HashMap<String, Object> params) {
+    public ResponseEntity<HashMap<String, Object>> usreSelectAnswer(@RequestBody HashMap<String, Object> params) {
         System.out.println("userChoiceAnswer 실행");
         return ResponseEntity.ok(modeService.userSelectAnswer(params));
     }
