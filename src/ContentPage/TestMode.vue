@@ -33,14 +33,14 @@
         <input type="radio" id="value-4" name="value-radio" value="잘 모르겠어요" v-model="selectedOption">
         <label for="value-4">잘 모르겠어요.</label>
       </div>
-      <div class="btn_collection" v-if="Qnumber < 100" @click="nextQuestion">
+      <div class="btn_collection" v-if="Qnumber < totalQuestionList.length" @click="nextQuestion">
         다음 문제 >
       </div>
-      <div class="btn_collection" @click="viewResult" v-if="Qnumber == 100">
+      <div class="btn_collection" @click="viewResult" v-if="Qnumber == totalQuestionList.length">
         제출하고 결과보기
       </div>
     </div>
-    <div class="last_Q" v-if="Qnumber == 100">
+    <div class="last_Q" v-if="Qnumber == totalQuestionList.length">
       <p>마지막 문제입니다.</p>
     </div>
     <div class="timer-container">
@@ -64,7 +64,7 @@ export default {
       imgCheckOP3 : true,
       imgCheckOP4 : true,
       imagePath : '', // 문제 이미지 경로
-      totalQuestionList : [], // DB에서 불러온 총 문제 
+      totalQuestionList : [], // DB에서 불러온 총 문제    
       DetailLicense: "", // 자격명
       TestDate: "", // 시험 시작 날짜 및 시간 
       Subject: "", // 과목명
@@ -91,7 +91,7 @@ export default {
 
       let timeString = '';
       if (hours > 0) {
-        timeString += `${hours}시 `;
+        timeString += `${hours}시간 `;
       }
       if (minutes > 0) {
         timeString += `${minutes}분 `;
@@ -104,6 +104,26 @@ export default {
     }
   },
   methods: {
+    // 남은 시간 계산 함수
+    remainingTimeCal() {
+      const hours = Math.floor(this.timeRemaining / 3600);
+      const minutes = Math.floor((this.timeRemaining % 3600) / 60);
+      const seconds = this.timeRemaining % 60;
+
+      let timeString = '';
+      if (hours > 0) {
+        timeString += `${hours}시간 `;
+      }
+      if (minutes > 0) {
+        timeString += `${minutes}분 `;
+      }
+      if (seconds > 0 || timeString === '') { // 초가 0이어도 시간과 분이 둘 다 0이면 표시
+        timeString += `${seconds}초`;
+      }
+
+      return timeString.trim();
+    },
+
     imgCheck(img) {
       if(img.includes("https://ifh.cc")) {return false;}
       else {
@@ -116,7 +136,9 @@ export default {
     // 결과페이지 이동 버튼 클릭
     viewResult() {
       clearInterval(this.timer);
-      this.$router.push({ name: 'TestResult' });
+      let remainingTime = this.remainingTimeCal();
+      console.log('remain : ', remainingTime);
+      this.$router.push({ name: 'TestResult', params : {time : remainingTime} });
     },
     // 다음문제 버튼 클릭
     nextQuestion() {
@@ -144,7 +166,7 @@ export default {
         data : postData,
       })
         .then(response => {
-          if(response.data) {
+          if(response.data.result > 0) {
             console.log('저장 성공');
           } else {
             console.log('저장 실패');
@@ -177,6 +199,19 @@ export default {
 
     // 타이머 시작
     startTimer() {
+      // 과목별 총 시험 시간 가져오기
+      // axios({
+      //   method : 'post',
+      //   header: { 'Content-Type': 'application/json; charset=UTF-8' },
+      //   url: "/mode/examTime",
+      // })
+      //   .then(response => {
+      //     this.timeRemaining = response.data;
+          
+      //   })
+      //   .catch(error =>{
+      //     console.log(error);
+      //   })
       this.timer = setInterval(() => {
         if (this.timeRemaining > 0) {
           this.timeRemaining--;
@@ -217,7 +252,6 @@ export default {
           this.imgCheckOP4 = this.Option4.startsWith("https://ifh") ? false : true;
           this.totalQNumber = this.totalQuestionList.length;
           this.imagePath = this.totalQuestionList[0].image;
-          this.startTimer();
           const currentDate = new Date();
           const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
           sessionStorage.setItem("startTestDate", formattedDate);
@@ -232,6 +266,8 @@ export default {
   mounted() {
     // 시험 문제 불러오기
     this.loadExam();
+    // 타이머
+    this.startTimer();
   },
   beforeUnmount() {
     clearInterval(this.timer);
