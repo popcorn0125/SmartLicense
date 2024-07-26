@@ -61,15 +61,12 @@ public class ModeService {
         ObjectMapper objectMapper = new ObjectMapper();
         List subjects = objectMapper.readValue(params.get("subject").toString(), List.class);
         params.put("subject", subjects);
-        System.out.println("params : "+ params);
         try{
             List<Object> subjectScore = new ArrayList<>();
             List<Object> subjectName = new ArrayList<>();
             List<Object> subjectQNumber = new ArrayList<>();
             List<HashMap<String, Object>> options = modeDao.getSubjectName(params);
-            System.out.println("options : " + options);
             for(HashMap<String, Object> option : options) {
-                System.out.println("option : " + option);
                 subjectName.add(option.get("subject_number") + "과목 : " + option.get("subject_name"));
                 subjectQNumber.add(option.get("question_total_count"));
             }
@@ -78,15 +75,10 @@ public class ModeService {
                 subjectScore.add(modeDao.loadTestScore(params));
             }
             result.put("subject", subjectName);
-            System.out.println("완료1");
             result.put("qnumber", subjectQNumber);
-            System.out.println("완료2");
             result.put("score", subjectScore);
-            System.out.println("완료3");
             result.put("remaintime", modeDao.getRemainingTime(params));
-            System.out.println("완료4");
             result.put("result", 1);
-            System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();
         }

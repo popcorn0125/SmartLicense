@@ -67,7 +67,6 @@ public class ModeController {
     @PostMapping("/loadTestScore")
     public ResponseEntity<HashMap<String, Object>> loadTestScore(@RequestBody HashMap<String, Object> params) throws JsonProcessingException {
         System.out.println("loadTestScore 실행");
-        System.out.println("params : " + params);
         return ResponseEntity.ok(modeService.loadTestScore(params));
     }
 
