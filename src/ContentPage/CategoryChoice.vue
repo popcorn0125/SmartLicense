@@ -286,7 +286,7 @@ export default {
 }
 
 .select {
-    width: 55%;
+    width: 60%;
     margin: 0.5em 0 1em 0;
     position: relative;
     font-size: 1em;

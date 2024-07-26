@@ -14,52 +14,64 @@
     </div>
     <div class="current_Q">
       <p>{{ currentProblemIndex + 1 }}. {{ currentProblem.question }}</p>
-      <img src="">
+      <img :src="currentProblem.image">
     </div>
     <span class="toggle-btn" @click="toggleBottomSheet"></span>
     <div class="radio-input" :class="{ 'is-visible': isBottomSheetVisible }">
-  <div class="info">
-    <span class="steps" @click="showExplanation">해설보기</span>
-    <span class="close-explanation" @click="toggleBottomSheet">&times;</span>
-  </div>
-  <div class="scrollable">
-    <input type="radio" id="value-1" name="value-radio" value="value-1" @change="checkAnswer('value-1')">
-    <label :class="{ 'correct': selectedAnswer === 'value-1' && isCorrectAnswer, 'incorrect': selectedAnswer === 'value-1' && !isCorrectAnswer }" for="value-1">
-      {{ currentProblem.option1 }}
-    </label>
+      <div class="info">
+        <span class="steps" @click="showExplanation">해설보기</span>
+        <span class="close-explanation" @click="toggleBottomSheet">&times;</span>
+      </div>
+      <div class="scrollable">
+        <input type="radio" id="value-1" name="value-radio" value="option1" @change="checkAnswer('option1')" v-model="selectedAnswer">
+        <label
+          :class="{ 'correct': selectedAnswer === 'option1' && isCorrectAnswer, 'incorrect': selectedAnswer === 'option1' && !isCorrectAnswer }"
+          for="value-1">
+          <div v-if="imgCheckOP1">{{ currentProblem.option1 }}</div>
+          <img v-else :src="currentProblem.option1">
+        </label>
 
-    <input type="radio" id="value-2" name="value-radio" value="value-2" @change="checkAnswer('value-2')">
-    <label :class="{ 'correct': selectedAnswer === 'value-2' && isCorrectAnswer, 'incorrect': selectedAnswer === 'value-2' && !isCorrectAnswer }" for="value-2">
-      {{ currentProblem.option2 }}
-    </label>
+        <input type="radio" id="value-2" name="value-radio" value="option2" @change="checkAnswer('option2')" v-model="selectedAnswer">
+        <label
+          :class="{ 'correct': selectedAnswer === 'option2' && isCorrectAnswer, 'incorrect': selectedAnswer === 'option2' && !isCorrectAnswer }"
+          for="value-2">
+          <div v-if="imgCheckOP2">{{ currentProblem.option2 }}</div>
+          <img v-else :src="currentProblem.option2">
+        </label>
 
-    <input type="radio" id="value-3" name="value-radio" value="value-3" @change="checkAnswer('value-3')">
-    <label :class="{ 'correct': selectedAnswer === 'value-3' && isCorrectAnswer, 'incorrect': selectedAnswer === 'value-3' && !isCorrectAnswer }" for="value-3">
-      {{ currentProblem.option3 }}
-    </label>
+        <input type="radio" id="value-3" name="value-radio" value="option3" @change="checkAnswer('option3')" v-model="selectedAnswer">
+        <label
+          :class="{ 'correct': selectedAnswer === 'option3' && isCorrectAnswer, 'incorrect': selectedAnswer === 'option3' && !isCorrectAnswer }"
+          for="value-3">
+          <div v-if="imgCheckOP3">{{ currentProblem.option3 }}</div>
+          <img v-else :src="currentProblem.option3">
+        </label>
 
-    <input type="radio" id="value-4" name="value-radio" value="value-4" @change="checkAnswer('value-4')">
-    <label :class="{ 'correct': selectedAnswer === 'value-4' && isCorrectAnswer, 'incorrect': selectedAnswer === 'value-4' && !isCorrectAnswer }" for="value-4">
-      {{ currentProblem.option4 }}
-    </label>
-  </div>
-  <div class="btn_collection" v-if="currentProblemIndex + 1 < 20" @click="nextQuestion">
-    다음 문제 >
-  </div>
-  <div class="btn_collection" @click="viewResult" v-if="currentProblemIndex + 1 == 20">
-    {{ Subject }} 점수 보기
-  </div>
-</div>
+        <input type="radio" id="value-4" name="value-radio" value="option4" @change="checkAnswer('option4')" v-model="selectedAnswer">
+        <label
+          :class="{ 'correct': selectedAnswer === 'option4' && isCorrectAnswer, 'incorrect': selectedAnswer === 'option4' && !isCorrectAnswer }"
+          for="value-4">
+          <div v-if="imgCheckOP4">{{ currentProblem.option4 }}</div>
+          <img v-else :src="currentProblem.option4">
+        </label>
+      </div>
+      <div class="btn_collection" v-if="currentProblemIndex + 1 < 20" @click="nextQuestion">
+        다음 문제 >
+      </div>
+      <div class="btn_collection" @click="viewResult" v-if="currentProblemIndex + 1 == 20">
+        {{ Subject }} 점수 보기
+      </div>
+    </div>
     <div class="last_Q" v-if="currentProblemIndex + 1 == 20">
-      <p>마지막 문제입니다.</p>
+      <p>현재 과목의 마지막 문제입니다.</p>
     </div>
 
   </div>
 
   <!---------해설보기 모달 창--------->
-  <div class="modal" v-if="isModalVisivle">
+  <div class="modal" v-if="isModalVisible">
     <div class="modal-content">
-      <p>{{ Description }}</p>
+      <p>{{ currentProblem.question_description }}</p>
       <span class="close" @click="closeModal">&times;</span>
     </div>
   </div>
@@ -86,15 +98,21 @@ export default {
       selectedSubjects: [],
       isBottomSheetVisible: true,
       isModalVisible: false,
-      currentProblem: [],
+      currentProblem: {},
 
       correctAnswer: '', // 정답을 저장
       selectedAnswer: '', // 사용자가 선택한 답변
       isCorrectAnswer: false, // 정답 여부
       isAnswerSelected: false, // 답변이 선택되었는지 여부
+      imgCheckOP1: true,
+      imgCheckOP2: true,
+      imgCheckOP3: true,
+      imgCheckOP4: true,
+
     };
   },
   methods: {
+    // 사용자가 선택한 모든문제 로드하는 함수
     loadProblems() {
       const criteria = {
         detail_license_name: this.selectedOption2,
@@ -104,9 +122,8 @@ export default {
 
       axios.post('/mode/practiceModeLoadExam', criteria)
         .then(response => {
-          console.log(response.data);
           this.problems = response.data;
-          console.log(this.problems[0].question);
+          // console.log(this.problems); 모든문제 잘 불러와지는 확인
           this.currentProblemIndex = 0;
           this.loadCurrentProblem();
         })
@@ -114,6 +131,8 @@ export default {
           console.error(error);
         });
     },
+
+    // 사용자가 선택한 문제중 현재과목의 문제를 로드하는 함수
     loadCurrentProblem() {
       if (this.problems.length > 0) {
         this.currentProblem = this.problems[this.currentProblemIndex];
@@ -121,41 +140,76 @@ export default {
         this.selectedAnswer = ''; // 새 문제를 로드할 때 선택된 답변 초기화
         this.isAnswerSelected = false;
         this.isCorrectAnswer = false;
+
+        this.imgCheckOP1 = this.currentProblem.option1.startsWith("https://ifh") ? false : true;
+        this.imgCheckOP2 = this.currentProblem.option2.startsWith("https://ifh") ? false : true;
+        this.imgCheckOP3 = this.currentProblem.option3.startsWith("https://ifh") ? false : true;
+        this.imgCheckOP4 = this.currentProblem.option4.startsWith("https://ifh") ? false : true;
       }
     },
+
+    // 다음 문제를 로드하는 함수
     nextQuestion() {
+      if (!this.isAnswerSelected) {
+        return;
+      }
+
       if (this.currentProblemIndex < this.problems.length - 1) {
         this.currentProblemIndex++;
         this.loadCurrentProblem();
+        this.selectedAnswer = ''; // 라디오 버튼 초기화
       } else {
         this.viewResult();
       }
     },
+
     viewResult() {
-      if (this.currentSubjectIndex < this.selectedSubjects.length - 1) {
-        this.currentSubjectIndex++;
-        this.loadProblems();
-      } else {
-        this.$router.push({ name: 'PracticeResult' });
+    const currentSubject = this.selectedSubjects[this.currentSubjectIndex];
+    const totalSubjects = this.selectedSubjects.length;
+
+    // 현재 과목 인덱스와 총 과목 수를 함께 전달
+    this.$router.push({
+      name: 'PracticeResult',
+      params: {
+        subject: currentSubject,
+        problems: this.problems,
+        currentSubjectIndex: this.currentSubjectIndex,
+        totalSubjects: totalSubjects
       }
-    },
+    });
+  },
+
+    // 사용자가 선택한 값과 정답을 검증하는 함수
     checkAnswer(option) {
       this.selectedAnswer = option;
       this.isAnswerSelected = true;
-      // 정답 비교 로직
-      this.isCorrectAnswer = option === this.currentProblem.answer; // 정답과 비교
-      this.showExplanation();
+
+      const answerText = this.currentProblem[option];
+      this.isCorrectAnswer = answerText == this.correctAnswer;
     },
+
+    // 해설 보기
     showExplanation() {
       this.isModalVisible = true;
     },
+
+    // 해설 모달 닫기
     closeModal() {
       this.isModalVisible = false;
     },
+
+    // 바텀시트 동작 기능
     toggleBottomSheet() {
       this.isBottomSheetVisible = !this.isBottomSheetVisible;
+    },
+
+     // 과목을 업데이트하는 메소드
+     updateSubject() {
+      this.currentSubjectIndex = parseInt(this.$route.params.subjectIndex) || 0;
+      this.loadCurrentProblem();
     }
   },
+
   mounted() {
     this.selectedOption1 = sessionStorage.getItem('license');
     this.selectedOption2 = sessionStorage.getItem('detail_license');
@@ -163,8 +217,12 @@ export default {
     this.mode = sessionStorage.getItem('mode');
     const selectedSubjects = sessionStorage.getItem('selectedSubjects');
     this.selectedSubjects = JSON.parse(selectedSubjects);
+
     this.currentSubjectIndex = 0;
+
     this.loadProblems();
+
+    this.updateSubject();
   }
 };
 </script>
@@ -420,12 +478,12 @@ export default {
   color: red;
 }
 
-.radio-input input:checked + label.correct {
+.radio-input input:checked+label.correct {
   border-color: rgb(22, 245, 22);
   color: rgb(16, 184, 16);
 }
 
-.radio-input input:checked + label.incorrect {
+.radio-input input:checked+label.incorrect {
   border-color: red;
   color: red;
 }

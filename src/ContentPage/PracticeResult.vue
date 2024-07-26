@@ -80,18 +80,34 @@ export default {
       totalQuestionCount: 20, // 총 문항 갯수
       corretCount: 15, // 정답 갯수
       wrongCount: 5, // 오답 갯수
+      currentSubjectIndex: 0, // 현재 과목 인덱스
+      totalSubjects: 5 // 총 과목 수
     }
   },
   methods: {
-      btnClick(){
-        if(this.buttonText == '마이페이지로 가기'){
-          this.$router.push({ name : 'MyPage'});
+    btnClick() {
+      if (this.buttonText === '마이페이지로 가기') {
+        this.$router.push({ name: 'MyPage' });
+      } else {
+        // 다음 과목으로 이동
+        const nextSubjectIndex = this.currentSubjectIndex + 1;
+        if (nextSubjectIndex < this.totalSubjects) {
+          this.$router.push({
+            name: 'PracticeMode',
+            params: {
+              subjectIndex: nextSubjectIndex,
+              totalSubjects: this.totalSubjects
+            }
+          });
+        } else {
+          this.$router.push({ name: 'MyPage' });
         }
       }
+    }
   },
 
   computed: {
-    passed(){
+    passed() {
       return this.corretCount >= this.totalQuestionCount * 0.4;
     },
     resultClass() {
@@ -100,12 +116,13 @@ export default {
     resultMessage() {
       return this.passed ? '합격 기준입니다.' : '불합격 기준입니다.';
     },
-    buttonText(){
-      return this.Subject.startsWith('5과목') ? '마이페이지로 가기' : '다음 과목 풀기';
+    buttonText() {
+      return this.currentSubjectIndex === this.totalSubjects - 1 ? '마이페이지로 가기' : '다음 과목 풀기';
     }
   },
   mounted() {
-
+    this.currentSubjectIndex = this.$route.params.currentSubjectIndex || 0;
+    this.totalSubjects = this.$route.params.totalSubjects || 5;
   },
 }
 </script>
