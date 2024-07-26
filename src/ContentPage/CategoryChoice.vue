@@ -45,12 +45,12 @@
         <div class="mydict" v-if="isShow">
             <div>
                 <label>
-                    <input type="radio" name="radio" value="practice" v-model="mode">
+                    <input type="radio" name="radio" value="연습" v-model="mode">
                     <span>연습 모드</span>
                 </label>
 
                 <label>
-                    <input type="radio" name="radio" value="test" v-model="mode">
+                    <input type="radio" name="radio" value="시험" v-model="mode">
                     <span>시험 모드</span>
                 </label>
 
@@ -146,7 +146,7 @@ export default {
 
         goSolve() {
 
-            if (this.mode === 'practice') {
+            if (this.mode === '연습') {
                 sessionStorage.setItem('license', this.selectedOption1);
                 sessionStorage.setItem('detail_license', this.selectedOption2);
                 sessionStorage.setItem('exam_date', this.selectedOption3);
@@ -154,7 +154,7 @@ export default {
                 sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
                 this.$router.push({ name: 'PracticeMode' });
 
-            } else if (this.mode === 'test') {
+            } else if (this.mode === '시험') {
                 sessionStorage.setItem('license', this.selectedOption1);
                 sessionStorage.setItem('detail_license', this.selectedOption2);
                 sessionStorage.setItem('exam_date', this.selectedOption3);
