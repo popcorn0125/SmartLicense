@@ -87,7 +87,7 @@ CREATE TABLE subject
 CREATE TABLE exam_record
 (
 	exam_record_idx INT AUTO_INCREMENT PRIMARY KEY,
-    mode CHAR(1) NOT NULL,
+    mode VARCHAR(10) NOT NULL,
     remaining_time VARCHAR(50),
     score INT,
     start_test_date VARCHAR(50),
