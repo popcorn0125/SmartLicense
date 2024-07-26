@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="results-summary-container__options">
-        <div class="heading-secondary">남은 시간 : {{ formattedRemainTime }}</div>
+        <div class="heading-secondary">남은 시간 : {{ remainTime }}</div>
         <div class="summary-result-options">
           <div 
           v-for="(subject, index) in Subject" 
@@ -55,6 +55,7 @@
 <script>
 import TopBar from '@/components/TopBar.vue';
 import BottomBar from '@/components/BottomBar.vue'
+import axios from 'axios';
 
 export default {
   name: "TestResult",
@@ -63,10 +64,10 @@ export default {
   },
   data() {
     return {
-      Subject: ['1과목 : 소프트웨어 설계', '2과목 : 소프트웨어 개발', '3과목 : 데이터베이스 구축', '4과목 : 프로그래밍 언어 활용', '5과목 : 정보시스템 구축관리'],
-      Qnumber: [20,20,20,20,20],
-      Score: [15, 10, 19, 17, 10],
-      remainTime: 1, // 9000초
+      Subject: [],
+      Qnumber: [],
+      Score: [],
+      remainTime: '', 
     }
   },
 
@@ -76,6 +77,40 @@ export default {
     },
     isPassedScore(index) {
       return this.Score[index] >= this.Qnumber[index] * 0.4;
+    },
+
+    // 시험결과 가져오기
+    loadExamRecord() {
+      const vm = this;
+      const loadData = {
+        start_test_date : sessionStorage.getItem('startTestDate'),
+        member_id : vm.$cookies.get('USER_ID'),
+        exam_date : sessionStorage.getItem('exam_date'),
+        detail_license_name : sessionStorage.getItem('detail_license'),
+        license_name : sessionStorage.getItem('license'),
+        subject : sessionStorage.getItem("selectedSubjects"),
+        mode : sessionStorage.getItem("mode")
+      };
+      axios({
+        method : 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/mode/loadTestScore",
+        data : loadData,
+      })
+        .then(response => {
+          if(response.data.result > 0) {
+            console.log(response.data);
+            vm.Subject = response.data.subject;
+            vm.Qnumber = response.data.qnumber;
+            vm.Score = response.data.score;
+            vm.remainTime = response.data.remaintime;
+          } else {
+            console.log('로드 실패');
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
     }
   },
   computed:{
@@ -88,26 +123,9 @@ export default {
     isPassed() {
       return this.ScoreSum >= this.QnumberSum * 0.6 && this.Score.every((score, index) => score >= this.Qnumber[index] * 0.4);
     },
-    formattedRemainTime() {
-      const hours = Math.floor(this.remainTime / 3600);
-      const minutes = Math.floor((this.remainTime % 3600) / 60);
-      const seconds = this.remainTime % 60;
-
-      let timeString = '';
-      if (hours > 0) {
-        timeString += `${hours}시간 `;
-      }
-      if (minutes > 0) {
-        timeString += `${minutes}분 `;
-      }
-      if (seconds > 0 || timeString === '') { // 초가 0이어도 시간과 분이 둘 다 0이면 표시
-        timeString += `${seconds}초`;
-      }
-
-      return timeString.trim();
-    }
   },
   mounted(){
+    this.loadExamRecord();
   }
 }
 </script>

@@ -125,20 +125,81 @@ export default {
     },
 
     imgCheck(img) {
-      if(img.includes("https://ifh.cc")) {return false;}
-      else {
-        return true;}
+      if(img.includes("https://ifh.cc")) { return false; }
+      else { return true; }
     },
 
     toggleBottomSheet() {
       this.isBottomSheetVisible = !this.isBottomSheetVisible;
     },
     // 결과페이지 이동 버튼 클릭
-    viewResult() {
-      clearInterval(this.timer);
-      let remainingTime = this.remainingTimeCal();
-      console.log('remain : ', remainingTime);
-      this.$router.push({ name: 'TestResult', params : {time : remainingTime} });
+    async viewResult() {
+      const vm = this;
+      if(vm.selectedOption === null) {
+        return;
+      }
+      if(vm.totalQuestionList[vm.Qnumber -1 ].answer == vm.selectedOption){
+        vm.isCorret = 1; // 정답일때
+      } else {
+        vm.isCorret = 0; // 오답일때
+      }
+      const postData = {
+        select_answer : vm.selectedOption,
+        member_id : vm.$cookies.get('USER_ID'),
+        question_idx : vm.totalQuestionList[vm.Qnumber - 1].question_idx,
+        is_correct : vm.isCorret,
+        start_test_date : sessionStorage.getItem("startTestDate")
+      }
+
+      // 사용자가 선택한 답 저장
+      await axios({
+        method : 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/mode/userSelectAnswer",
+        data : postData,
+      })
+        .then(response => {
+          if(response.data.result > 0) {
+            console.log('저장 성공');
+          } else {
+            console.log('저장 실패');
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      
+      let remainingTime = vm.remainingTimeCal();
+      clearInterval(vm.timer);
+      
+      const recordData = {
+        mode : sessionStorage.getItem('mode'),
+        remaining_time : remainingTime,
+        start_test_date : sessionStorage.getItem('startTestDate'),
+        member_id : vm.$cookies.get('USER_ID'),
+        exam_date : sessionStorage.getItem('exam_date'),
+        detail_license_name : sessionStorage.getItem('detail_license'),
+        license_name : sessionStorage.getItem('license')
+      };
+      console.log('recordData', recordData);
+      // 응시 시험 기록 저장
+      axios({
+        method : 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/mode/storeExamRecord",
+        data : recordData,
+      })
+        .then(response => {
+          if(response.data > 0) {
+            vm.$router.push({ name: 'TestResult' });  
+          } else {
+            // 제대로 저장하지 못했을 경우 
+            console.log('에러');
+          }
+        })
+        .catch(error=>{
+          console.log(error);
+        })
     },
     // 다음문제 버튼 클릭
     nextQuestion() {
@@ -158,7 +219,7 @@ export default {
         is_correct : vm.isCorret,
         start_test_date : sessionStorage.getItem("startTestDate")
       }
-      console.log('postData', postData);
+
       axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
@@ -216,7 +277,8 @@ export default {
       const data = {
         detail_license_name : this.DetailLicense,
         exam_date : this.TestDate,
-        subject : sessionStorage.getItem("selectedSubjects")
+        subject : sessionStorage.getItem("selectedSubjects"),
+        license_name : sessionStorage.getItem('license')
       };
       axios({
         method : 'post',
