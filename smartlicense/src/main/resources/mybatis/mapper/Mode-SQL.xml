@@ -18,12 +18,33 @@
                q.question_idx as question_idx, q.question as question,
                q.option1 as option1, q.option2 as option2, q.option3 as option3, q.option4 as option4,
                q.answer as answer, q.image as image
-        FROM detail_license dl
+        FROM license l
+            JOIN detail_license dl ON l.license_idx = dl.license_idx
             JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
             JOIN question q ON s.subject_idx = q.subject_idx
             JOIN session_question sq ON q.question_idx = sq.question_idx
-        WHERE dl.detail_license_name = #{detail_license_name}
+        WHERE  l.license_name = #{license_name}
+            AND dl.detail_license_name = #{detail_license_name}
             AND sq.exam_date = #{exam_date}
+            AND s.subject_name IN
+            <foreach collection="subject" item="subject_name" open="(" separator="," close=")" >
+                #{subject_name}
+            </foreach>
+        ORDER BY s.subject_number ASC
+    </select>
+
+    <!--
+	작성일 : 2024.07.26
+	작성자 : 김준식
+	내용 : 과목별 시험 시간을 합하여 총 시험시간을 반환
+    -->
+    <select id="getExamDuration" parameterType="HashMap" resultType="int" >
+        SELECT SUM(s.exam_duration)
+        FROM license l
+            JOIN detail_license dl ON l.license_idx = dl.license_idx
+            JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
+        WHERE l.license_name = #{license_name}
+            AND dl.detail_license_name = #{detail_license_name}
             AND s.subject_name IN
             <foreach collection="subject" item="subject_name" open="(" separator="," close=")" >
                 #{subject_name}
@@ -39,6 +60,95 @@
         INSERT INTO user_select_answer (select_answer, is_correct, start_test_date, member_id, question_idx)
         VALUES (#{select_answer}, #{is_correct}, #{start_test_date}, #{member_id}, #{question_idx});
     </insert>
+
+    <!--
+	작성일 : 2024.07.26
+	작성자 : 김준식
+	내용 : 사용자 응시 기록을 저장
+    -->
+    <insert id="storeExamRecord" parameterType="HashMap">
+        INSERT INTO exam_record ( mode, remaining_time, start_test_date, member_id, exam_duration, score)
+        VALUES (
+                #{mode},
+                #{remaining_time},
+                #{start_test_date},
+                #{member_id},
+                #{exam_date},
+                (
+                SELECT SUM(usa.is_correct)
+                FROM license l
+                  JOIN detail_license dl ON l.license_idx = dl.license_idx
+                  JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
+                  JOIN question q ON s.subject_idx = q.subject_idx
+                  JOIN session_question sq ON q.question_idx = sq.question_idx
+                  JOIN user_select_answer usa ON q.question_idx = usa.question_idx
+                WHERE l.license_name = #{license_name}
+                       AND dl.detail_license_name = #{detail_license_name}
+                       AND sq.exam_date = #{exam_date}
+                       AND usa.start_test_date = #{start_test_date}
+                )
+                    )
+    </insert>
+
+    <!--
+	작성일 : 2024.07.26
+	작성자 : 김준식
+	내용 : 과목명, 과목번호, 과목별 총 문제수 가져오기
+    -->
+    <select id="getSubjectName" parameterType="HashMap" resultType="HashMap">
+        SELECT distinct s.subject_name as subject_name, s.subject_number as subject_number, s.question_total_count as question_total_count
+        FROM license l
+                 JOIN detail_license dl ON l.license_idx = dl.license_idx
+                 JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
+                 JOIN question q ON s.subject_idx = q.subject_idx
+                 JOIN session_question sq ON q.question_idx = sq.question_idx
+                 JOIN user_select_answer usa ON q.question_idx = usa.question_idx
+        WHERE  l.license_name = #{license_name}
+          AND dl.detail_license_name = #{detail_license_name}
+          AND sq.exam_date = #{exam_date}
+          AND s.subject_name IN
+          <foreach collection="subject" item="subject_name" open="(" separator="," close=")" >
+              #{subject_name}
+          </foreach>
+          AND usa.start_test_date = #{start_test_date}
+        ORDER BY s.subject_number ASC
+    </select>
+
+    <!--
+	작성일 : 2024.07.26
+	작성자 : 김준식
+	내용 : 과목별 점수 반환
+    -->
+    <select id="loadTestScore" parameterType="HashMap" resultType="int">
+        SELECT sum(usa.is_correct)
+        FROM license l
+                 JOIN detail_license dl ON l.license_idx = dl.license_idx
+                 JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
+                 JOIN question q ON s.subject_idx = q.subject_idx
+                 JOIN session_question sq ON q.question_idx = sq.question_idx
+                 JOIN user_select_answer usa ON q.question_idx = usa.question_idx
+        WHERE  l.license_name = #{license_name}
+          AND dl.detail_license_name = #{detail_license_name}
+          AND sq.exam_date = #{exam_date}
+          AND s.subject_name = #{subject}
+          AND usa.member_id = #{member_id}
+          AND usa.start_test_date = #{start_test_date}
+          AND usa.is_correct = 1
+    </select>
+
+    <!--
+	작성일 : 2024.07.26
+	작성자 : 김준식
+	내용 : 남은 시간 반환
+    -->
+    <select id="getRemainingTime" parameterType="HashMap" resultType="String">
+        SELECT remaining_time
+        FROM exam_record
+        WHERE mode = #{mode}
+            AND start_test_date = #{start_test_date}
+            AND member_id = #{member_id}
+            AND exam_duration = #{exam_date}
+    </select>
 
     <!-- 연습 모드 문제 로드 -->
     <select id="practiceModeLoadExam" parameterType="Map" resultType="Map">
