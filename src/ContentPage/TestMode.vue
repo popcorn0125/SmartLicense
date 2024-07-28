@@ -59,6 +59,7 @@ export default {
   },
   data() {
     return {
+      memberId: '',
       imgCheckOP1 : true,
       imgCheckOP2 : true,
       imgCheckOP3 : true,
@@ -145,7 +146,7 @@ export default {
       }
       const postData = {
         select_answer : vm.selectedOption,
-        member_id : vm.$cookies.get('USER_ID'),
+        member_id : vm.memberId,
         question_idx : vm.totalQuestionList[vm.Qnumber - 1].question_idx,
         is_correct : vm.isCorret,
         start_test_date : sessionStorage.getItem("startTestDate")
@@ -176,7 +177,7 @@ export default {
         mode : sessionStorage.getItem('mode'),
         remaining_time : remainingTime,
         start_test_date : sessionStorage.getItem('startTestDate'),
-        member_id : vm.$cookies.get('USER_ID'),
+        member_id : vm.memberId,
         exam_date : sessionStorage.getItem('exam_date'),
         detail_license_name : sessionStorage.getItem('detail_license'),
         license_name : sessionStorage.getItem('license')
@@ -214,7 +215,7 @@ export default {
       }
       const postData = {
         select_answer : vm.selectedOption,
-        member_id : vm.$cookies.get('USER_ID'),
+        member_id : vm.memberId,
         question_idx : vm.totalQuestionList[vm.Qnumber - 1].question_idx,
         is_correct : vm.isCorret,
         start_test_date : sessionStorage.getItem("startTestDate")
@@ -318,6 +319,11 @@ export default {
   mounted() {
     // 시험 문제 불러오기
     this.loadExam();
+    if((this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)) {
+      this.memberId = this.$cookies.get('USER_ID');
+    } else {
+      this.memberId = localStorage.getItem('GUEST');
+    }
     // // 타이머
     // this.startTimer();
   },

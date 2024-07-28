@@ -64,6 +64,7 @@ export default {
   },
   data() {
     return {
+      memberId: '',
       Subject: [],
       Qnumber: [],
       Score: [],
@@ -84,7 +85,7 @@ export default {
       const vm = this;
       const loadData = {
         start_test_date : sessionStorage.getItem('startTestDate'),
-        member_id : vm.$cookies.get('USER_ID'),
+        member_id : vm.memberId,
         exam_date : sessionStorage.getItem('exam_date'),
         detail_license_name : sessionStorage.getItem('detail_license'),
         license_name : sessionStorage.getItem('license'),
@@ -125,7 +126,13 @@ export default {
     },
   },
   mounted(){
+    if((this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)) {
+      this.memberId = this.$cookies.get('USER_ID');
+    } else {
+      this.memberId = localStorage.getItem('GUEST');
+    }
     this.loadExamRecord();
+    
   }
 }
 </script>

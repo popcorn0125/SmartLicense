@@ -70,10 +70,31 @@ export default {
     },
 
     goToCC() {
-      const currentDate = new Date();
-      const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}_${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
-      sessionStorage.setItem("GUEST", 'Guest_' + formattedDate);
-      this.$router.push({ name: 'CategoryChoice' });
+      if(localStorage.getItem("GUEST") !== null) {
+        this.$router.push({ name: 'CategoryChoice' });
+      } else {
+        axios({
+          method : 'post',
+          header: { 'Content-Type': 'application/json; charset=UTF-8' },
+          url: "/memberLogin/guestLogin",
+          data: null,
+        })
+          .then(response => {
+            if(response.data.result > 0) {
+              localStorage.setItem('GUEST',response.data.guestId);
+              this.$router.push({ name: 'CategoryChoice' });
+            } else{
+              console.log('게스트로그인 실패');
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+      // const currentDate = new Date();
+      // const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}_${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+      // sessionStorage.setItem("GUEST", 'Guest_' + formattedDate);
+      // this.$router.push({ name: 'CategoryChoice' });
     },
 
     // 로그인

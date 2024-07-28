@@ -61,7 +61,7 @@ export default {
             this.$router.push('/CategoryChoice'); // CategoryChoice 페이지로 이동
         },
         goToMyHistoryPage() {
-            // if(sessionStorage.getItem('GUEST') != null ) {
+            // if(localStorage.getItem('GUEST') != null ) {
             //     this.isShowModal = true;
             // }
             this.$router.push({name : 'MyHistoryPage'}); // MyHistoryPage 페이지로 이동
@@ -69,7 +69,7 @@ export default {
             // }
         },
         goToMyPage() {
-            // if(sessionStorage.getItem('GUEST') != null ) {
+            // if(localStorage.getItem('GUEST') != null ) {
             //     this.isShowModal = true;
             // }
             this.$router.push({name : 'MyPage'}); // MyPage 페이지로 이동
