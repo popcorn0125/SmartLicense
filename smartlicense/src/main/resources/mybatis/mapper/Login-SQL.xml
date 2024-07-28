@@ -30,4 +30,14 @@
         WHERE member_id = #{userId}
     </select>
 
+    <!--
+	작성일 : 2024.07.28
+	작성자 : 김준식
+	내용 : 게스트 ID 저장
+    -->
+    <insert id="guestLogin" parameterType="String" >
+        INSERT INTO member (member_id, is_active)
+        VALUES (#{guestId}, 'G')
+    </insert>
+
 </mapper>

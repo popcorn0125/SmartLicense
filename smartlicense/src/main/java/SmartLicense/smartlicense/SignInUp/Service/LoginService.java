@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.UUID;
+
 /*******************
  * 날짜 : 2024.07.10
  * 이름 : 김준식
@@ -123,6 +125,28 @@ public class LoginService {
                 }
             }
         }
+    }
+
+    /*******************
+     * 날짜 : 2024.07.28
+     * 이름 : 김준식
+     * 내용 : 게스트 로그인(UUID를 생성하여 DB에 저장 후 front로 전달
+     * *****************/
+    public HashMap<String, Object> guestLogin() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("result", 0);
+        try{
+            String uuid = UUID.randomUUID().toString();
+            int isSuccess = loginDao.guestLogin(uuid);
+            if (isSuccess > 0) {
+                result.put("result", 1);
+                result.put("guestId", uuid);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
     }
 
 }
