@@ -4,7 +4,7 @@
         <form class="login-form">
             <br>
             <div class="input-group">
-                <input placeholder="현재 비밀번호를 입력하세요." type="password" v-model="userPw" />
+                <input placeholder="현재 비밀번호를 입력하세요." type="password" v-model="member.userPw" />
                 <text id="passwordCheck" class="infoMessage">{{ pwCheckMsg }}</text>
             </div>
             
