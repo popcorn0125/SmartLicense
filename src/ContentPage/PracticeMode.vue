@@ -9,12 +9,12 @@
         <div class="info-message">{{ selectedOption3 }}</div>
       </div>
       <div class="popup info-popup">
-        <div class="info-message">{{ currentProblem.subject_name }}</div>
+        <div class="info-message">{{ problems[currentProblemIndex].subject_name }}</div>
       </div>
     </div>
     <div class="current_Q">
-      <p>{{ currentProblemIndex + 1 }}. {{ currentProblem.question }}</p>
-      <img :src="currentProblem.image">
+      <p>{{ currentProblemIndex + 1 }}. {{ problems[currentProblemIndex].question }}</p>
+      <img :src="problems[currentProblemIndex].image">
     </div>
     <span class="toggle-btn" @click="toggleBottomSheet"></span>
     <div class="radio-input" :class="{ 'is-visible': isBottomSheetVisible }">
@@ -23,36 +23,40 @@
         <span class="close-explanation" @click="toggleBottomSheet">&times;</span>
       </div>
       <div class="scrollable">
-        <input type="radio" id="value-1" name="value-radio" value="option1" @change="checkAnswer('option1')" v-model="selectedAnswer">
+        <input type="radio" id="value-1" name="value-radio" value="option1" @change="checkAnswer('option1')"
+          v-model="selectedAnswer">
         <label
           :class="{ 'correct': selectedAnswer === 'option1' && isCorrectAnswer, 'incorrect': selectedAnswer === 'option1' && !isCorrectAnswer }"
           for="value-1">
-          <div v-if="imgCheckOP1">{{ currentProblem.option1 }}</div>
-          <img v-else :src="currentProblem.option1">
+          <div v-if="imgCheckOP1">{{ problems[currentProblemIndex].option1 }}</div>
+          <img v-else :src="problems[currentProblemIndex].option1">
         </label>
 
-        <input type="radio" id="value-2" name="value-radio" value="option2" @change="checkAnswer('option2')" v-model="selectedAnswer">
+        <input type="radio" id="value-2" name="value-radio" value="option2" @change="checkAnswer('option2')"
+          v-model="selectedAnswer">
         <label
           :class="{ 'correct': selectedAnswer === 'option2' && isCorrectAnswer, 'incorrect': selectedAnswer === 'option2' && !isCorrectAnswer }"
           for="value-2">
-          <div v-if="imgCheckOP2">{{ currentProblem.option2 }}</div>
-          <img v-else :src="currentProblem.option2">
+          <div v-if="imgCheckOP2">{{ problems[currentProblemIndex].option2 }}</div>
+          <img v-else :src="problems[currentProblemIndex].option2">
         </label>
 
-        <input type="radio" id="value-3" name="value-radio" value="option3" @change="checkAnswer('option3')" v-model="selectedAnswer">
+        <input type="radio" id="value-3" name="value-radio" value="option3" @change="checkAnswer('option3')"
+          v-model="selectedAnswer">
         <label
           :class="{ 'correct': selectedAnswer === 'option3' && isCorrectAnswer, 'incorrect': selectedAnswer === 'option3' && !isCorrectAnswer }"
           for="value-3">
-          <div v-if="imgCheckOP3">{{ currentProblem.option3 }}</div>
-          <img v-else :src="currentProblem.option3">
+          <div v-if="imgCheckOP3">{{ problems[currentProblemIndex].option3 }}</div>
+          <img v-else :src="problems[currentProblemIndex].option3">
         </label>
 
-        <input type="radio" id="value-4" name="value-radio" value="option4" @change="checkAnswer('option4')" v-model="selectedAnswer">
+        <input type="radio" id="value-4" name="value-radio" value="option4" @change="checkAnswer('option4')"
+          v-model="selectedAnswer">
         <label
           :class="{ 'correct': selectedAnswer === 'option4' && isCorrectAnswer, 'incorrect': selectedAnswer === 'option4' && !isCorrectAnswer }"
           for="value-4">
-          <div v-if="imgCheckOP4">{{ currentProblem.option4 }}</div>
-          <img v-else :src="currentProblem.option4">
+          <div v-if="imgCheckOP4">{{ problems[currentProblemIndex].option4 }}</div>
+          <img v-else :src="problems[currentProblemIndex].option4">
         </label>
       </div>
       <div class="btn_collection" v-if="currentProblemIndex + 1 < 20" @click="nextQuestion">
@@ -71,7 +75,7 @@
   <!---------해설보기 모달 창--------->
   <div class="modal" v-if="isModalVisible">
     <div class="modal-content">
-      <p>{{ currentProblem.question_description }}</p>
+      <p>{{ }}</p>
       <span class="close" @click="closeModal">&times;</span>
     </div>
   </div>
@@ -88,7 +92,7 @@ export default {
   },
   data() {
     return {
-      problems: [],
+      problems: [{}],
       currentProblemIndex: 0,
       currentSubjectIndex: 0,
       selectedOption1: '',
@@ -109,21 +113,61 @@ export default {
       imgCheckOP3: true,
       imgCheckOP4: true,
 
+      memberId: null,
+      start_exam_date: null,
+      is_correct: null,
+
     };
   },
   methods: {
+    // 한문제 풀때마다 푼 기록 저장하는 함수
+    async storeProblem() {
+      if (this.isCorrectAnswer == true) {
+        this.is_correct = 1; // 정답
+      } else {
+        this.is_correct = 0; // 오답
+      }
+      const postData = {
+        select_answer: this.selectedAnswerValue,
+        member_id: this.memberId,
+        question_idx: this.problems[this.currentProblemIndex].question_idx,
+        is_correct: this.is_correct,
+        start_test_date: sessionStorage.getItem("start_exam_date")
+      }
+
+      await axios({
+        method: 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/mode/userSelectAnswer",
+        data: postData,
+      })
+        .then(response => {
+          if (response.data.result > 0) {
+            console.log('저장 성공');
+          } else {
+            console.log('저장 실패');
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+
     // 사용자가 선택한 모든문제 로드하는 함수
     loadProblems() {
       const criteria = {
+        license: sessionStorage.getItem('license'),
         detail_license_name: this.selectedOption2,
         exam_date: this.selectedOption3,
-        subject_name: this.selectedSubjects[this.currentSubjectIndex]
+        subject_name: this.selectedSubjects[this.currentSubjectIndex],
+        member_id: this.memberId,
+        start_exam_date: this.start_exam_date
       };
 
       axios.post('/mode/practiceModeLoadExam', criteria)
         .then(response => {
+          this.problems = [],
           this.problems = response.data;
-          // console.log(this.problems); 모든문제 잘 불러와지는 확인
           this.currentProblemIndex = 0;
           this.loadCurrentProblem();
         })
@@ -155,33 +199,27 @@ export default {
       }
 
       if (this.currentProblemIndex < this.problems.length - 1) {
+        this.storeProblem();
         this.currentProblemIndex++;
         this.loadCurrentProblem();
         this.selectedAnswer = ''; // 라디오 버튼 초기화
+
       } else {
         this.viewResult();
       }
+
+
     },
 
     viewResult() {
-    const currentSubject = this.selectedSubjects[this.currentSubjectIndex];
-    const totalSubjects = this.selectedSubjects.length;
-
-    // 현재 과목 인덱스와 총 과목 수를 함께 전달
-    this.$router.push({
-      name: 'PracticeResult',
-      params: {
-        subject: currentSubject,
-        problems: this.problems,
-        currentSubjectIndex: this.currentSubjectIndex,
-        totalSubjects: totalSubjects
-      }
-    });
-  },
+      this.storeProblem();
+      this.$router.push({ name: 'PracticeResult' });
+    },
 
     // 사용자가 선택한 값과 정답을 검증하는 함수
     checkAnswer(option) {
       this.selectedAnswer = option;
+      this.selectedAnswerValue = this.currentProblem[option]; // option의 실제 값
       this.isAnswerSelected = true;
 
       const answerText = this.currentProblem[option];
@@ -202,28 +240,31 @@ export default {
     toggleBottomSheet() {
       this.isBottomSheetVisible = !this.isBottomSheetVisible;
     },
-
-     // 과목을 업데이트하는 메소드
-     updateSubject() {
-      this.currentSubjectIndex = parseInt(this.$route.params.subjectIndex) || 0;
-      this.loadCurrentProblem();
-    }
   },
 
   mounted() {
+    if ((this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)) {
+      this.memberId = this.$cookies.get('USER_ID');
+    } else {
+      this.memberId = localStorage.getItem('GUEST');
+    }
+
     this.selectedOption1 = sessionStorage.getItem('license');
     this.selectedOption2 = sessionStorage.getItem('detail_license');
     this.selectedOption3 = sessionStorage.getItem('exam_date');
     this.mode = sessionStorage.getItem('mode');
     const selectedSubjects = sessionStorage.getItem('selectedSubjects');
     this.selectedSubjects = JSON.parse(selectedSubjects);
+    this.start_exam_date = sessionStorage.getItem('start_exam_date');
 
     this.currentSubjectIndex = 0;
 
     this.loadProblems();
+  },
 
-    this.updateSubject();
-  }
+  created() {
+
+  },
 };
 </script>
 

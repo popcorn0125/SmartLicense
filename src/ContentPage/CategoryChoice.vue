@@ -145,6 +145,8 @@ export default {
         },
 
         goSolve() {
+            const now = new Date();
+            const formattedDateTime = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
             if (this.mode === '연습') {
                 sessionStorage.setItem('license', this.selectedOption1);
@@ -152,6 +154,8 @@ export default {
                 sessionStorage.setItem('exam_date', this.selectedOption3);
                 sessionStorage.setItem('mode', this.mode);
                 sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
+                sessionStorage.setItem('start_exam_date', formattedDateTime);
+                sessionStorage.setItem('subject_count', this.selectedSubjects.length);
                 this.$router.push({ name: 'PracticeMode' });
 
             } else if (this.mode === '시험') {

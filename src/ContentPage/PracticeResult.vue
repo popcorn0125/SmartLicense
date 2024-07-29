@@ -1,7 +1,7 @@
 <template>
   <TopBar />
   <div class="results-summary-container">
-    <div :class="['confetti',resultClass]">
+    <div :class="['confetti', resultClass]">
       <div class="confetti-piece"></div>
       <div class="confetti-piece"></div>
       <div class="confetti-piece"></div>
@@ -24,36 +24,36 @@
     </div>
     <div :class="['results-summary-container__result', resultClass]">
       <div :class="['result-box', resultClass]">
-        <div :class="['heading-primary', resultClass]">{{ corretCount }}</div>
-        <p :class="['result', resultClass]">of {{ totalQuestionCount }}</p>
+        <div :class="['heading-primary', resultClass]">{{ practiceScore.correctCount }}</div>
+        <p :class="['result', resultClass]">of {{ practiceScore.totalProblems }}</p>
       </div>
       <div class="result-text-box">
         <div :class="['heading-secondary', resultClass]">{{ resultMessage }}</div>
       </div>
     </div>
     <div class="results-summary-container__options">
-      <div class="heading-secondary heading-secondary--blue">{{ Subject }}</div>
+      <div class="heading-secondary heading-secondary--blue">과목 : {{ subject }}</div>
       <div class="summary-result-options">
         <div class="result-option result-option-memory">
           <div class="icon-box">
 
             <span class="reaction-icon-text">총 문항 갯수</span>
           </div>
-          <div class="result-box"><span>{{ totalQuestionCount }}</span></div>
+          <div class="result-box"><span>{{ practiceScore.totalProblems }}</span></div>
         </div>
         <div class="result-option result-option-verbal">
           <div class="icon-box">
 
             <span class="memory-icon-text">정답 갯수</span>
           </div>
-          <div class="result-box"><span>{{corretCount}}</span></div>
+          <div class="result-box"><span>{{ practiceScore.correctCount }}</span></div>
         </div>
         <div class="result-option result-option-reaction">
           <div class="icon-box">
 
             <span class="verbal-icon-text">오답 갯수</span>
           </div>
-          <div class="result-box"><span>{{wrongCount}}</span></div>
+          <div class="result-box"><span>{{ (practiceScore.totalProblems) - (practiceScore.correctCount) }}</span></div>
         </div>
         <div class="summary__cta">
           <button class="btn btn__continue" @click="btnClick()">{{ buttonText }}</button>
@@ -66,7 +66,8 @@
 
 <script>
 import TopBar from '@/components/TopBar.vue';
-import BottomBar from '@/components/BottomBar.vue'
+import BottomBar from '@/components/BottomBar.vue';
+import axios from 'axios';
 export default {
   name: "PracticeResult",
   components: {
@@ -74,41 +75,53 @@ export default {
   },
   data() {
     return {
-      DetailLicense: "정보처리기사",
-      TestDate: "2020년 4월 24일",
-      Subject: "1과목 : 소프트웨어 설계",
-      totalQuestionCount: 20, // 총 문항 갯수
-      corretCount: 15, // 정답 갯수
-      wrongCount: 5, // 오답 갯수
-      currentSubjectIndex: 0, // 현재 과목 인덱스
-      totalSubjects: 5 // 총 과목 수
+      practiceScore: [],
+      memberId: null,
+      subject: null,
     }
   },
   methods: {
     btnClick() {
-      if (this.buttonText === '마이페이지로 가기') {
-        this.$router.push({ name: 'MyPage' });
+      let selectedSubjects = JSON.parse(sessionStorage.getItem('selectedSubjects'));
+      if (selectedSubjects.length > 1) {
+        selectedSubjects.splice(0, 1); // 인덱스가 0인 것을 하나 지우기
+        sessionStorage.setItem('selectedSubjects', JSON.stringify(selectedSubjects));
+        this.$router.push({ name: 'PracticeMode' });
       } else {
-        // 다음 과목으로 이동
-        const nextSubjectIndex = this.currentSubjectIndex + 1;
-        if (nextSubjectIndex < this.totalSubjects) {
-          this.$router.push({
-            name: 'PracticeMode',
-            params: {
-              subjectIndex: nextSubjectIndex,
-              totalSubjects: this.totalSubjects
-            }
-          });
-        } else {
-          this.$router.push({ name: 'MyPage' });
-        }
+        this.$router.push({ name: 'MyHistoryPage' });
+        sessionStorage.clear();
       }
+    },
+
+    loadUserSelectAnswer() {
+      let subjectindex = JSON.parse(sessionStorage.getItem('selectedSubjects'));
+      this.subject = subjectindex[0];
+      const postData = {
+        detail_license: sessionStorage.getItem('detail_license'),
+        license: sessionStorage.getItem('license'),
+        exam_date: sessionStorage.getItem('exam_date'),
+        subject_name: subjectindex[0],
+        member_id: this.memberId,
+        start_test_date: sessionStorage.getItem("start_exam_date")
+      }
+      axios({
+        method: 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/mode/loadPracticeScore",
+        data: postData,
+      })
+        .then(response => {
+          this.practiceScore = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
 
   computed: {
     passed() {
-      return this.corretCount >= this.totalQuestionCount * 0.4;
+      return this.practiceScore.correctCount >= this.practiceScore.totalProblems * 0.4;
     },
     resultClass() {
       return this.passed ? 'passed' : 'failed';
@@ -117,12 +130,18 @@ export default {
       return this.passed ? '합격 기준입니다.' : '불합격 기준입니다.';
     },
     buttonText() {
-      return this.currentSubjectIndex === this.totalSubjects - 1 ? '마이페이지로 가기' : '다음 과목 풀기';
+      let selectedSubjects = JSON.parse(sessionStorage.getItem('selectedSubjects'));
+      return selectedSubjects.length > 1 ? '다음 과목 풀기' : '기록 페이지로 가기';
     }
   },
   mounted() {
-    this.currentSubjectIndex = this.$route.params.currentSubjectIndex || 0;
-    this.totalSubjects = this.$route.params.totalSubjects || 5;
+    if ((this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)) {
+      this.memberId = this.$cookies.get('USER_ID');
+    } else {
+      this.memberId = localStorage.getItem('GUEST');
+    }
+
+    this.loadUserSelectAnswer();
   },
 }
 </script>
@@ -331,9 +350,11 @@ export default {
   overflow: hidden;
   z-index: 1000;
 }
+
 .confetti.failed {
   visibility: hidden;
 }
+
 .confetti-piece {
   position: absolute;
   width: 10px;
@@ -518,15 +539,18 @@ export default {
   }
 }
 
-.passed{
+.passed {
   color: #49862C;
 }
-.failed{
+
+.failed {
   color: #FF0000;
 }
+
 .heading-primary.passed {
   background-color: #49862C;
 }
+
 .heading-primary.failed {
   background-color: #FF0000;
 }
