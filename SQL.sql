@@ -89,10 +89,13 @@ CREATE TABLE exam_record
 	exam_record_idx INT AUTO_INCREMENT PRIMARY KEY,
     mode VARCHAR(10) NOT NULL,
     remaining_time VARCHAR(50),
-    score INT,
+    correct_count INT,
     start_test_date VARCHAR(50),
     member_id VARCHAR(100) NOT NULL,
-    session_question_idx INT,
+    exam_duration VARCHAR(50) NOT NULL ,
+    subject_count INT,
+    question_count INT,
+    is_pass CHAR(1),
     create_date TIMESTAMP DEFAULT NOW()
 );
 
