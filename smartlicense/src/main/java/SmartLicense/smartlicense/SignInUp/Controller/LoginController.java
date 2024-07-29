@@ -36,6 +36,17 @@ public class LoginController {
     }
 
     /*******************
+     * 날짜 : 2024.07.29
+     * 이름 : 김준식
+     * 내용 : 로그아웃
+     * *****************/
+    @PostMapping("/logout")
+    public ResponseEntity<Integer> logout(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("logout 실행");
+        return ResponseEntity.ok(loginService.logout(request, response));
+    }
+
+    /*******************
      * 날짜 : 2024.07.28
      * 이름 : 김준식
      * 내용 : 게스트로그인

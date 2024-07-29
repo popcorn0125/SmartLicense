@@ -118,11 +118,11 @@ public class LoginService {
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
             for( Cookie cookie : cookies) {
-                if(cookie.getName().equals("USER_ID") || cookie.getName().equals("JSESSIONID")){
+                if(cookie.getName().equals("JSESSIONID") || cookie.getName().equals("USER_ID")){
                     // 쿠키에 USER_ID가 있을 경우
                     cookie.setMaxAge(0);
+                    cookie.setPath("/");
                     response.addCookie(cookie);
-                    break;
                 }
             }
         }
