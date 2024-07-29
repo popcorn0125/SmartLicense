@@ -70,6 +70,17 @@ public class ModeController {
         return ResponseEntity.ok(modeService.loadTestScore(params));
     }
 
+    /*******************
+     * 날짜 : 2024.07.29
+     * 이름 : 김준식
+     * 내용 : 합격 여부 업데이트
+     * *****************/
+    @PostMapping("/isPassUpdate")
+    public ResponseEntity<Integer> isPassUpdate(@RequestBody HashMap<String, Object> params) {
+        System.out.println("isPassUpdate 실행");
+        return ResponseEntity.ok(modeService.isPassUpdate(params));
+    }
+
     // 연습 모드 문제 로드
     @PostMapping("/practiceModeLoadExam")
     public ResponseEntity<List<Map<String, Object>>> practiceModeLoadExam(@RequestBody Map<String, Object> params) {

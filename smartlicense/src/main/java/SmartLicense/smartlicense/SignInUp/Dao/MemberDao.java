@@ -3,6 +3,7 @@ package SmartLicense.smartlicense.SignInUp.Dao;
 import SmartLicense.smartlicense.SignInUp.DTO.MemberDTO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /*******************
@@ -33,4 +34,11 @@ public interface MemberDao {
      * 내용 : 닉네임 중복이 있는지 확인 ( 닉네임 중복 확인 )
      * *****************/
     int isDuplicateNickName(HashMap<String, Object> params);
+
+    /*******************
+     * 날짜 : 2024.07.29
+     * 이름 : 김준식
+     * 내용 : 마이페이지에서 회원 정보 불러오기
+     * *****************/
+    HashMap<String, Object> loadUserInfo(HashMap<String, Object> params) throws SQLException;
 }

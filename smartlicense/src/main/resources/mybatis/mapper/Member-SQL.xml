@@ -39,5 +39,21 @@
         VALUES (#{userid}, #{pw}, #{name}, #{phonenumber}, #{nickname}, #{gender})
     </insert>
 
+    <!--
+	작성일 : 2024.07.29
+	작성자 : 김준식
+	내용 : 마이페이지에서 회원정보(이름, 닉네임, 오늘 푼 총 문제수, 오늘 푼 문제에 대한 정답 갯수)
+    -->
+    <select id="loadUserInfo" parameterType="HashMap" resultType="HashMap">
+        SELECT m.member_name as member_name,
+               m.member_nickname as member_nickname,
+               COUNT(usa.user_select_answer_idx) as total_count,
+               SUM(usa.is_correct) as correct_count
+        FROM member m
+                 JOIN user_select_answer usa ON m.member_id = usa.member_id
+        WHERE m.member_id = #{member_id}
+          AND usa.start_test_date LIKE CONCAT(#{current_date}, '%')
+    </select>
+
 
 </mapper>

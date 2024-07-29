@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -91,4 +92,16 @@ public class MemberController {
         }
         return ResponseEntity.ok(result);
     }
+
+    /*******************
+     * 날짜 : 2024.07.29
+     * 이름 : 김준식
+     * 내용 : 마이페이지에서 회원 정보 불러오기
+     * *****************/
+    @PostMapping("/loadUserInfo")
+    public ResponseEntity<HashMap<String, Object>> loadUserInfo(@RequestBody HashMap<String, Object> params) throws SQLException {
+        System.out.println("loadUserInfo 실행");
+        return ResponseEntity.ok(memberService.loadUserInfo(params));
+    }
+
 }

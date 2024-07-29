@@ -67,7 +67,7 @@
 	내용 : 사용자 응시 기록을 저장
     -->
     <insert id="storeExamRecord" parameterType="HashMap">
-        INSERT INTO exam_record ( mode, remaining_time, start_test_date, member_id, exam_duration, score)
+        INSERT INTO exam_record ( mode, remaining_time, start_test_date, member_id, exam_date, correct_count, subject_count, question_count, is_pass )
         VALUES (
                 #{mode},
                 #{remaining_time},
@@ -86,9 +86,27 @@
                        AND dl.detail_license_name = #{detail_license_name}
                        AND sq.exam_date = #{exam_date}
                        AND usa.start_test_date = #{start_test_date}
-                )
+                       AND usa.is_correct = 1
+                ),
+                #{subject_count},
+                #{question_count},
+                '0'
                     )
     </insert>
+
+    <!--
+	작성일 : 2024.07.26
+	작성자 : 김준식
+	내용 : 합격 여부 변경
+    -->
+    <update id="isPassUpdate" parameterType="HashMap" >
+        UPDATE exam_record
+        SET is_pass = '1'
+        WHERE member_id = #{member_id}
+            AND exam_date = #{exam_date}
+            AND start_test_date = #{start_test_date}
+            AND mode = #{mode}
+    </update>
 
     <!--
 	작성일 : 2024.07.26
@@ -133,7 +151,6 @@
           AND s.subject_name = #{subject}
           AND usa.member_id = #{member_id}
           AND usa.start_test_date = #{start_test_date}
-          AND usa.is_correct = 1
     </select>
 
     <!--
@@ -147,7 +164,7 @@
         WHERE mode = #{mode}
             AND start_test_date = #{start_test_date}
             AND member_id = #{member_id}
-            AND exam_duration = #{exam_date}
+            AND exam_date = #{exam_date}
     </select>
 
     <!-- 연습 모드 문제 로드 -->

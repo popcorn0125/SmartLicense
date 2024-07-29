@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 /*******************
  * 날짜 : 2024.07.15
@@ -68,6 +69,15 @@ public class MemberService {
             e.printStackTrace();
         }
         return result;
+    }
+
+    /*******************
+     * 날짜 : 2024.07.29
+     * 이름 : 김준식
+     * 내용 : 마이페이지에서 회원 정보 불러오기
+     * *****************/
+    public HashMap<String, Object> loadUserInfo(HashMap<String, Object> params) throws SQLException {
+        return memberDao.loadUserInfo(params);
     }
 
 }
