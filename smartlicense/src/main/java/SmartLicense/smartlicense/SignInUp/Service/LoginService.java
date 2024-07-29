@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -145,6 +146,29 @@ public class LoginService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        return result;
+    }
+
+    /*******************
+     * 날짜 : 2024.07.29
+     * 이름 : 김준식
+     * 내용 : 사용자 비밀번호 일치 여부 확인
+     * *****************/
+    public HashMap<String, Object> userPWCheck(HashMap<String, Object> params) throws SQLException {
+        // 0 : 비밀번호 불일치, 1 : 비밀번호 일치
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("result",0);
+        // 비밀번호 검증
+        String password = params.get("userPw").toString();
+        String encodePassword = loginDao.getUserPw(params);
+        // 비밀번호가 일치하지 않을 경우
+        if( !(passwordEncoder.matches(password, encodePassword)) ) {
+            result.put("message", "비밀번호가 일치하지 않습니다.");
+            return result;
+        }
+
+        result.put("result", 1);
 
         return result;
     }
