@@ -93,6 +93,41 @@ export default {
       }
     },
 
+    storeExamRecord(){
+      const recordData = {
+        mode : sessionStorage.getItem('mode'),
+        remaining_time : '-',
+        // correct_count: ,
+        start_test_date : sessionStorage.getItem('start_test_date'),
+        member_id : this.memberId,
+        exam_date : sessionStorage.getItem('exam_date'),
+        detail_license_name : sessionStorage.getItem('detail_license'),
+        license_name : sessionStorage.getItem('license'),
+        // subject_count: ,
+        // question_count:,
+        // is_pass:
+      };
+      console.log('recordData', recordData);
+      // 응시 시험 기록 저장
+      axios({
+        method : 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/mode/storeExamRecord",
+        data : recordData,
+      })
+        .then(response => {
+          if(response.data > 0) {
+            // vm.$router.push({ name: 'TestResult' });  
+          } else {
+            // 제대로 저장하지 못했을 경우 
+            console.log('에러');
+          }
+        })
+        .catch(error=>{
+          console.log(error);
+        })
+    },
+
     loadUserSelectAnswer() {
       let subjectindex = JSON.parse(sessionStorage.getItem('selectedSubjects'));
       this.subject = subjectindex[0];
