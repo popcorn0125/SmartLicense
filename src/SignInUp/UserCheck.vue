@@ -4,8 +4,10 @@
         <form class="login-form">
             <br>
             <div class="input-group">
-                <input placeholder="현재 비밀번호를 입력하세요." type="password" />
+                <input placeholder="현재 비밀번호를 입력하세요." type="password" v-model="userPw" />
+                <text id="passwordCheck" class="infoMessage">{{ pwCheckMsg }}</text>
             </div>
+            
             <button type="button" @click="goToChangeInfo">확인</button>
         </form>
     </div>
@@ -14,6 +16,7 @@
 <script>
 import TopBar from '@/components/TopBar.vue';
 import BottomBar from '@/components/BottomBar.vue';
+import axios from 'axios';
 
 export default {
     name: "FindByPwPage",
@@ -22,12 +25,34 @@ export default {
     },
     data() {
         return {
-
+            member : {
+                userId : this.$cookies.get('USER_ID'),
+                userPw : '',
+            },
+            pwCheckMsg : '',
+            
         }
     },
     methods: {
         goToChangeInfo(){
-            this.$router.push({ name : 'ChangeInfo'})
+            const vm = this;
+            axios({
+                method : 'post',
+                header: { 'Content-Type': 'application/json; charset=UTF-8' },
+                url: "/memberLogin/userPWCheck",
+                data : vm.member,
+            })
+                .then(response => {
+                    if(response.data.result > 0) {
+                        this.$router.push({ name : 'ChangeInfo'})
+                    } else {
+                        vm.pwCheckMsg = response.data.message;
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+            
         }
     }
 }
@@ -49,7 +74,7 @@ export default {
 }
 .input-group {
     margin-bottom: 20px;
-    display: flex;
+
 }
 .input-group input {
     background: none;
@@ -74,5 +99,18 @@ button {
     box-shadow: rgba(0, 0, 0, 0.06) 0px 1px 1px,
         rgba(0, 0, 0, 0.09) 0px 1px 1px, rgba(0, 0, 0, 0.09) 0px 1px 2px,
         rgba(0, 0, 0, 0.09) 0px 1px 4px, rgba(0, 0, 0, 0.09) 0px 1px 8px;
+}
+
+.infoMessage {
+  display: block;
+  color: #F00;
+  -webkit-text-stroke-width: 1;
+  -webkit-text-stroke-color: #000;
+  font-family: Inter;
+  font-size: 0.7em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: left;
 }
 </style>

@@ -16,13 +16,13 @@
                         <p class="flex flex-col">
                             오늘 푼 문제 수
                             <span class="state-value">
-                                34
+                                {{ todaySolvedProblems }}
                             </span>
                         </p>
                         <p class="flex">
                             오늘의 정답률
                             <span class="state-value">
-                                88.2%
+                                {{ correctRate }}%
                             </span>
                         </p>
 
@@ -56,6 +56,7 @@
 <script>
 import TopBar from '@/components/TopBar.vue';
 import BottomBar from '@/components/BottomBar.vue'
+import axios from 'axios';
 export default {
     name: 'MyPage',
     components: {
@@ -63,17 +64,53 @@ export default {
     },
     data() {
         return {
-            UserId: "hong123",
-            UserName: "홍길동",
-            UserNickName: "honghong",
-            RegistDate: "2024. 07. 15",
+            UserName: '',
+            UserNickName: '',
+            todaySolvedProblems: '',
+            correctRate : '',
         };
     },
     methods: {
       goToUserCheck(){
         this.$router.push({ name : 'UserCheck'});
+      },
+
+      // 회원 정보 불러오기
+      loadUserInfo() {
+        const vm = this;
+        const currentDate = new Date();
+        const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+          
+        const data = {
+          member_id : vm.$cookies.get('USER_ID'), // 사용자 ID or 게스트 ID
+          current_date : formattedDate, // 현재 날짜
+        }
+        axios({
+          method : 'post',
+          header: { 'Content-Type': 'application/json; charset=UTF-8' },
+          url: "/api/loadUserInfo",
+          data : data,
+        })
+          .then(response => {
+            if(response.data) {
+              console.log(response.data)
+              vm.UserName = response.data.member_name;
+              vm.UserNickName = response.data.member_nickname;
+              vm.todaySolvedProblems = response.data.total_count;
+              vm.correctRate = ((response.data.correct_count / vm.todaySolvedProblems) * 100).toFixed(2);
+            } else {
+              console.log("정보를 불러오는데 실패하였습니다.");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          })
       }
     },
+
+    mounted() {
+      this.loadUserInfo();
+    }
 }
 </script>
 

@@ -30,8 +30,8 @@
         <label for="value-3"><div v-if="imgCheckOP3">{{ Option3 }}</div><img v-else :src="Option3"></label>
         <input type="radio" id="value-4" name="value-radio" :value="Option4" v-model="selectedOption">
         <label for="value-4"><div v-if="imgCheckOP4">{{ Option4 }}</div><img v-else :src="Option4"></label>
-        <input type="radio" id="value-4" name="value-radio" value="잘 모르겠어요" v-model="selectedOption">
-        <label for="value-4">잘 모르겠어요.</label>
+        <input type="radio" id="value-5" name="value-radio" :value="Option5" v-model="selectedOption">
+        <label for="value-5">{{ Option5 }}</label>
       </div>
       <div class="btn_collection" v-if="Qnumber < totalQuestionList.length" @click="nextQuestion">
         다음 문제 >
@@ -75,6 +75,7 @@ export default {
       Option2: "", // 보기2
       Option3: "", // 보기3
       Option4: "", // 보기4
+      Option5: '잘 모르겠어요',
       selectedOption: null, // 사용자가 선택한 답
       isModalVisivle: false, // 모달창 열기 여부
       isBottomSheetVisible: true,
@@ -136,10 +137,10 @@ export default {
     // 결과페이지 이동 버튼 클릭
     async viewResult() {
       const vm = this;
-      if(vm.selectedOption === null) {
+      if(vm.selectedOption === '') {
         return;
       }
-      if(vm.totalQuestionList[vm.Qnumber -1 ].answer == vm.selectedOption){
+      if(vm.totalQuestionList[vm.Qnumber-1].answer === vm.selectedOption){
         vm.isCorret = 1; // 정답일때
       } else {
         vm.isCorret = 0; // 오답일때
@@ -180,7 +181,9 @@ export default {
         member_id : vm.memberId,
         exam_date : sessionStorage.getItem('exam_date'),
         detail_license_name : sessionStorage.getItem('detail_license'),
-        license_name : sessionStorage.getItem('license')
+        license_name : sessionStorage.getItem('license'),
+        subject_count : JSON.parse(sessionStorage.getItem('selectedSubjects')).length,
+        question_count : vm.totalQuestionList.length,
       };
       console.log('recordData', recordData);
       // 응시 시험 기록 저장
@@ -205,10 +208,10 @@ export default {
     // 다음문제 버튼 클릭
     nextQuestion() {
       const vm = this;
-      if(vm.selectedOption === null) {
+      if(vm.selectedOption === '') {
         return;
       }
-      if(vm.totalQuestionList[vm.Qnumber -1 ].answer == vm.selectedOption){
+      if(vm.totalQuestionList[vm.Qnumber-1].answer === vm.selectedOption){
         vm.isCorret = 1; // 정답일때
       } else {
         vm.isCorret = 0; // 오답일때
@@ -216,7 +219,7 @@ export default {
       const postData = {
         select_answer : vm.selectedOption,
         member_id : vm.memberId,
-        question_idx : vm.totalQuestionList[vm.Qnumber - 1].question_idx,
+        question_idx : vm.totalQuestionList[vm.Qnumber-1].question_idx,
         is_correct : vm.isCorret,
         start_test_date : sessionStorage.getItem("startTestDate")
       }
@@ -255,8 +258,9 @@ export default {
         vm.Subject = vm.totalQuestionList[vm.Qnumber-1].subject_name
       }
       vm.imagePath = vm.totalQuestionList[vm.Qnumber -1].image;
-      vm.selectedOption = null;
-      return ;
+      vm.selectedOption = '';
+      vm.isCorret = 0;
+
     },
 
     // 타이머 시작
@@ -308,6 +312,8 @@ export default {
           this.timeRemaining = response.data.timeRemaining * 60; // 
           // 타이머
           this.startTimer();
+          this.selectedOption = '';
+          this.isCorret = 0;
           // console.log(response.data);
         })
         .catch(function(error){

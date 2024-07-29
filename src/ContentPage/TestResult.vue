@@ -81,7 +81,7 @@ export default {
     },
 
     // 시험결과 가져오기
-    loadExamRecord() {
+    async loadExamRecord() {
       const vm = this;
       const loadData = {
         start_test_date : sessionStorage.getItem('startTestDate'),
@@ -92,7 +92,7 @@ export default {
         subject : sessionStorage.getItem("selectedSubjects"),
         mode : sessionStorage.getItem("mode")
       };
-      axios({
+      await axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
         url: "/mode/loadTestScore",
@@ -112,7 +112,42 @@ export default {
         .catch(error => {
           console.log(error);
         })
-    }
+        
+        // 합격 여부 확인하는 부분
+        const scoreSum = this.Qnumber.reduce((acc, val) => acc + val, 0);
+        const qNumberSum = this.Score.reduce((acc, val) => acc + val, 0);
+        const isPass = scoreSum >= qNumberSum * 0.6 && this.Score.every((score, index) => score >= this.Qnumber[index] * 0.4);
+
+        // 불합격일 경우
+        if(isPass === false) {
+          return;
+        }
+        // 합격일 경우
+        const postData = {
+          start_test_date : sessionStorage.getItem('startTestDate'),
+          member_id : vm.memberId,
+          exam_date : sessionStorage.getItem('exam_date'),
+          mode : sessionStorage.getItem("mode")
+        };
+        // 합격일 경우
+        axios({
+          method : 'post',
+          header: { 'Content-Type': 'application/json; charset=UTF-8' },
+          url: "/mode/isPassUpdate",
+          data : postData,
+        })
+          .then(response => {
+            if(response.data < 1) {
+              console.log('로드 실패');
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          })
+      
+    },
+
+
   },
   computed:{
     QnumberSum() {
