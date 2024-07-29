@@ -29,4 +29,6 @@ public interface ModeDao {
     // 연습 모드 문제 로드
     List<Map<String, Object>> practiceModeLoadExam(Map<String, Object> params);
 
+    HashMap<String, Object> loadPracticeScore(HashMap<String, Object> Params);
+
 }

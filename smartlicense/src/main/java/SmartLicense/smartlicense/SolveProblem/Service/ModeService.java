@@ -90,4 +90,8 @@ public class ModeService {
     public List<Map<String, Object>> practiceModeLoadExam(Map<String, Object> params) {
         return modeDao.practiceModeLoadExam(params);
     }
+
+    public HashMap<String, Object> loadPracticeScore(HashMap<String, Object> params) {
+        return modeDao.loadPracticeScore(params);
+    }
 }

@@ -157,12 +157,30 @@
                q.option1 as option1, q.option2 as option2, q.option3 as option3, q.option4 as option4,
                q.answer as answer, q.image as image, q.question_description as question_description
         FROM detail_license dl
+                 JOIN license l ON l.license_idx = dl.license_idx
                  JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
                  JOIN question q ON s.subject_idx = q.subject_idx
                  JOIN session_question sq ON q.question_idx = sq.question_idx
         WHERE dl.detail_license_name = #{detail_license_name}
+          AND l.license_name = #{license}
           AND sq.exam_date = #{exam_date}
           AND s.subject_name = #{subject_name}
+    </select>
+
+    <select id="loadPracticeScore" parameterType="HashMap" resultType="HashMap">
+        SELECT  count(usa.is_correct) as totalProblems, sum(usa.is_correct) as correctCount
+        FROM license l
+                 JOIN detail_license dl ON dl.license_idx = l.license_idx
+                 JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
+                 JOIN question q ON s.subject_idx = q.subject_idx
+                 JOIN session_question sq ON q.question_idx = sq.question_idx
+                 JOIN user_select_answer usa ON usa.question_idx = sq.question_idx
+        WHERE dl.detail_license_name = #{detail_license}
+          AND l.license_name = #{license}
+          AND sq.exam_date = #{exam_date}
+          AND s.subject_name = #{subject_name}
+          AND usa.member_id = #{member_id}
+          AND usa.start_test_date = #{start_test_date}
     </select>
 
 

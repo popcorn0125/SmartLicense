@@ -77,4 +77,10 @@ public class ModeController {
         System.out.println("params : " + params);
         return ResponseEntity.ok(modeService.practiceModeLoadExam(params));
     }
+
+    @PostMapping("/loadPracticeScore")
+    public ResponseEntity<HashMap<String, Object>> loadPracticeScore(@RequestBody HashMap<String, Object> params) {
+        System.out.println("loadPracticeScore 실행");
+        return ResponseEntity.ok(modeService.loadPracticeScore(params));
+    }
 }
