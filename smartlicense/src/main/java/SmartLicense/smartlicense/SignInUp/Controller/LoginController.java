@@ -44,4 +44,10 @@ public class LoginController {
         System.out.println("guestLogin 실행");
         return ResponseEntity.ok(loginService.guestLogin());
     }
+
+    /*******************
+     * 날짜 : 2024.07.28
+     * 이름 : 김준식
+     * 내용 : 게스트로그인
+     * *****************/
 }

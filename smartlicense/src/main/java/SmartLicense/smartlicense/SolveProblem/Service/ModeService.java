@@ -86,6 +86,10 @@ public class ModeService {
         return result;
     }
 
+    public Integer isPassUpdate(HashMap<String, Object> params) {
+        return modeDao.isPassUpdate(params);
+    }
+
     // 연습 모드 문제 로드
     public List<Map<String, Object>> practiceModeLoadExam(Map<String, Object> params) {
         return modeDao.practiceModeLoadExam(params);
