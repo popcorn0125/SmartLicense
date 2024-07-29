@@ -48,7 +48,7 @@
         <div class="card">
           <p>앱 버전</p>
         </div>
-        <div class="logout"><a href="/Login">로그아웃</a></div>
+        <div class="logout"><a @click="logout()">로그아웃</a></div>
     </div>
     <BottomBar />
 </template>
@@ -105,11 +105,37 @@ export default {
           .catch(error => {
             console.log(error);
           })
+      },
+
+      // 로그아웃
+      logout() {
+        const vm = this;
+        axios({
+          method : 'post',
+          header: { 'Content-Type': 'application/json; charset=UTF-8' },
+          url: "/memberLogin/logout",
+          data : {},
+        })
+          .then(response => {
+            if(response.data > 0) {
+              vm.$router.push({ name: 'LoginPage' });
+            } else {
+              console.log('다시 로그아웃을 해주세요');
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          })
       }
     },
 
     mounted() {
-      this.loadUserInfo();
+      if( (this.$cookies.get('JSESSIONID') == null && this.$cookies.get('USER_ID') == null)){
+        this.$router.push({ name: 'LoginPage' });
+      } else{
+        this.loadUserInfo();
+      }
+      
     }
 }
 </script>
