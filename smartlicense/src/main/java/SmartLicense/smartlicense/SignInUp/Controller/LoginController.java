@@ -41,9 +41,9 @@ public class LoginController {
      * 내용 : 로그아웃
      * *****************/
     @PostMapping("/logout")
-    public ResponseEntity<Integer> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Integer> logout(HttpServletRequest request) {
         System.out.println("logout 실행");
-        return ResponseEntity.ok(loginService.logout(request, response));
+        return ResponseEntity.ok(loginService.logout(request));
     }
 
     /*******************

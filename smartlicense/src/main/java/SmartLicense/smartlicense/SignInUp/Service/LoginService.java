@@ -97,7 +97,7 @@ public class LoginService {
      * 이름 : 김준식
      * 내용 : 로그아웃
      * *****************/
-    public int logout(HttpServletRequest request, HttpServletResponse response) {
+    public int logout(HttpServletRequest request) {
         int result = 0;
 
         HttpSession session = request.getSession(false);
@@ -105,7 +105,7 @@ public class LoginService {
             // 세션 무효화
             session.invalidate();
             // 쿠키 삭제
-            cookieDelete(request, response);
+            //cookieDelete(request, response);
             result = 1;
         }
         return result;
