@@ -65,8 +65,10 @@ public class LoginService {
             HttpSession session = request.getSession();
             session.setAttribute("loginUser", params.get("userId").toString());
             session.setMaxInactiveInterval(24*60*60); // 24시간
-            cookieCreate(response, "JSESSIONID", session.getId());
-            cookieCreate(response, "USER_ID", params.get("userId").toString());
+            result.put("JSESSIONID", session.getId().toString());
+            result.put("USER_ID", params.get("userId").toString());
+//            cookieCreate(response, "JSESSIONID", session.getId());
+//            cookieCreate(response, "USER_ID", params.get("userId").toString());
 
             result.put("result", 1);
             System.out.println("로그인 성공");
