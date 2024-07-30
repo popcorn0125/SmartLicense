@@ -82,6 +82,12 @@ export default {
       isCorret : 0,
       timeRemaining: 150 * 60, // 150분을 초로 변환 (9000)
       timer: null,
+
+      Score : [], // 합격 불합격 여부를 확인하기 위해 과목별 점수를 저장할 변수
+      correctSum : 0, // 과목별 정답 개수를 저장할 변수
+      subjectQnumber : [], // 과목별 총 문제수를 저장
+      subjectQnumberSum : 0, // 과목별 문제수를 저장(1씩더하다가 과목명이 변경되면 Qnumber에 저장 후 0으로 초기화)
+      Pass : '0', // 합격 여부
     }
   },
   computed: {
@@ -140,11 +146,19 @@ export default {
       if(vm.selectedOption === '') {
         return;
       }
+      vm.subjectQnumberSum += 1;
       if(vm.totalQuestionList[vm.Qnumber-1].answer === vm.selectedOption){
         vm.isCorret = 1; // 정답일때
+        vm.correctSum += vm.isCorret;
       } else {
         vm.isCorret = 0; // 오답일때
       }
+      console.log('subjectQnumber',vm.subjectQnumber);
+      console.log('Score', vm.Score);
+      vm.Score.push(vm.correctSum);
+      vm.subjectQnumber.push(vm.subjectQnumberSum);
+      vm.correctSum = 0;
+      
       const postData = {
         select_answer : vm.selectedOption,
         member_id : vm.memberId,
@@ -174,6 +188,15 @@ export default {
       let remainingTime = vm.remainingTimeCal();
       clearInterval(vm.timer);
       
+      // 합격 여부 확인하는 부분
+      const scoreSum = vm.Score.reduce((acc, val) => acc + val, 0);
+      const qNumberSum = vm.subjectQnumber.reduce((acc, val) => acc + val, 0);
+      const isPass = scoreSum >= qNumberSum * 0.6 && vm.Score.every((score, index) => score >= vm.Qnumber[index] * 0.4);
+
+      // 불합격일 경우
+      if(isPass === true) {
+        vm.Pass = '1';
+      }
       const recordData = {
         mode : sessionStorage.getItem('mode'),
         remaining_time : remainingTime,
@@ -184,6 +207,7 @@ export default {
         license_name : sessionStorage.getItem('license'),
         subject_count : JSON.parse(sessionStorage.getItem('selectedSubjects')).length,
         question_count : vm.totalQuestionList.length,
+        is_pass : vm.Pass
       };
       console.log('recordData', recordData);
       // 응시 시험 기록 저장
@@ -211,8 +235,10 @@ export default {
       if(vm.selectedOption === '') {
         return;
       }
+      vm.subjectQnumberSum += 1;
       if(vm.totalQuestionList[vm.Qnumber-1].answer === vm.selectedOption){
         vm.isCorret = 1; // 정답일때
+        vm.correctSum += vm.isCorret;
       } else {
         vm.isCorret = 0; // 오답일때
       }
@@ -256,6 +282,12 @@ export default {
       }
       if(vm.totalQuestionList[vm.Qnumber-1].subject_name !== vm.Subject) {
         vm.Subject = vm.totalQuestionList[vm.Qnumber-1].subject_name
+        vm.Score.push(vm.correctSum);
+        vm.subjectQnumber.push(vm.subjectQnumberSum);
+        vm.correctSum = 0;
+        vm.subjectQnumberSum = 0;
+        console.log('subjectQnumber',vm.subjectQnumber);
+        console.log('Score', vm.Score);
       }
       vm.imagePath = vm.totalQuestionList[vm.Qnumber -1].image;
       vm.selectedOption = '';
