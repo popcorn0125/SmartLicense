@@ -50,7 +50,7 @@
                COUNT(usa.user_select_answer_idx) as total_count,
                SUM(usa.is_correct) as correct_count
         FROM member m
-                 JOIN user_select_answer usa ON m.member_id = usa.member_id
+                 LEFT JOIN user_select_answer usa ON m.member_id = usa.member_id
         WHERE m.member_id = #{member_id}
           AND usa.start_test_date LIKE CONCAT(#{current_date}, '%')
     </select>

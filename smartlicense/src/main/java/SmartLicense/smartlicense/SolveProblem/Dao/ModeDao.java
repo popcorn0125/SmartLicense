@@ -26,8 +26,6 @@ public interface ModeDao {
 
     String getRemainingTime(HashMap<String, Object> params);
 
-    int isPassUpdate(HashMap<String, Object> params);
-
     // 연습 모드 문제 로드
     List<Map<String, Object>> practiceModeLoadExam(Map<String, Object> params);
 

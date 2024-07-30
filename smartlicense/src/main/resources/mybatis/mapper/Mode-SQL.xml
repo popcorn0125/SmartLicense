@@ -90,23 +90,9 @@
                 ),
                 #{subject_count},
                 #{question_count},
-                '0'
+                #{is_pass}
                     )
     </insert>
-
-    <!--
-	작성일 : 2024.07.26
-	작성자 : 김준식
-	내용 : 합격 여부 변경
-    -->
-    <update id="isPassUpdate" parameterType="HashMap" >
-        UPDATE exam_record
-        SET is_pass = '1'
-        WHERE member_id = #{member_id}
-            AND exam_date = #{exam_date}
-            AND start_test_date = #{start_test_date}
-            AND mode = #{mode}
-    </update>
 
     <!--
 	작성일 : 2024.07.26
