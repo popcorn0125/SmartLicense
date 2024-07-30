@@ -118,6 +118,7 @@ export default {
         })
           .then(response => {
             if(response.data > 0) {
+              sessionStorage.clear();
               vm.$router.push({ name: 'LoginPage' });
             } else {
               console.log('다시 로그아웃을 해주세요');
@@ -130,7 +131,7 @@ export default {
     },
 
     mounted() {
-      if( (this.$cookies.get('JSESSIONID') == null && this.$cookies.get('USER_ID') == null)){
+      if( (sessionStorage.getItem('JSESSIONID') == null && sessionStorage.getItem('USER_ID') == null)){
         this.$router.push({ name: 'LoginPage' });
       } else{
         this.loadUserInfo();
