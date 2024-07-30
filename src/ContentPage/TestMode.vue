@@ -164,7 +164,7 @@ export default {
         member_id : vm.memberId,
         question_idx : vm.totalQuestionList[vm.Qnumber - 1].question_idx,
         is_correct : vm.isCorret,
-        start_test_date : sessionStorage.getItem("startTestDate")
+        start_test_date : vm.$cookies.get("startTestDate")
       }
 
       // 사용자가 선택한 답 저장
@@ -198,14 +198,14 @@ export default {
         vm.Pass = '1';
       }
       const recordData = {
-        mode : sessionStorage.getItem('mode'),
+        mode : vm.$cookies.get('mode'),
         remaining_time : remainingTime,
-        start_test_date : sessionStorage.getItem('startTestDate'),
+        start_test_date : vm.$cookies.get('startTestDate'),
         member_id : vm.memberId,
-        exam_date : sessionStorage.getItem('exam_date'),
-        detail_license_name : sessionStorage.getItem('detail_license'),
-        license_name : sessionStorage.getItem('license'),
-        subject_count : JSON.parse(sessionStorage.getItem('selectedSubjects')).length,
+        exam_date : vm.$cookies.get('exam_date'),
+        detail_license_name : vm.$cookies.get('detail_license'),
+        license_name : vm.$cookies.get('license'),
+        subject_count : JSON.parse(this.$cookies.get('selectedSubjects')).length,
         question_count : vm.totalQuestionList.length,
         is_pass : vm.Pass
       };
@@ -247,7 +247,7 @@ export default {
         member_id : vm.memberId,
         question_idx : vm.totalQuestionList[vm.Qnumber-1].question_idx,
         is_correct : vm.isCorret,
-        start_test_date : sessionStorage.getItem("startTestDate")
+        start_test_date : this.$cookies.get("startTestDate")
       }
 
       axios({
@@ -309,13 +309,13 @@ export default {
 
     // 시험 문제 불러오는 함수
     loadExam() {
-      this.DetailLicense = sessionStorage.getItem("detail_license");
-      this.TestDate = sessionStorage.getItem("exam_date");
+      this.DetailLicense = this.$cookies.get("detail_license");
+      this.TestDate = this.$cookies.get("exam_date");
       const data = {
         detail_license_name : this.DetailLicense,
         exam_date : this.TestDate,
-        subject : sessionStorage.getItem("selectedSubjects"),
-        license_name : sessionStorage.getItem('license')
+        subject : this.$cookies.get("selectedSubjects"),
+        license_name : this.$cookies.get('license')
       };
       axios({
         method : 'post',
@@ -340,7 +340,7 @@ export default {
           this.imagePath = this.totalQuestionList[0].image;
           const currentDate = new Date();
           const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
-          sessionStorage.setItem("startTestDate", formattedDate);
+          this.$cookies.get("startTestDate", formattedDate);
           this.timeRemaining = response.data.timeRemaining * 60; // 
           // 타이머
           this.startTimer();
@@ -357,8 +357,8 @@ export default {
   mounted() {
     // 시험 문제 불러오기
     this.loadExam();
-    if((this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)) {
-      this.memberId = this.$cookies.get('USER_ID');
+    if((sessionStorage.getItem('JSESSIONID') != null && sessionStorage.getItem('USER_ID') != null)) {
+      this.memberId = sessionStorage.getItem('USER_ID');
     } else {
       this.memberId = localStorage.getItem('GUEST');
     }

@@ -84,13 +84,13 @@ export default {
     async loadExamRecord() {
       const vm = this;
       const loadData = {
-        start_test_date : sessionStorage.getItem('startTestDate'),
+        start_test_date : vm.$cookies.get('startTestDate'),
         member_id : vm.memberId,
-        exam_date : sessionStorage.getItem('exam_date'),
-        detail_license_name : sessionStorage.getItem('detail_license'),
-        license_name : sessionStorage.getItem('license'),
-        subject : sessionStorage.getItem("selectedSubjects"),
-        mode : sessionStorage.getItem("mode")
+        exam_date : vm.$cookies.get('exam_date'),
+        detail_license_name : vm.$cookies.get('detail_license'),
+        license_name : vm.$cookies.get('license'),
+        subject : vm.$cookies.get("selectedSubjects"),
+        mode : vm.$cookies.get("mode")
       };
       await axios({
         method : 'post',
@@ -129,8 +129,8 @@ export default {
     },
   },
   mounted(){
-    if((this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)) {
-      this.memberId = this.$cookies.get('USER_ID');
+    if((sessionStorage.getItem('JSESSIONID') != null && sessionStorage.getItem('USER_ID') != null)) {
+      this.memberId = sessionStorage.getItem('USER_ID');
     } else {
       this.memberId = localStorage.getItem('GUEST');
     }
