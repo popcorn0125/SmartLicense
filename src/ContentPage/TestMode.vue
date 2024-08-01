@@ -340,7 +340,7 @@ export default {
           this.imagePath = this.totalQuestionList[0].image;
           const currentDate = new Date();
           const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
-          this.$cookies.get("startTestDate", formattedDate);
+          this.$cookies.set("startTestDate", formattedDate);
           this.timeRemaining = response.data.timeRemaining * 60; // 
           // 타이머
           this.startTimer();

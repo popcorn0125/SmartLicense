@@ -161,7 +161,7 @@ export default {
                 this.$cookies.set('exam_date', this.selectedOption3);
                 this.$cookies.set('mode', this.mode);
                 this.$cookies.set('selectedSubjects', JSON.stringify(this.selectedSubjects));
-                this.$cookies.set('start_exam_date', formattedDateTime);
+                this.$cookies.set('start_test_date', formattedDateTime);
                 this.$cookies.set('subject_count', this.selectedSubjects.length);
                 this.$router.push({ name: 'PracticeMode' });
 
