@@ -80,4 +80,21 @@ public class MemberService {
         return memberDao.loadUserInfo(params);
     }
 
+    /*******************
+     * 날짜 : 2024.08.01
+     * 이름 : 김준식
+     * 내용 : 정보수정페이지에 필요한 회원정보 불러오기
+     * *****************/
+    public HashMap<String, Object> getUserInfo(HashMap<String, Object> params) throws SQLException {
+        return memberDao.getUserInfo(params);
+    }
+
+    /*******************
+     * 날짜 : 2024.08.01
+     * 이름 : 김준식
+     * 내용 : 회원탈퇴
+     * *****************/
+    public int deleteAccount(HashMap<String, Object> params) throws SQLException {
+        return memberDao.deleteAccount(params);
+    }
 }

@@ -124,7 +124,7 @@
 	내용 : 과목별 점수 반환
     -->
     <select id="loadTestScore" parameterType="HashMap" resultType="int">
-        SELECT sum(usa.is_correct)
+        SELECT count(usa.is_correct)
         FROM license l
                  JOIN detail_license dl ON l.license_idx = dl.license_idx
                  JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
@@ -137,6 +137,7 @@
           AND s.subject_name = #{subject}
           AND usa.member_id = #{member_id}
           AND usa.start_test_date = #{start_test_date}
+          AND usa.is_correct = 1
     </select>
 
     <!--
