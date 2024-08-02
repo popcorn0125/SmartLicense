@@ -114,7 +114,7 @@ export default {
       imgCheckOP4: true,
 
       memberId: null,
-      start_exam_date: null,
+      start_test_date: null,
       is_correct: null,
 
     };
@@ -132,7 +132,7 @@ export default {
         member_id: this.memberId,
         question_idx: this.problems[this.currentProblemIndex].question_idx,
         is_correct: this.is_correct,
-        start_test_date: this.$cookies.get("start_exam_date")
+        start_test_date: this.$cookies.get("start_test_date")
       }
 
       await axios({
@@ -161,7 +161,7 @@ export default {
         exam_date: this.selectedOption3,
         subject_name: this.selectedSubjects[this.currentSubjectIndex],
         member_id: this.memberId,
-        start_exam_date: this.start_exam_date
+        start_test_date: this.start_test_date
       };
 
       axios.post('/mode/practiceModeLoadExam', criteria)
@@ -255,7 +255,7 @@ export default {
     this.mode = this.$cookies.get('mode');
     const selectedSubjects = this.$cookies.get('selectedSubjects');
     this.selectedSubjects = JSON.parse(selectedSubjects);
-    this.start_exam_date = this.$cookies.get('start_exam_date');
+    this.start_test_date = this.$cookies.get('start_test_date');
 
     this.currentSubjectIndex = 0;
 
