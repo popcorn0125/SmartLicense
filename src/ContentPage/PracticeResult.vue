@@ -83,28 +83,28 @@ export default {
   },
   methods: {
     btnClick() {
-      let selectedSubjects = JSON.parse(sessionStorage.getItem('selectedSubjects'));
-      let scoreResult = JSON.parse(sessionStorage.getItem('scoreResult')) || [];
+      let selectedSubjects = JSON.parse(this.$cookies.get('selectedSubjects'));
+      let scoreResult = JSON.parse(this.$cookies.get('scoreResult')) || [];
 
       scoreResult.push({
         correctCount: this.practiceScore.correctCount,
         questionCount: this.practiceScore.totalProblems
       });
-      sessionStorage.setItem('scoreResult', JSON.stringify(scoreResult));
+      this.$cookies.set('scoreResult', JSON.stringify(scoreResult));
 
       if (selectedSubjects.length > 1) {
         selectedSubjects.splice(0, 1); // 인덱스가 0인 것을 하나 지우기
-        sessionStorage.setItem('selectedSubjects', JSON.stringify(selectedSubjects));
+        this.$cookies.set('selectedSubjects', JSON.stringify(selectedSubjects));
         this.$router.push({ name: 'PracticeMode' });
       } else {
         this.$router.push({ name: 'MyHistoryPage' });
         this.storeExamRecord();
-        sessionStorage.clear();
+        // sessionStorage.clear();
       }
     },
 
     storeExamRecord() {
-      let scoreResult = JSON.parse(sessionStorage.getItem('scoreResult'));
+      let scoreResult = JSON.parse(this.$cookies.get('scoreResult'));
       let totalCorrectCount = 0;
       let totalQuestionCount = 0;
       let passedSubjects = 0;
@@ -136,13 +136,13 @@ export default {
 
 
       const recordData = {
-        mode: sessionStorage.getItem('mode'),
-        start_test_date: sessionStorage.getItem('start_exam_date'),
+        mode: this.$cookies.get('mode'),
+        start_test_date: this.$cookies.get('start_exam_date'),
         member_id: this.memberId,
-        exam_date: sessionStorage.getItem('exam_date'),
-        detail_license_name: sessionStorage.getItem('detail_license'),
-        license_name: sessionStorage.getItem('license'),
-        subject_count: sessionStorage.getItem('subject_count'),
+        exam_date: this.$cookies.get('exam_date'),
+        detail_license_name: this.$cookies.get('detail_license'),
+        license_name: this.$cookies.get('license'),
+        subject_count: this.$cookies.get('subject_count'),
         is_pass: isPass ? 1 : 0 // 1: 합격, 0: 불합격
       };
       console.log('recordData', recordData);
@@ -167,15 +167,15 @@ export default {
     },
 
     loadUserSelectAnswer() {
-      let subjectindex = JSON.parse(sessionStorage.getItem('selectedSubjects'));
+      let subjectindex = JSON.parse(this.$cookies.get('selectedSubjects'));
       this.subject = subjectindex[0];
       const postData = {
-        detail_license: sessionStorage.getItem('detail_license'),
-        license: sessionStorage.getItem('license'),
-        exam_date: sessionStorage.getItem('exam_date'),
+        detail_license: this.$cookies.get('detail_license'),
+        license: this.$cookies.get('license'),
+        exam_date: this.$cookies.get('exam_date'),
         subject_name: subjectindex[0],
         member_id: this.memberId,
-        start_test_date: sessionStorage.getItem("start_exam_date")
+        start_test_date: this.$cookies.get("start_exam_date")
       }
       axios({
         method: 'post',
@@ -203,13 +203,13 @@ export default {
       return this.passed ? '합격 기준입니다.' : '불합격 기준입니다.';
     },
     buttonText() {
-      let selectedSubjects = JSON.parse(sessionStorage.getItem('selectedSubjects'));
+      let selectedSubjects = JSON.parse(this.$cookies.get('selectedSubjects'));
       return selectedSubjects.length > 1 ? '다음 과목 풀기' : '기록 페이지로 가기';
     }
   },
   mounted() {
-    if ((this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)) {
-      this.memberId = this.$cookies.get('USER_ID');
+    if ((sessionStorage.getItem('JSESSIONID') != null && sessionStorage.getItem('USER_ID') != null)) {
+      this.memberId = sessionStorage.getItem('USER_ID');
     } else {
       this.memberId = localStorage.getItem('GUEST');
     }
