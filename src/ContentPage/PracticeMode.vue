@@ -132,7 +132,7 @@ export default {
         member_id: this.memberId,
         question_idx: this.problems[this.currentProblemIndex].question_idx,
         is_correct: this.is_correct,
-        start_test_date: sessionStorage.getItem("start_exam_date")
+        start_test_date: this.$cookies.get("start_exam_date")
       }
 
       await axios({
@@ -156,7 +156,7 @@ export default {
     // 사용자가 선택한 모든문제 로드하는 함수
     loadProblems() {
       const criteria = {
-        license: sessionStorage.getItem('license'),
+        license: this.$cookies.get('license'),
         detail_license_name: this.selectedOption2,
         exam_date: this.selectedOption3,
         subject_name: this.selectedSubjects[this.currentSubjectIndex],
@@ -243,19 +243,19 @@ export default {
   },
 
   mounted() {
-    if ((this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)) {
-      this.memberId = this.$cookies.get('USER_ID');
+    if ((sessionStorage.getItem('JSESSIONID') != null && sessionStorage.getItem('USER_ID') != null)) {
+      this.memberId = sessionStorage.getItem('USER_ID');
     } else {
       this.memberId = localStorage.getItem('GUEST');
     }
 
-    this.selectedOption1 = sessionStorage.getItem('license');
-    this.selectedOption2 = sessionStorage.getItem('detail_license');
-    this.selectedOption3 = sessionStorage.getItem('exam_date');
-    this.mode = sessionStorage.getItem('mode');
-    const selectedSubjects = sessionStorage.getItem('selectedSubjects');
+    this.selectedOption1 = this.$cookies.get('license');
+    this.selectedOption2 = this.$cookies.get('detail_license');
+    this.selectedOption3 = this.$cookies.get('exam_date');
+    this.mode = this.$cookies.get('mode');
+    const selectedSubjects = this.$cookies.get('selectedSubjects');
     this.selectedSubjects = JSON.parse(selectedSubjects);
-    this.start_exam_date = sessionStorage.getItem('start_exam_date');
+    this.start_exam_date = this.$cookies.get('start_exam_date');
 
     this.currentSubjectIndex = 0;
 
