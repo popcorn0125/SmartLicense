@@ -78,52 +78,90 @@ export default {
       practiceScore: [],
       memberId: null,
       subject: null,
+      is_pass: null,
     }
   },
   methods: {
     btnClick() {
       let selectedSubjects = JSON.parse(sessionStorage.getItem('selectedSubjects'));
+      let scoreResult = JSON.parse(sessionStorage.getItem('scoreResult')) || [];
+
+      scoreResult.push({
+        correctCount: this.practiceScore.correctCount,
+        questionCount: this.practiceScore.totalProblems
+      });
+      sessionStorage.setItem('scoreResult', JSON.stringify(scoreResult));
+
       if (selectedSubjects.length > 1) {
         selectedSubjects.splice(0, 1); // 인덱스가 0인 것을 하나 지우기
         sessionStorage.setItem('selectedSubjects', JSON.stringify(selectedSubjects));
         this.$router.push({ name: 'PracticeMode' });
       } else {
         this.$router.push({ name: 'MyHistoryPage' });
+        this.storeExamRecord();
         sessionStorage.clear();
       }
     },
 
-    storeExamRecord(){
+    storeExamRecord() {
+      let scoreResult = JSON.parse(sessionStorage.getItem('scoreResult'));
+      let totalCorrectCount = 0;
+      let totalQuestionCount = 0;
+      let passedSubjects = 0;
+      let totalSubjects = scoreResult.length + 1; // 현재 과목도 포함
+
+      // 현재 과목 점수를 합산
+      totalCorrectCount += this.practiceScore.correctCount;
+      totalQuestionCount += this.practiceScore.totalProblems;
+
+      // 저장된 과목의 점수와 전체 점수를 합산
+      for (let i = 0; i < scoreResult.length; i++) {
+        totalCorrectCount += scoreResult[i].correctCount;
+        totalQuestionCount += scoreResult[i].totalProblems;
+
+        // 과락 조건 확인
+        if (scoreResult[i].correctCount >= scoreResult[i].totalProblems * 0.4) {
+          passedSubjects++;
+        }
+      }
+
+      // 현재 과목의 과락 조건 확인
+      if (this.practiceScore.correctCount >= this.practiceScore.totalProblems * 0.4) {
+        passedSubjects++;
+      }
+
+      // 전체 평균 조건 확인
+      const averageScore = totalCorrectCount / totalQuestionCount;
+      const isPass = (passedSubjects === totalSubjects) && (averageScore >= 0.6);
+
+
       const recordData = {
-        mode : sessionStorage.getItem('mode'),
-        remaining_time : '-',
-        // correct_count: ,
-        start_test_date : sessionStorage.getItem('start_test_date'),
-        member_id : this.memberId,
-        exam_date : sessionStorage.getItem('exam_date'),
-        detail_license_name : sessionStorage.getItem('detail_license'),
-        license_name : sessionStorage.getItem('license'),
-        // subject_count: ,
-        // question_count:,
-        // is_pass:
+        mode: sessionStorage.getItem('mode'),
+        start_test_date: sessionStorage.getItem('start_exam_date'),
+        member_id: this.memberId,
+        exam_date: sessionStorage.getItem('exam_date'),
+        detail_license_name: sessionStorage.getItem('detail_license'),
+        license_name: sessionStorage.getItem('license'),
+        subject_count: sessionStorage.getItem('subject_count'),
+        is_pass: isPass ? 1 : 0 // 1: 합격, 0: 불합격
       };
       console.log('recordData', recordData);
       // 응시 시험 기록 저장
       axios({
-        method : 'post',
+        method: 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "/mode/storeExamRecord",
-        data : recordData,
+        url: "/mode/storeExamRecordPractice",
+        data: recordData,
       })
         .then(response => {
-          if(response.data > 0) {
+          if (response.data > 0) {
             // vm.$router.push({ name: 'TestResult' });  
           } else {
             // 제대로 저장하지 못했을 경우 
             console.log('에러');
           }
         })
-        .catch(error=>{
+        .catch(error => {
           console.log(error);
         })
     },
