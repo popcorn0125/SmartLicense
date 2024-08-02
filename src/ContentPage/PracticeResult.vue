@@ -137,7 +137,7 @@ export default {
 
       const recordData = {
         mode: this.$cookies.get('mode'),
-        start_test_date: this.$cookies.get('start_exam_date'),
+        start_test_date: this.$cookies.get('start_test_date'),
         member_id: this.memberId,
         exam_date: this.$cookies.get('exam_date'),
         detail_license_name: this.$cookies.get('detail_license'),
@@ -175,7 +175,7 @@ export default {
         exam_date: this.$cookies.get('exam_date'),
         subject_name: subjectindex[0],
         member_id: this.memberId,
-        start_test_date: this.$cookies.get("start_exam_date")
+        start_test_date: this.$cookies.get("start_test_date")
       }
       axios({
         method: 'post',
