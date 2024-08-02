@@ -10,13 +10,13 @@
       </div>
       <div class="include-msg">
         <div class="input-group">
-          <input v-model="member.member_password" placeholder="비밀번호(8~16글자, 영문, 숫자, 특수문자 모두 포함)" type="password" />
+          <input @input="pwChange()" v-model="member.member_password" placeholder="비밀번호(8~16글자, 영문, 숫자, 특수문자 모두 포함)" type="password" />
         </div>
         <text id="password" class="infoMessage">{{ pwMsg }}</text>
       </div>
       <div class="include-msg">
         <div class="input-group">
-          <input v-model="pwCheck" placeholder="비밀번호 재확인" id="confirm-Password" type="password" />
+          <input @input="onchange()" v-model="pwCheck" placeholder="비밀번호 재확인" id="confirm-Password" type="password" />
         </div>
         <text id="passwordCheck" class="infoMessage">{{ pwCheckMsg }}</text>
       </div>
@@ -27,7 +27,7 @@
       </div>
       <div class="include-msg">
         <div class="input-group btn_posi">
-          <input v-model="member.member_nickname" placeholder="닉네임" type="text" />
+          <input @input="nickNameChange()" v-model="member.member_nickname" placeholder="닉네임" type="text" />
           <button class="button1" type="button" @click="isDuplicateNickName()">중복확인</button>
         </div>
         <text id="nickname" class="infoMessage">{{ nickNameMsg }}</text>
@@ -50,7 +50,7 @@
           </div>
         </div>
       </div>
-      <button class="button1" type="button">수정 하기</button>
+      <button class="button1" type="button" @click="updateUserInfo()">수정 하기</button>
     </form>
     <div class="DA-wrap">
       <p class="deleteAccount" @click="isShowModal = true">탈퇴 하기</p>
@@ -58,16 +58,52 @@
   </div>
 
    <!---------알림 모달 창--------->
-  <!-- <div class="modal" v-if="isShowModal">
-    <div class="modal-content">
-      <p>한번 탈퇴하면 지금까지의 모든 기록과 정보는 삭제됩니다.</p>
-      <p>정말로 <strong>&nbsp;탈퇴</strong>하시겠습니까?</p>
-      <div class="del-btn-wrap">
-        <button class="ok">확인</button>
-        <button class="cancel" @click="isShowModal = false">취소</button>
+  <div class="modal" v-if="isUpdateShowModal">
+    <div class="cookies-card">
+      <p class="cookie-heading">회원 정보 수정</p>
+      <p class="cookie-para">
+        {{ modalMsg }}
+      </p>
+      <div class="button-wrapper">
+        <button class="accept cookie-button" @click="this.$router.push({name: 'MyPage'})">확인</button>
+        <button class="reject cookie-button" @click="isUpdateShowModal = false" >취소</button>
+      </div>
+      <button class="exit-button" @click="isUpdateShowModal = false">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 162 162"
+          class="svgIconCross"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-width="17"
+            stroke="black"
+            d="M9.01074 8.98926L153.021 153"
+          ></path>
+          <path
+            stroke-linecap="round"
+            stroke-width="17"
+            stroke="black"
+            d="M9.01074 153L153.021 8.98926"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="modal" v-if="isUpdateSuccessful">
+    <div class="cookies-card2" v-if="isUpdateSuccessful">
+      <p class="cookie-heading2">회원 정보 수정</p>
+      <p class="cookie-para2">
+        {{ modalMsg }}
+      </p>
+      <div class="button-wrapper2">
+        <button class="accept2 cookie-button2" @click="modalCheck()">확인</button>
       </div>
     </div>
-  </div> -->
+  </div>
+  
   <div class="modal" v-if="isShowModal">
     <div class="card">
       <div class="header">
@@ -78,10 +114,10 @@
           <span class="title">회원 탈퇴</span>
           <p class="message">정말로 회원 탈퇴를 원하십니까? 탈퇴 시 모든 정보가 삭제되며 복구할 수 없습니다.</p>
           <br>
-          <hr>
+
         </div>
         <div class="actions">
-          <button class="desactivate" type="button">Desactivate</button>
+          <button class="desactivate" type="button" @click="deleteAccount()">Desactivate</button>
           <button class="cancel" type="button" @click="isShowModal = false">Cancel</button>
         </div>
       </div>
@@ -112,15 +148,209 @@ export default {
         member_gender : '',
         member_phone_number : '',
       },
-      isShowModal: false,
-      pwCheck : '',
+      nickNameDuplicateCheck : false, // 닉네임 중복확인 진행 여부
+      isShowModal: false, // 회원탈퇴에 대한 모달창
+      isUpdateShowModal : false, // 변경내용이 없을 때 보이는 모달창
+      isUpdateSuccessful : false, // 회원정보를 수정했을 때 보이는 모달창
+      pwCheck : '', // 비밀번호 재확인
+
+      pwMsg : '', // 비밀번호 메세지
+      pwCheckMsg : '', // 비밀번호 재확인 메세지
+      nickNameMsg : '', // 닉네임 메세지
+      phoneMsg : '', // 전화번호 메세지
+
+      // 수정하기 전 데이터
+      beforeUpdateMember : {
+        member_nickname : '',
+        member_phone_number : '',
+      },
+      
+      modalStatus : 0, // 0이면 현재 페이지, 1이면 다음페이지로 이동
 
     }
   },
   methods: {
+    modalCheck() {
+      this.modalStatus === 1 ? this.$router.push({name: 'MyPage'}) : this.isUpdateSuccessful = false;
+    },
+
+    // 비밀번호 유효성 검사 (8글자 이상, 영문, 숫자, 특수문자 사용)
+    strongPassword (password) {
+      return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/.test(password);
+    },
+    // 비밀번호 재확인
+    isMatch(pw, pwCheck) {
+      return pw === pwCheck;
+    },
+    // 닉네임 유효성 검사 (첫글자는 숫자또는 영어가 오고 그 이후에 영어 대소문자, 숫자, 언더스코어, 띄어쓰기 및 한글만 포함. 길이는 15자까지 가능.)
+    validateNickName(nickName) {
+      return /^[A-Za-z0-9가-힣][A-Za-z0-9가-힣_ ]{0,14}$/.test(nickName);
+    },
+    // 전화번호 유효성 검사( 숫자 11자리)
+    validatePhoneNumber(phoneNumber) {
+      return /^01([0|1|6|7|8|9])?([0-9]{3,4})?([0-9]{4})$/.test(phoneNumber);
+    },
+    // 비밀번호 입력 감지
+    pwChange() {
+      const password = document.getElementById('password');
+      if(this.strongPassword(this.member.member_password) === false) {
+        password.style.color = "#F00";
+        this.pwMsg = "영문, 숫자, 특수문자 모두 포함 8글자 이상 입력하세요.";
+      } else {
+        password.style.color = "#70CA77";
+        this.pwMsg = "사용 가능한 비밀번호입니다.";
+      }
+      if(this.member.member_password === '') {
+        password.style.color = '#d1d1d1'
+        this.pwMsg = '';
+      }
+    },  
+    // 비밀번호 재입력 입력 감지
+    onchange(){
+      const vm = this;
+      const input_tag = document.getElementById('confirm-Password');
+      if(vm.member.member_password !== vm.pwCheck) {
+        input_tag.style.borderColor = '#F00';
+        document.getElementById('passwordCheck').style.color = '#F00';
+        vm.pwCheckMsg = '비밀번호가 일치하지 않습니다.';
+      } else {
+        input_tag.style.borderColor = '#70CA77';
+        document.getElementById('passwordCheck').style.color = '#70CA77';
+        vm.pwCheckMsg = '비밀번호가 일치합니다.';
+      }
+      if(vm.pwCheck === '') {
+        input_tag.style.borderColor = '#d1d1d1';
+        vm.pwCheckMsg = '';
+      }
+    },
+    // 닉네임 입력 감지
+    nickNameChange() {
+      const textTag = document.getElementById('nickname');
+      if(this.validateNickName(this.member.member_nickname) === false) {
+        textTag.style.color = '#F00';
+        this.nickNameMsg = '첫글자는 영어 또는 숫자이고 그 이후는 대소문자, 숫자, 언더스코어, 띄어쓰기 포함 15글자까지 입력가능합니다.';
+      } else {
+        this.nickNameMsg = '';
+      }
+    },
+
+    // 전화번호 입력 감지
+    phoneNumChange() {
+      if(this.validatePhoneNumber(this.member.member_phone_number) === false) {
+        document.getElementById('phone').style.color = '#F00';
+        this.phoneMsg = '입력예시 : 01012345678';
+      } else {
+        this.phoneMsg = '';
+      }
+    },
     // 닉네임 중복 확인
     isDuplicateNickName() {
+      const vm = this;
+      if(vm.validateNickName(vm.member.member_nickname) === false) {
+        vm.nickNameMsg = "닉네임은 영어 대소문자, 숫자, 언더스코어 및 한글만 포함. 길이는 15자까지 가능하오니 다시 입력해주시기 바랍니다.";
+        return;
+      }
 
+      if(vm.member.member_nickname.trim() === vm.beforeUpdateMember.member_nickname) {
+        document.getElementById('nickname').style.color = '#F00';
+        vm.nickNameMsg = '사용자의 현재 닉네임입니다.';
+        return ;
+      }
+      const data = {
+        nickname : vm.member.member_nickname
+      };
+      axios({
+        method : 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/api/isDuplicateNickName",
+        data: data,
+      })
+        .then(response => {
+          if(response.data > 0) {
+            document.getElementById('nickname').style.color = '#F00';
+            vm.nickNameMsg = '이미 존재하는 닉네임 입니다.';
+            vm.nickNameDuplicateCheck = false;
+          } else {
+            document.getElementById('nickname').style.color = '#70CA77';
+            vm.nickNameMsg = '사용가능한 닉네임 입니다.';
+            vm.nickNameDuplicateCheck = true;
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        })
+    },
+
+    // 회원정보 수정
+    updateUserInfo() {
+      const vm = this;
+      if((vm.pwCheck === '' && vm.member.member_password === '') && (vm.member.member_nickname === vm.beforeUpdateMember.member_nickname && vm.nickNameDuplicateCheck  === false) && vm.member.member_phone_number === vm.beforeUpdateMember.member_phone_number) {
+        vm.modalMsg = '변경사항이 없습니다. 마이페이지로 이동하시겠습니까?';
+        vm.isUpdateShowModal = true;
+        return;
+      }
+      if(vm.member.member_password !== vm.pwCheck) {
+        return;
+      }
+      if(vm.member.member_nickname !== vm.beforeUpdateMember.member_nickname && vm.nickNameDuplicateCheck === false) {
+        document.getElementById('nickname').style.color = '#F00';
+        vm.nickNameMsg = '닉네임 중복확인을 진행해주세요.'
+        return;
+      }
+      if(vm.phoneMsg !== '') {
+        return;
+      }
+
+      axios({
+        method : 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/api/updateUserInfo",
+        data: vm.member,
+      })
+        .then(response => {
+          console.log(response.data);
+          if(response.data > 0) {
+            vm.modalMsg = '회원님의 정보가 성공적으로 수정되었습니다.';
+            vm.modalStatus = 1
+            vm.isUpdateSuccessful = true;
+          } else {
+            vm.modalMsg = '회원정보 수정에 실패했습니다. 다시 시도해 주세요.';
+            vm.modalStatus = 0
+            vm.isUpdateSuccessful = true;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          vm.modalMsg = '오류가 발생하였습니다. 잠시후 다시 시도해주세요.';
+          vm.modalStatus = 0;
+          vm.isUpdateSuccessful = true;
+        })
+      
+    },  
+
+    // 회원탈퇴
+    deleteAccount() {
+      const vm = this;
+      const postData = {
+        member_id : vm.member.member_id,
+        member_name : vm.member.member_name
+      }
+      axios({
+        method : 'post',
+        header: { 'Content-Type': 'application/json; charset=UTF-8' },
+        url: "/api/deleteAccount",
+        data: postData,
+      })
+        .then(response => {
+          if(response.data > 0 ) {
+            alert("그동안 이용해주셔서 감사합니다.");
+            sessionStorage.clear();
+            vm.$router.push({name : 'LoginPage'});
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
     },
 
     // 사용자 닉네임, 전화번호 불러오기
@@ -138,6 +368,8 @@ export default {
             vm.member.member_nickname = response.data.member_nickname;
             vm.member.member_phone_number = response.data.member_phone_number;
             vm.member.member_gender = response.data.member_gender;
+            vm.beforeUpdateMember.member_nickname = response.data.member_nickname;
+            vm.beforeUpdateMember.member_phone_number = response.data.member_phone_number;
           } else {
             console.log('정보를 불러오는데 실패하였습니다.');
           }
@@ -379,7 +611,7 @@ input:focus {
   background-color: #ffffff;
   text-align: left;
   border-radius: 0.5rem;
-  max-width: 40%;
+  max-width: 80%;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
@@ -462,5 +694,135 @@ input:focus {
   border: 1px solid #D1D5DB;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
+
+/* check box */
+
+
+/* isUpdateShowModal 모달창 css */
+.cookies-card {
+  width: 280px;
+  height: fit-content;
+  background-color: rgb(255, 250, 250);
+  border-radius: 10px;
+  border: 1px solid rgb(206, 206, 206);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px;
+  gap: 15px;
+  position: relative;
+  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
+}
+
+.cookie-heading {
+  color: rgb(34, 34, 34);
+  font-weight: 800;
+}
+.cookie-para {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgb(51, 51, 51);
+}
+.button-wrapper {
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.cookie-button {
+  width: 50%;
+  padding: 8px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.accept {
+  background-color: rgb(34, 34, 34);
+  color: white;
+}
+.reject {
+  background-color: #ececec;
+  color: rgb(34, 34, 34);
+}
+.accept:hover {
+  background-color: rgb(0, 0, 0);
+}
+.reject:hover {
+  background-color: #ddd;
+}
+.exit-button {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.exit-button:hover {
+  background-color: #ddd;
+  color: white;
+}
+.svgIconCross {
+  height: 10px;
+}
+
+/* isUpdateSuccessful 모달창 */
+.cookies-card2 {
+  width: 280px;
+  height: fit-content;
+  background-color: rgb(255, 250, 250);
+  border-radius: 10px;
+  border: 1px solid rgb(206, 206, 206);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 15px;
+  position: relative;
+  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
+}
+
+.cookie-heading2 {
+  color: rgb(34, 34, 34);
+  font-weight: 800;
+  text-align: center;
+}
+.cookie-para2 {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgb(51, 51, 51);
+}
+.button-wrapper2 {
+  width: 50%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.cookie-button2 {
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.accept2 {
+  background-color: rgb(34, 34, 34);
+  color: white;
+}
+
 
 </style>

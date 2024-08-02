@@ -210,7 +210,7 @@ export default {
     },
     // 전화번호 유효성 검사( 숫자 11자리)
     validatePhoneNumber(phoneNumber) {
-      return /^\d{11}$/.test(phoneNumber);
+      return /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/.test(phoneNumber);
     },
     // 아이디 중복확인
     isDuplicateId() {
