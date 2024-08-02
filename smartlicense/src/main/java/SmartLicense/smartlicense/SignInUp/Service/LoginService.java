@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -64,8 +65,10 @@ public class LoginService {
             HttpSession session = request.getSession();
             session.setAttribute("loginUser", params.get("userId").toString());
             session.setMaxInactiveInterval(24*60*60); // 24시간
-            cookieCreate(response, "JSESSIONID", session.getId());
-            cookieCreate(response, "USER_ID", params.get("userId").toString());
+            result.put("JSESSIONID", session.getId().toString());
+            result.put("USER_ID", params.get("userId").toString());
+//            cookieCreate(response, "JSESSIONID", session.getId());
+//            cookieCreate(response, "USER_ID", params.get("userId").toString());
 
             result.put("result", 1);
             System.out.println("로그인 성공");
@@ -94,7 +97,7 @@ public class LoginService {
      * 이름 : 김준식
      * 내용 : 로그아웃
      * *****************/
-    public int logout(HttpServletRequest request, HttpServletResponse response) {
+    public int logout(HttpServletRequest request) {
         int result = 0;
 
         HttpSession session = request.getSession(false);
@@ -102,7 +105,7 @@ public class LoginService {
             // 세션 무효화
             session.invalidate();
             // 쿠키 삭제
-            cookieDelete(request, response);
+            //cookieDelete(request, response);
             result = 1;
         }
         return result;
@@ -117,11 +120,11 @@ public class LoginService {
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
             for( Cookie cookie : cookies) {
-                if(cookie.getName().equals("USER_ID") || cookie.getName().equals("JSESSIONID")){
+                if(cookie.getName().equals("JSESSIONID") || cookie.getName().equals("USER_ID")){
                     // 쿠키에 USER_ID가 있을 경우
                     cookie.setMaxAge(0);
+                    cookie.setPath("/");
                     response.addCookie(cookie);
-                    break;
                 }
             }
         }
@@ -145,6 +148,29 @@ public class LoginService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        return result;
+    }
+
+    /*******************
+     * 날짜 : 2024.07.29
+     * 이름 : 김준식
+     * 내용 : 사용자 비밀번호 일치 여부 확인
+     * *****************/
+    public HashMap<String, Object> userPWCheck(HashMap<String, Object> params) throws SQLException {
+        // 0 : 비밀번호 불일치, 1 : 비밀번호 일치
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("result",0);
+        // 비밀번호 검증
+        String password = params.get("userPw").toString();
+        String encodePassword = loginDao.getUserPw(params);
+        // 비밀번호가 일치하지 않을 경우
+        if( !(passwordEncoder.matches(password, encodePassword)) ) {
+            result.put("message", "비밀번호가 일치하지 않습니다.");
+            return result;
+        }
+
+        result.put("result", 1);
 
         return result;
     }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 /*******************
  * 날짜 : 2024.07.10
@@ -35,6 +36,17 @@ public class LoginController {
     }
 
     /*******************
+     * 날짜 : 2024.07.29
+     * 이름 : 김준식
+     * 내용 : 로그아웃
+     * *****************/
+    @PostMapping("/logout")
+    public ResponseEntity<Integer> logout(HttpServletRequest request) {
+        System.out.println("logout 실행");
+        return ResponseEntity.ok(loginService.logout(request));
+    }
+
+    /*******************
      * 날짜 : 2024.07.28
      * 이름 : 김준식
      * 내용 : 게스트로그인
@@ -46,8 +58,14 @@ public class LoginController {
     }
 
     /*******************
-     * 날짜 : 2024.07.28
+     * 날짜 : 2024.07.29
      * 이름 : 김준식
-     * 내용 : 게스트로그인
+     * 내용 : 사용자 비밀번호 일치 여부 확인
      * *****************/
+    @PostMapping("/userPWCheck")
+    public ResponseEntity<HashMap<String, Object>> userPWCheck(@RequestBody HashMap<String, Object> params) throws SQLException {
+        System.out.println("userPWCheck 실행");
+        System.out.println("params : " + params);
+        return ResponseEntity.ok(loginService.userPWCheck(params));
+    }
 }

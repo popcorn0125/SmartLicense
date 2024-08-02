@@ -41,4 +41,18 @@ public interface MemberDao {
      * 내용 : 마이페이지에서 회원 정보 불러오기
      * *****************/
     HashMap<String, Object> loadUserInfo(HashMap<String, Object> params) throws SQLException;
+
+    /*******************
+     * 날짜 : 2024.08.01
+     * 이름 : 김준식
+     * 내용 : 정보수정페이지에 필요한 회원정보 불러오기
+     * *****************/
+    HashMap<String, Object> getUserInfo(HashMap<String, Object> params) throws SQLException;
+
+    /*******************
+     * 날짜 : 2024.08.01
+     * 이름 : 김준식
+     * 내용 : 회원탈퇴
+     * *****************/
+    int deleteAccount(HashMap<String, Object> params) throws SQLException;
 }

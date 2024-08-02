@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.*;
 
 @Service
@@ -84,10 +85,6 @@ public class ModeService {
         }
 
         return result;
-    }
-
-    public Integer isPassUpdate(HashMap<String, Object> params) {
-        return modeDao.isPassUpdate(params);
     }
 
     // 연습 모드 문제 로드

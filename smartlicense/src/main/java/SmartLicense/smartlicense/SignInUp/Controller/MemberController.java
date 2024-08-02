@@ -104,4 +104,26 @@ public class MemberController {
         return ResponseEntity.ok(memberService.loadUserInfo(params));
     }
 
+    /*******************
+     * 날짜 : 2024.08.01
+     * 이름 : 김준식
+     * 내용 : 정보수정에서 회원 정보 불러오기
+     * *****************/
+    @PostMapping("/getUserInfo")
+    public ResponseEntity<HashMap<String, Object>> getUserInfo(@RequestBody HashMap<String, Object> params) throws SQLException {
+        System.out.println("getUserInfo 실행");
+        System.out.println("params : " + params);
+        return ResponseEntity.ok(memberService.getUserInfo(params));
+    }
+
+    /*******************
+     * 날짜 : 2024.08.01
+     * 이름 : 김준식
+     * 내용 : 회원탈퇴
+     * *****************/
+    @PostMapping("/deleteAccount")
+    public ResponseEntity<Integer> deleteAccount(@RequestBody HashMap<String, Object> params) throws SQLException {
+        System.out.println("deleteAccount 실행");
+        return ResponseEntity.ok(memberService.deleteAccount(params));
+    }
 }
