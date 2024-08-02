@@ -1,7 +1,7 @@
 <template>
     <TopBar />
     <div class="login-container">
-        <form class="login-form">
+        <div class="login-form">
             <br>
             <div class="input-group">
                 <input placeholder="현재 비밀번호를 입력하세요." type="password" v-model="member.userPw" @input="pwCheckMsg = ''"/>
@@ -9,7 +9,7 @@
             </div>
             
             <button type="button" @click="goToChangeInfo">확인</button>
-        </form>
+        </div>
     </div>
     <BottomBar />
 </template>
