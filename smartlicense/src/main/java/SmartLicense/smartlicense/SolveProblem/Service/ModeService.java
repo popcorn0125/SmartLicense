@@ -98,4 +98,13 @@ public class ModeService {
     public HashMap<String, Object> loadPracticeScore(HashMap<String, Object> params) {
         return modeDao.loadPracticeScore(params);
     }
+
+    public Integer storeExamRecordPractice(HashMap<String, Object> params) {
+        try{
+            return modeDao.storeExamRecordPractice(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

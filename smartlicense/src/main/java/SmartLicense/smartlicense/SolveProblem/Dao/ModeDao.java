@@ -33,4 +33,6 @@ public interface ModeDao {
 
     HashMap<String, Object> loadPracticeScore(HashMap<String, Object> Params);
 
+    int storeExamRecordPractice(HashMap<String, Object> params);
+
 }

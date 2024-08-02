@@ -200,5 +200,45 @@
           AND usa.start_test_date = #{start_test_date}
     </select>
 
+    <insert id="storeExamRecordPractice" parameterType="HashMap">
+        INSERT INTO exam_record ( mode, remaining_time, start_test_date, member_id, exam_date, correct_count, subject_count, question_count, is_pass )
+        VALUES (
+                   #{mode},
+                   '-',
+                   #{start_test_date},
+                   #{member_id},
+                   #{exam_date},
+                   (
+                       SELECT  sum(usa.is_correct)
+                       FROM license l
+                                JOIN detail_license dl ON dl.license_idx = l.license_idx
+                                JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
+                                JOIN question q ON s.subject_idx = q.subject_idx
+                                JOIN session_question sq ON q.question_idx = sq.question_idx
+                                JOIN user_select_answer usa ON usa.question_idx = sq.question_idx
+                       WHERE dl.detail_license_name = #{detail_license_name}
+                         AND l.license_name = #{license_name}
+                         AND sq.exam_date = #{exam_date}
+                         AND usa.member_id = #{member_id}
+                         AND usa.start_test_date = #{start_test_date}
+                   ),
+                   #{subject_count},
+                   (
+                       SELECT  count(usa.is_correct)
+                       FROM license l
+                                JOIN detail_license dl ON dl.license_idx = l.license_idx
+                                JOIN subject s ON dl.detail_license_idx = s.detail_license_idx
+                                JOIN question q ON s.subject_idx = q.subject_idx
+                                JOIN session_question sq ON q.question_idx = sq.question_idx
+                                JOIN user_select_answer usa ON usa.question_idx = sq.question_idx
+                       WHERE dl.detail_license_name = #{detail_license_name}
+                         AND l.license_name = #{license_name}
+                         AND sq.exam_date = #{exam_date}
+                         AND usa.member_id = #{member_id}
+                         AND usa.start_test_date = #{start_test_date}
+                       ),
+                   #{is_pass}
+               )
+    </insert>
 
 </mapper>

@@ -94,4 +94,11 @@ public class ModeController {
         System.out.println("loadPracticeScore 실행");
         return ResponseEntity.ok(modeService.loadPracticeScore(params));
     }
+
+    @PostMapping("/storeExamRecordPractice")
+    public ResponseEntity<Integer> storeExamRecordPractice(@RequestBody HashMap<String, Object> params) {
+        System.out.println("storeExamRecordPractice 실행");
+        System.out.println("asdasdf : " + params);
+        return ResponseEntity.ok(modeService.storeExamRecordPractice(params));
+    }
 }
