@@ -4,7 +4,7 @@
         <form class="login-form">
             <br>
             <div class="input-group">
-                <input placeholder="현재 비밀번호를 입력하세요." type="password" v-model="userPw" />
+                <input placeholder="현재 비밀번호를 입력하세요." type="password" v-model="member.userPw" @input="pwCheckMsg = ''"/>
                 <text id="passwordCheck" class="infoMessage">{{ pwCheckMsg }}</text>
             </div>
             
@@ -26,7 +26,7 @@ export default {
     data() {
         return {
             member : {
-                userId : this.$cookies.get('USER_ID'),
+                userId : sessionStorage.getItem('USER_ID'),
                 userPw : '',
             },
             pwCheckMsg : '',
@@ -54,6 +54,9 @@ export default {
                 })
             
         }
+    },
+
+    watch : {
     }
 }
 </script>
@@ -74,7 +77,6 @@ export default {
 }
 .input-group {
     margin-bottom: 20px;
-
 }
 .input-group input {
     background: none;
@@ -112,5 +114,6 @@ button {
   font-weight: 400;
   line-height: normal;
   text-align: left;
+  height: 5%;
 }
 </style>

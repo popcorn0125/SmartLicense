@@ -8,5 +8,8 @@ import cookies from 'vue3-cookies'
 // 위 createApp 코드 아래처럼 변경
 const app = createApp(App)
 app.use(routers)  // router 추가
-app.use(cookies)
+app.use(cookies, {
+    expire : "1d",
+    path : "/",
+})
 app.mount('#app')

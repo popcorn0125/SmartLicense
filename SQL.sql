@@ -92,7 +92,7 @@ CREATE TABLE exam_record
     correct_count INT,
     start_test_date VARCHAR(50),
     member_id VARCHAR(100) NOT NULL,
-    exam_duration VARCHAR(50) NOT NULL ,
+    exam_date VARCHAR(50) NOT NULL ,
     subject_count INT,
     question_count INT,
     is_pass CHAR(1),

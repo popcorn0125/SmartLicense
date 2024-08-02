@@ -82,6 +82,12 @@ export default {
       isCorret : 0,
       timeRemaining: 150 * 60, // 150분을 초로 변환 (9000)
       timer: null,
+
+      Score : [], // 합격 불합격 여부를 확인하기 위해 과목별 점수를 저장할 변수
+      correctSum : 0, // 과목별 정답 개수를 저장할 변수
+      subjectQnumber : [], // 과목별 총 문제수를 저장
+      subjectQnumberSum : 0, // 과목별 문제수를 저장(1씩더하다가 과목명이 변경되면 Qnumber에 저장 후 0으로 초기화)
+      Pass : '0', // 합격 여부
     }
   },
   computed: {
@@ -140,17 +146,25 @@ export default {
       if(vm.selectedOption === '') {
         return;
       }
+      vm.subjectQnumberSum += 1;
       if(vm.totalQuestionList[vm.Qnumber-1].answer === vm.selectedOption){
         vm.isCorret = 1; // 정답일때
+        vm.correctSum += vm.isCorret;
       } else {
         vm.isCorret = 0; // 오답일때
       }
+      console.log('subjectQnumber',vm.subjectQnumber);
+      console.log('Score', vm.Score);
+      vm.Score.push(vm.correctSum);
+      vm.subjectQnumber.push(vm.subjectQnumberSum);
+      vm.correctSum = 0;
+      
       const postData = {
         select_answer : vm.selectedOption,
         member_id : vm.memberId,
         question_idx : vm.totalQuestionList[vm.Qnumber - 1].question_idx,
         is_correct : vm.isCorret,
-        start_test_date : sessionStorage.getItem("startTestDate")
+        start_test_date : vm.$cookies.get("startTestDate")
       }
 
       // 사용자가 선택한 답 저장
@@ -174,16 +188,26 @@ export default {
       let remainingTime = vm.remainingTimeCal();
       clearInterval(vm.timer);
       
+      // 합격 여부 확인하는 부분
+      const scoreSum = vm.Score.reduce((acc, val) => acc + val, 0);
+      const qNumberSum = vm.subjectQnumber.reduce((acc, val) => acc + val, 0);
+      const isPass = scoreSum >= qNumberSum * 0.6 && vm.Score.every((score, index) => score >= vm.Qnumber[index] * 0.4);
+
+      // 불합격일 경우
+      if(isPass === true) {
+        vm.Pass = '1';
+      }
       const recordData = {
-        mode : sessionStorage.getItem('mode'),
+        mode : vm.$cookies.get('mode'),
         remaining_time : remainingTime,
-        start_test_date : sessionStorage.getItem('startTestDate'),
+        start_test_date : vm.$cookies.get('startTestDate'),
         member_id : vm.memberId,
-        exam_date : sessionStorage.getItem('exam_date'),
-        detail_license_name : sessionStorage.getItem('detail_license'),
-        license_name : sessionStorage.getItem('license'),
-        subject_count : JSON.parse(sessionStorage.getItem('selectedSubjects')).length,
+        exam_date : vm.$cookies.get('exam_date'),
+        detail_license_name : vm.$cookies.get('detail_license'),
+        license_name : vm.$cookies.get('license'),
+        subject_count : JSON.parse(this.$cookies.get('selectedSubjects')).length,
         question_count : vm.totalQuestionList.length,
+        is_pass : vm.Pass
       };
       console.log('recordData', recordData);
       // 응시 시험 기록 저장
@@ -211,8 +235,10 @@ export default {
       if(vm.selectedOption === '') {
         return;
       }
+      vm.subjectQnumberSum += 1;
       if(vm.totalQuestionList[vm.Qnumber-1].answer === vm.selectedOption){
         vm.isCorret = 1; // 정답일때
+        vm.correctSum += vm.isCorret;
       } else {
         vm.isCorret = 0; // 오답일때
       }
@@ -221,7 +247,7 @@ export default {
         member_id : vm.memberId,
         question_idx : vm.totalQuestionList[vm.Qnumber-1].question_idx,
         is_correct : vm.isCorret,
-        start_test_date : sessionStorage.getItem("startTestDate")
+        start_test_date : this.$cookies.get("startTestDate")
       }
 
       axios({
@@ -256,6 +282,12 @@ export default {
       }
       if(vm.totalQuestionList[vm.Qnumber-1].subject_name !== vm.Subject) {
         vm.Subject = vm.totalQuestionList[vm.Qnumber-1].subject_name
+        vm.Score.push(vm.correctSum);
+        vm.subjectQnumber.push(vm.subjectQnumberSum);
+        vm.correctSum = 0;
+        vm.subjectQnumberSum = 0;
+        console.log('subjectQnumber',vm.subjectQnumber);
+        console.log('Score', vm.Score);
       }
       vm.imagePath = vm.totalQuestionList[vm.Qnumber -1].image;
       vm.selectedOption = '';
@@ -277,13 +309,13 @@ export default {
 
     // 시험 문제 불러오는 함수
     loadExam() {
-      this.DetailLicense = sessionStorage.getItem("detail_license");
-      this.TestDate = sessionStorage.getItem("exam_date");
+      this.DetailLicense = this.$cookies.get("detail_license");
+      this.TestDate = this.$cookies.get("exam_date");
       const data = {
         detail_license_name : this.DetailLicense,
         exam_date : this.TestDate,
-        subject : sessionStorage.getItem("selectedSubjects"),
-        license_name : sessionStorage.getItem('license')
+        subject : this.$cookies.get("selectedSubjects"),
+        license_name : this.$cookies.get('license')
       };
       axios({
         method : 'post',
@@ -308,7 +340,7 @@ export default {
           this.imagePath = this.totalQuestionList[0].image;
           const currentDate = new Date();
           const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
-          sessionStorage.setItem("startTestDate", formattedDate);
+          this.$cookies.set("startTestDate", formattedDate);
           this.timeRemaining = response.data.timeRemaining * 60; // 
           // 타이머
           this.startTimer();
@@ -325,8 +357,8 @@ export default {
   mounted() {
     // 시험 문제 불러오기
     this.loadExam();
-    if((this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)) {
-      this.memberId = this.$cookies.get('USER_ID');
+    if((sessionStorage.getItem('JSESSIONID') != null && sessionStorage.getItem('USER_ID') != null)) {
+      this.memberId = sessionStorage.getItem('USER_ID');
     } else {
       this.memberId = localStorage.getItem('GUEST');
     }

@@ -130,6 +130,8 @@ export default {
             vm.isModalVisivle = true;
           }
           if(response.data.result == 1) {
+            sessionStorage.setItem('JSESSIONID', response.data.JSESSIONID);
+            sessionStorage.setItem('USER_ID', response.data.USER_ID);
             vm.$router.push({ name: 'CategoryChoice' });
           }
         })
@@ -145,7 +147,7 @@ export default {
 
   },
   mounted() {
-    if( (this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null)){
+    if( (sessionStorage.getItem('JSESSIONID') != null && sessionStorage.getItem('USER_ID') != null)){
       this.$router.push({ name: 'CategoryChoice' });
     }
   },

@@ -149,21 +149,33 @@ export default {
             const formattedDateTime = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
             if (this.mode === '연습') {
-                sessionStorage.setItem('license', this.selectedOption1);
-                sessionStorage.setItem('detail_license', this.selectedOption2);
-                sessionStorage.setItem('exam_date', this.selectedOption3);
-                sessionStorage.setItem('mode', this.mode);
-                sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
-                sessionStorage.setItem('start_exam_date', formattedDateTime);
-                sessionStorage.setItem('subject_count', this.selectedSubjects.length);
+                // sessionStorage.setItem('license', this.selectedOption1);
+                // sessionStorage.setItem('detail_license', this.selectedOption2);
+                // sessionStorage.setItem('exam_date', this.selectedOption3);
+                // sessionStorage.setItem('mode', this.mode);
+                // sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
+                // sessionStorage.setItem('start_exam_date', formattedDateTime);
+                // sessionStorage.setItem('subject_count', this.selectedSubjects.length);
+                this.$cookies.set('license', this.selectedOption1);
+                this.$cookies.set('detail_license', this.selectedOption2);
+                this.$cookies.set('exam_date', this.selectedOption3);
+                this.$cookies.set('mode', this.mode);
+                this.$cookies.set('selectedSubjects', JSON.stringify(this.selectedSubjects));
+                this.$cookies.set('start_test_date', formattedDateTime);
+                this.$cookies.set('subject_count', this.selectedSubjects.length);
                 this.$router.push({ name: 'PracticeMode' });
 
             } else if (this.mode === '시험') {
-                sessionStorage.setItem('license', this.selectedOption1);
-                sessionStorage.setItem('detail_license', this.selectedOption2);
-                sessionStorage.setItem('exam_date', this.selectedOption3);
-                sessionStorage.setItem('mode', this.mode);
-                sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
+                // sessionStorage.setItem('license', this.selectedOption1);
+                // sessionStorage.setItem('detail_license', this.selectedOption2);
+                // sessionStorage.setItem('exam_date', this.selectedOption3);
+                // sessionStorage.setItem('mode', this.mode);
+                // sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
+                this.$cookies.set('license', this.selectedOption1);
+                this.$cookies.set('detail_license', this.selectedOption2);
+                this.$cookies.set('exam_date', this.selectedOption3);
+                this.$cookies.set('mode', this.mode);
+                this.$cookies.set('selectedSubjects', JSON.stringify(this.selectedSubjects));
                 this.$router.push({ name: 'TestMode' });
             } else {
                 alert('모드를 선택해 주세요.');
