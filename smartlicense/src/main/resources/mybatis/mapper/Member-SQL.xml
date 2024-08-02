@@ -51,7 +51,10 @@
                COALESCE( SUM(usa.is_correct), 0) as correct_count
         FROM member m
                  LEFT JOIN user_select_answer usa ON m.member_id = usa.member_id
-                                                    AND usa.start_test_date IN (SELECT start_test_date FROM exam_record WHERE start_test_date LIKE CONCAT(#{current_date}, ' %')
+                    AND usa.start_test_date IN
+                        (SELECT start_test_date
+                         FROM exam_record
+                         WHERE start_test_date LIKE CONCAT(#{current_date}, ' %'))
         WHERE m.member_id = #{member_id}
         GROUP BY m.member_id
     </select>
@@ -69,6 +72,32 @@
     </select>
 
     <!--
+	작성일 : 2024.08.02
+	작성자 : 김준식
+	내용 : 회원 정보 수정(비밀번호 or 닉네임 or 전화번호 )
+    -->
+    <update id="updateUserInfo" parameterType="HashMap" >
+        UPDATE member
+
+        <set>
+            <if test='member_password != null and member_password != ""'>
+                member_password = #{member_password},
+            </if>
+            <if test='member_nickname != null and member_nickname != ""'>
+                member_nickname = #{member_nickname},
+            </if>
+            <if test='member_phone_number != null and member_phone_number != ""'>
+                member_phone_number = #{member_phone_number}
+            </if>
+
+        </set>
+        WHERE member_id = #{member_id}
+            AND member_name = #{member_name}
+            AND member_gender = #{member_gender}
+            AND is_active = '1'
+    </update>
+
+    <!--
 	작성일 : 2024.08.01
 	작성자 : 김준식
 	내용 : 회원탈퇴 (is_active를 "0"으로 변경).
@@ -78,7 +107,6 @@
         SET is_active = '0'
         WHERE member_id = #{member_id}
                 AND member_name = #{member_name}
-                AND member_nickname = #{member_nickname}
                 AND is_active = '1'
     </update>
 

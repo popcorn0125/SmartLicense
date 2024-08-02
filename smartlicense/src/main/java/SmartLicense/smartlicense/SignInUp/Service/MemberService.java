@@ -90,6 +90,20 @@ public class MemberService {
     }
 
     /*******************
+     * 날짜 : 2024.08.02
+     * 이름 : 김준식
+     * 내용 : 정보수정에서 회원정보 수정하기
+     * *****************/
+    public int updateUserInfo(HashMap<String, Object> params) throws SQLException {
+        String pw = params.get("member_password").toString();
+        if(pw != null && !pw.equals("")) {
+            String encodPW = passwordEncoder.encode(pw);
+            params.put("member_password",encodPW);
+        }
+        return memberDao.updateUserInfo(params);
+    }
+
+    /*******************
      * 날짜 : 2024.08.01
      * 이름 : 김준식
      * 내용 : 회원탈퇴

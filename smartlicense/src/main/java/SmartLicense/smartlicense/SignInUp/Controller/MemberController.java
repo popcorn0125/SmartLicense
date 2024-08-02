@@ -112,8 +112,18 @@ public class MemberController {
     @PostMapping("/getUserInfo")
     public ResponseEntity<HashMap<String, Object>> getUserInfo(@RequestBody HashMap<String, Object> params) throws SQLException {
         System.out.println("getUserInfo 실행");
-        System.out.println("params : " + params);
         return ResponseEntity.ok(memberService.getUserInfo(params));
+    }
+
+    /*******************
+     * 날짜 : 2024.08.02
+     * 이름 : 김준식
+     * 내용 : 정보수정에서 회원정보 수정하기
+     * *****************/
+    @PostMapping("/updateUserInfo")
+    public ResponseEntity<Integer> updateUserInfo(@RequestBody HashMap<String, Object> params) throws SQLException {
+        System.out.println("updateUserInfo 실행");
+        return ResponseEntity.ok(memberService.updateUserInfo(params));
     }
 
     /*******************

@@ -50,6 +50,13 @@ public interface MemberDao {
     HashMap<String, Object> getUserInfo(HashMap<String, Object> params) throws SQLException;
 
     /*******************
+     * 날짜 : 2024.08.02
+     * 이름 : 김준식
+     * 내용 : 정보수정에서 회원정보 수정하기
+     * *****************/
+    int updateUserInfo(HashMap<String, Object> params) throws SQLException;
+
+    /*******************
      * 날짜 : 2024.08.01
      * 이름 : 김준식
      * 내용 : 회원탈퇴
