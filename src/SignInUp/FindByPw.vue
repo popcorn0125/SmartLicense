@@ -5,22 +5,22 @@
             <p class="heading">비밀번호 찾기</p>
             <br>
             <div class="input-group">
-                <input placeholder="아이디" id="id" type="text" v-model="userID" />
+                <input @input="idChange()" placeholder="아이디" id="userID" type="text" v-model="userID" />
             </div>
             <text id="userid" class="infoMessage">{{ idMsg }}</text>
             <div class="input-group btn_posi">
-                <input  placeholder="전화번호" id="phonenumber" type="text" v-model="phonenumber"
+                <input @input="phoneNumChange()" placeholder="전화번호" id="phonenumber" type="text" v-model="phonenumber"
                     maxlength="11" />
                 <button @click="verifyUser()" type="button">인증번호 전송</button>
             </div>
             <text id="phone" class="infoMessage">{{ phoneMsg }}</text>
             <div class="input-group btn_posi">
-                <input  placeholder="인증번호" name="number" id="number" type="text"
+                <input @input="checknumberChange()" placeholder="인증번호" name="number" id="checknumber" type="text"
                     v-model="enteredCode" maxlength="6" />
                 <button @click="verifyCode" type="button">확인</button>
             </div>
-            <text id="checknumber" class="infoMessage">{{ pnCheckMsg }}</text>
-            <button type="button" @click="findId">비밀번호 찾기</button>
+            <text id="checknumber2" class="infoMessage">{{ pnCheckMsg }}</text>
+            <button type="button" class="checkBTN" @click="findId">비밀번호 찾기</button>
         </form>
     </div>
 </template>
@@ -62,10 +62,10 @@ export default {
                 data: userInfo,
             })
                 .then(function (response) {
-                    if(response.data.userExists){
+                    if (response.data.userExists) {
                         vm.serverVerificationCode = response.data.verificationCode;
                         alert("인증 번호는 " + vm.serverVerificationCode + " 입니다.");
-                    } else{
+                    } else {
                         alert("사용자 정보를 확인할 수 없습니다.");
                     }
                 })
@@ -79,21 +79,65 @@ export default {
             if (this.enteredCode == this.serverVerificationCode) {
                 this.isCodeVerified = true;
                 this.pnCheckMsg = '인증 성공';
-                document.getElementById('checknumber').style.color = '#70CA77';
+                document.getElementById('checknumber2').style.color = '#70CA77';
             } else {
                 this.isCodeVerified = false;
                 this.pnCheckMsg = '인증번호를 다시 입력해주세요.';
-                document.getElementById('checknumber').style.color = '#F00';
+                document.getElementById('checknumber2').style.color = '#F00';
             }
         },
 
-        findId(){
-            if (this.isCodeVerified){
-                this.$router.push({ name: 'ResettingPwPage', query: { userID: this.userID} })
-            } else{
+        findId() {
+            if (this.isCodeVerified) {
+                this.$router.push({ name: 'ResettingPwPage', query: { userID: this.userID } })
+            } else {
                 alert("인증을 진행하세요")
             }
-        }
+        },
+
+        // 아이디 입력 감지
+        idChange() {
+            const userId = document.getElementById('userid');
+            if (this.userID.length < 5 || !this.onlyEnglishAndNumber(this.userID)) {
+                userId.style.color = "#F00";
+                this.idMsg = "영어와 숫자를 사용하여 최소 5자리 이상 입력하세요."
+            } else {
+                this.idMsg = '';
+            }
+        },
+        // 아이디 유효성 검사 (영어 또는 숫자 또는 영어+숫자만 입력 가능)
+        onlyEnglishAndNumber(id) {
+            return /^[A-Za-z0-9][A-Za-z0-9]{4,20}$/.test(id);
+        },
+
+        // 전화번호 입력 감지
+        phoneNumChange() {
+            if (!this.validatePhoneNumber(this.phonenumber)) {
+                document.getElementById('phone').style.color = '#F00';
+                this.phoneMsg = '입력예시 : 01012345678';
+            } else {
+                this.phoneMsg = '';
+            }
+        },
+        // 전화번호 유효성 검사( 숫자 11자리)
+        validatePhoneNumber(phoneNumber) {
+            return /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/.test(phoneNumber);
+        },
+
+        //인증번호 입력 감지
+        checknumberChange() {
+            const textTag = document.getElementById('checknumber2');
+            if (!this.validateEnteredCode(this.enteredCode)) {
+                textTag.style.color = '#F00';
+                this.pnCheckMsg = '인증번호를 다시 입력해주세요.';
+            } else {
+                this.pnCheckMsg = '';
+            }
+        },
+        // 인증번호 유효성 검사( 숫자 6자리)
+        validateEnteredCode(enteredCode) {
+            return /^[0-9]{6}$/.test(enteredCode);
+        },
     }
 }
 </script>
@@ -141,14 +185,14 @@ export default {
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-top: 20px;
     display: flex;
 }
 
 .input-group input {
     background: none;
     border: 1px solid #d1d1d1;
-    padding: 15px 23px;
+    padding: 15px 15px;
     font-size: 16px;
     border-radius: 8px;
     color: #000000;
@@ -214,5 +258,15 @@ button {
 
 .pwhref {
     margin-left: .5em;
+}
+
+.infoMessage {
+    font-size: 0.7em;
+    font-weight: 400;
+    text-align: left;
+}
+
+.checkBTN {
+    margin-top: 20px;
 }
 </style>
