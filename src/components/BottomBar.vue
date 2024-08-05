@@ -54,7 +54,7 @@ export default {
         updateIconColor() {
             const currentRoute = this.$route.name;
             this.homesvg = currentRoute === 'CategoryChoice' ? 'black' : 'gray';
-            this.ranksvg = currentRoute === 'RankingPage' ? 'black' : 'gray';
+            this.ranksvg = currentRoute === 'MyHistoryPage' ? 'black' : 'gray';
             this.mysvg = currentRoute === 'MyPage' ? 'black' : 'gray';
         },
         goToCategoryChoice() {
@@ -64,7 +64,7 @@ export default {
             if(localStorage.getItem('GUEST') != null ) {
                 this.isShowModal = true;
             }
-            if(this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null) {
+            if(sessionStorage.getItem('JSESSIONID') != null && sessionStorage.getItem('USER_ID') != null) {
                 this.$router.push({name : 'MyHistoryPage'}); // MyHistoryPage 페이지로 이동
             }
         },
@@ -72,7 +72,7 @@ export default {
             if(localStorage.getItem('GUEST') != null ) {
                 this.isShowModal = true;
             }
-            if(this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null) {
+            if(sessionStorage.getItem('JSESSIONID') != null && sessionStorage.getItem('USER_ID') != null) {
                 this.$router.push({name : 'MyPage'}); // MyPage 페이지로 이동
         }
         },
