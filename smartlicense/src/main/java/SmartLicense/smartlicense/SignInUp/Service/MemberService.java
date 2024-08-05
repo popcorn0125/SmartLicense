@@ -3,11 +3,14 @@ package SmartLicense.smartlicense.SignInUp.Service;
 import SmartLicense.smartlicense.SignInUp.DTO.MemberDTO;
 import SmartLicense.smartlicense.SignInUp.Dao.MemberDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
+
 /*******************
  * 날짜 : 2024.07.15
  * 이름 : 김준식
@@ -110,5 +113,49 @@ public class MemberService {
      * *****************/
     public int deleteAccount(HashMap<String, Object> params) throws SQLException {
         return memberDao.deleteAccount(params);
+    }
+
+    /*******************
+     * 날짜 : 2024.08.05
+     * 이름 : 권지용
+     * 내용 : 아이디 찾기
+     * *****************/
+    public HashMap<String, Object> findByID(String userName, String phoneNumber) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("userName", userName);
+        params.put("phonenumber", phoneNumber);
+
+        // 사용자 ID를 조회
+        String userID = memberDao.findByID(params);
+
+        // 결과를 담을 해시맵
+        HashMap<String, Object> response = new HashMap<>();
+        if (userID != null) {
+            response.put("userID", userID);
+        } else {
+            response.put("error", "User not found");
+        }
+
+        return response;
+    }
+
+    public boolean checkUserExists(String userID, String phonenumber) {
+        int count = memberDao.findByPW(userID, phonenumber);
+        return count > 0;
+    }
+
+    /*******************
+     * 날짜 : 2024.08.05
+     * 이름 : 권지용
+     * 내용 : 비밀번호 재설정
+     * *****************/
+    public boolean updatePassword(String userID, String newPassword) {
+        try {
+            memberDao.updatePassword(userID, passwordEncoder.encode(newPassword));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

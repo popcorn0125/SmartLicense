@@ -110,4 +110,35 @@
                 AND is_active = '1'
     </update>
 
+    <!--
+	작성일 : 2024.08.05
+	작성자 : 권지용
+	내용 : 아이디 찾기
+    -->
+    <select id="findByID" parameterType="map" resultType="String" >
+        SELECT member_id
+        FROM member
+        WHERE member_name = #{userName}
+          AND member_phone_number = #{phonenumber}
+    </select>
+
+    <!--
+	작성일 : 2024.08.05
+	작성자 : 권지용
+	내용 : 비밀번호 찾기
+    -->
+    <select id="findByPW" resultType="int" >
+        SELECT COUNT(*)
+        FROM member
+        WHERE member_id = #{userID}
+          AND member_phone_number = #{phonenumber}
+    </select>
+
+    <update id="updatePassword" parameterType="map">
+        UPDATE member
+        SET member_password = #{newPassword}
+        WHERE member_id = #{userID}
+    </update>
+
+
 </mapper>

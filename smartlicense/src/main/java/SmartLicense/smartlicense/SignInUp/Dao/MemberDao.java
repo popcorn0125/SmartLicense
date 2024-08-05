@@ -2,6 +2,7 @@ package SmartLicense.smartlicense.SignInUp.Dao;
 
 import SmartLicense.smartlicense.SignInUp.DTO.MemberDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -62,4 +63,15 @@ public interface MemberDao {
      * 내용 : 회원탈퇴
      * *****************/
     int deleteAccount(HashMap<String, Object> params) throws SQLException;
+
+    /*******************
+     * 날짜 : 2024.08.05
+     * 이름 : 권지용
+     * 내용 : 아이디 찾기
+     * *****************/
+    String findByID(HashMap<String, Object> params);
+
+    int findByPW(@Param("userID") String userID, @Param("phonenumber") String phonenumber);
+
+    int updatePassword(@Param("userID") String userID, @Param("newPassword") String newPassword);
 }

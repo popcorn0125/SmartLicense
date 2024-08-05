@@ -34,4 +34,5 @@ public interface LoginDao {
      * 내용 : 게스트 식별값 저장
      * *****************/
     int guestLogin(@Param("guestId") String uuid);
+
 }
