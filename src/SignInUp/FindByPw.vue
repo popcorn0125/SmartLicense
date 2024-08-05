@@ -5,27 +5,28 @@
             <p class="heading">비밀번호 찾기</p>
             <br>
             <div class="input-group">
-                <input placeholder="아이디" id="name=" type="text" />
+                <input placeholder="아이디" id="id" type="text" v-model="userID" />
             </div>
+            <text id="userid" class="infoMessage">{{ idMsg }}</text>
             <div class="input-group btn_posi">
-                <input placeholder="전화번호" id="phonenumber" type="text" />
-                <button type="button">인증번호 전송</button>
+                <input  placeholder="전화번호" id="phonenumber" type="text" v-model="phonenumber"
+                    maxlength="11" />
+                <button @click="verifyUser()" type="button">인증번호 전송</button>
             </div>
+            <text id="phone" class="infoMessage">{{ phoneMsg }}</text>
             <div class="input-group btn_posi">
-                <input placeholder="인증번호" name="password" id="password" type="password" />
-                <button type="button">확인</button>
+                <input  placeholder="인증번호" name="number" id="number" type="text"
+                    v-model="enteredCode" maxlength="6" />
+                <button @click="verifyCode" type="button">확인</button>
             </div>
+            <text id="checknumber" class="infoMessage">{{ pnCheckMsg }}</text>
             <button type="button" @click="findId">비밀번호 찾기</button>
-            <div class="bottom-text" v-show="isShow">
-                <p><span>아이디를 다시 입력해주세요.</span></p>
-                <p><a href="/findbyid" class="idhref">아이디 찾기</a></p>
-            </div>
         </form>
     </div>
 </template>
 <script>
 import TopBar from '@/components/TopBar.vue';
-
+import axios from 'axios';
 export default {
     name: "FindByPwPage",
     components: {
@@ -33,17 +34,64 @@ export default {
     },
     data() {
         return {
-            userId : 'sd',
-            isShow : false,
+            userID: '',
+            phonenumber: '',
+            enteredCode: '',
+
+            idMsg: '',
+            phoneMsg: '',
+            pnCheckMsg: '',
+
+            serverVerificationCode: null, // 서버에서 받아온 인증번호 저장
+            isCodeVerified: false, // 인증번호 확인 여부
+
         }
     },
     methods: {
-        findId(){
-            if(this.userId == '') {
-               this.isShow = true;
-            } else{
-                this.$router.push({ name : 'FindByPwPage'});
+        verifyUser() {
+            const vm = this;
+            const userInfo = {
+                userID: this.userID,
+                phonenumber: this.phonenumber
+            }
 
+            axios({
+                method: 'post',
+                header: { 'Content-Type': 'application/json; charset=UTF-8' },
+                url: "/api/findByPW",
+                data: userInfo,
+            })
+                .then(function (response) {
+                    if(response.data.userExists){
+                        vm.serverVerificationCode = response.data.verificationCode;
+                        alert("인증 번호는 " + vm.serverVerificationCode + " 입니다.");
+                    } else{
+                        alert("사용자 정보를 확인할 수 없습니다.");
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                ;
+        },
+
+        verifyCode() {
+            if (this.enteredCode == this.serverVerificationCode) {
+                this.isCodeVerified = true;
+                this.pnCheckMsg = '인증 성공';
+                document.getElementById('checknumber').style.color = '#70CA77';
+            } else {
+                this.isCodeVerified = false;
+                this.pnCheckMsg = '인증번호를 다시 입력해주세요.';
+                document.getElementById('checknumber').style.color = '#F00';
+            }
+        },
+
+        findId(){
+            if (this.isCodeVerified){
+                this.$router.push({ name: 'ResettingPwPage', query: { userID: this.userID} })
+            } else{
+                alert("인증을 진행하세요")
             }
         }
     }
@@ -148,7 +196,7 @@ button {
 
 }
 
-.bottom-text > p > strong {
+.bottom-text>p>strong {
     font-size: 1.5em;
 }
 

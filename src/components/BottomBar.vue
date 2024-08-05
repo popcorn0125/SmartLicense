@@ -61,20 +61,20 @@ export default {
             this.$router.push('/CategoryChoice'); // CategoryChoice 페이지로 이동
         },
         goToMyHistoryPage() {
-            // if(localStorage.getItem('GUEST') != null ) {
-            //     this.isShowModal = true;
-            // }
-            this.$router.push({name : 'MyHistoryPage'}); // MyHistoryPage 페이지로 이동
-            // if(this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null) {
-            // }
+            if(localStorage.getItem('GUEST') != null ) {
+                this.isShowModal = true;
+            }
+            if(this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null) {
+                this.$router.push({name : 'MyHistoryPage'}); // MyHistoryPage 페이지로 이동
+            }
         },
         goToMyPage() {
-            // if(localStorage.getItem('GUEST') != null ) {
-            //     this.isShowModal = true;
-            // }
-            this.$router.push({name : 'MyPage'}); // MyPage 페이지로 이동
-            // if(this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null) {
-            // }
+            if(localStorage.getItem('GUEST') != null ) {
+                this.isShowModal = true;
+            }
+            if(this.$cookies.get('JSESSIONID') != null && this.$cookies.get('USER_ID') != null) {
+                this.$router.push({name : 'MyPage'}); // MyPage 페이지로 이동
+        }
         },
 
         goToLogin() {

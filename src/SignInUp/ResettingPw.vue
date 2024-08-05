@@ -11,7 +11,7 @@
             <div class="input-group">
                 <input placeholder="비밀번호 확인" v-model="newPwCheck" id="newPwCheck" type="password" :class="passwordMatchClass" @input="validatePassword" />
             </div>
-            <button type="button" @click="movePage()">비밀번호 재설정</button>
+            <button type="button" @click="resetPassword">비밀번호 재설정</button>
             <div v-show="isShow">
                 <p>이전과 동일한 비밀번호입니다. 새로운 비밀번호를 입력하세요.</p>
             </div>
@@ -20,7 +20,7 @@
 </template>
 <script>
 import TopBar from '@/components/TopBar.vue';
-
+import axios from 'axios';
 export default {
     name: "ResettingPwPage",
     components: {
@@ -34,19 +34,31 @@ export default {
             newPwCheck: '',
             passwordMatch: false,
 
+            userID: this.$route.query.userID,
+
         }
     },
     methods: {
-        movePage(){
+        resetPassword() {
             if(this.newPw !== this.newPwCheck){
-                alert("sadfsadf")
+                alert("비밀번호가 다릅니다")
                 return;
             }
-            if(this.response) {
-                this.$router.push({ name : 'testComponent'});
-            } else{
-                this.isShow = true;
-            }
+
+            const payload = {
+                userID: this.userID,
+                newPassword: this.newPw
+            };
+
+            axios.post('/api/resetPassword', payload)
+                .then(response => {
+                    alert(response.data);
+                    this.$router.push({ name: 'LoginPage' });
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("비밀번호 재설정에 실패했습니다.");
+                });
         },
         validatePassword() {
             this.passwordMatch = this.newPw === this.newPwCheck;
@@ -59,6 +71,11 @@ export default {
                 'input-match': this.passwordMatch,
                 'input-mismatch': !this.passwordMatch
             };
+        }
+    },
+    mounted(){
+        if(this.userID === undefined){
+            this.$router.push({ name : 'LoginPage'});
         }
     }
 }
