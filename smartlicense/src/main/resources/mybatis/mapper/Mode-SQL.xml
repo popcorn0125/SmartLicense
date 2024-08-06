@@ -67,7 +67,7 @@
 	내용 : 사용자 응시 기록을 저장
     -->
     <insert id="storeExamRecord" parameterType="HashMap">
-        INSERT INTO exam_record ( mode, remaining_time, start_test_date, member_id, exam_date, correct_count, subject_count, question_count, is_pass )
+        INSERT INTO exam_record ( mode, remaining_time, start_test_date, member_id, exam_date, correct_count, subject_count, question_count, is_pass, detail_license_name )
         VALUES (
                 #{mode},
                 #{remaining_time},
@@ -90,7 +90,8 @@
                 ),
                 #{subject_count},
                 #{question_count},
-                #{is_pass}
+                #{is_pass},
+                #{detail_license_name}
                     )
     </insert>
 
