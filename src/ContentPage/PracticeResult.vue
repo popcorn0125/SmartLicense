@@ -100,6 +100,7 @@ export default {
         this.$router.push({ name: 'MyHistoryPage' });
         this.storeExamRecord();
         // sessionStorage.clear();
+        this.$cookies.remove('scoreResult');
       }
     },
 
@@ -108,32 +109,22 @@ export default {
       let totalCorrectCount = 0;
       let totalQuestionCount = 0;
       let passedSubjects = 0;
-      let totalSubjects = scoreResult.length + 1; // 현재 과목도 포함
-
-      // 현재 과목 점수를 합산
-      totalCorrectCount += this.practiceScore.correctCount;
-      totalQuestionCount += this.practiceScore.totalProblems;
 
       // 저장된 과목의 점수와 전체 점수를 합산
-      for (let i = 0; i < scoreResult.length; i++) {
-        totalCorrectCount += scoreResult[i].correctCount;
-        totalQuestionCount += scoreResult[i].totalProblems;
+      scoreResult.forEach(result => {
+        totalCorrectCount += result.correctCount;
+        totalQuestionCount += result.questionCount;
 
-        // 과락 조건 확인
-        if (scoreResult[i].correctCount >= scoreResult[i].totalProblems * 0.4) {
-          passedSubjects++;
+        if (result.correctCount >= result.questionCount * 0.4) {
+          passedSubjects = 1;
+        } else{
+          passedSubjects = 0;
         }
-      }
-
-      // 현재 과목의 과락 조건 확인
-      if (this.practiceScore.correctCount >= this.practiceScore.totalProblems * 0.4) {
-        passedSubjects++;
-      }
+      });
 
       // 전체 평균 조건 확인
       const averageScore = totalCorrectCount / totalQuestionCount;
-      const isPass = (passedSubjects === totalSubjects) && (averageScore >= 0.6);
-
+      const isPass = (passedSubjects == 1) && (averageScore >= 0.6);
 
       const recordData = {
         mode: this.$cookies.get('mode'),

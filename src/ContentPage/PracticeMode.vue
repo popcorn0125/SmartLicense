@@ -261,10 +261,6 @@ export default {
 
     this.loadProblems();
   },
-
-  created() {
-
-  },
 };
 </script>
 
