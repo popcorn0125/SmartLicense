@@ -18,6 +18,7 @@ import ChangeInfo from "@/SignInUp/ChangeInfo.vue";
 import PracticeResult from "@/ContentPage/PracticeResult.vue";
 import TestResult from "@/ContentPage/TestResult.vue";
 import UserCheck from "@/SignInUp/UserCheck.vue";
+import IncorrectNote from "@/ContentPage/Note.vue";
 
 
 
@@ -69,6 +70,12 @@ const routes = [
         name: "MyHistoryPage",
         component: MyHistoryPage,
         meta: { title: '기록', showBackButton: false }
+    },
+    {
+        path: "/IncorrectNote",
+        name: "IncorrectNote",
+        component: IncorrectNote,
+        meta: { title: '문제풀이', showBackButton: true }
     },
     {
         path: "/MyPage",
