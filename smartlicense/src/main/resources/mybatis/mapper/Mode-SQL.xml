@@ -188,7 +188,7 @@
     </select>
 
     <insert id="storeExamRecordPractice" parameterType="HashMap">
-        INSERT INTO exam_record ( mode, remaining_time, start_test_date, member_id, exam_date, correct_count, subject_count, question_count, is_pass )
+        INSERT INTO exam_record ( mode, remaining_time, start_test_date, member_id, exam_date, correct_count, subject_count, question_count, is_pass, detail_license_name )
         VALUES (
                    #{mode},
                    '-',
@@ -224,7 +224,8 @@
                          AND usa.member_id = #{member_id}
                          AND usa.start_test_date = #{start_test_date}
                        ),
-                   #{is_pass}
+                   #{is_pass},
+                #{detail_license_name}
                )
     </insert>
 
