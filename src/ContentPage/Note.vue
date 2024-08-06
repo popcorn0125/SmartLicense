@@ -121,7 +121,7 @@ export default {
             }
         },
 
-        // 맞은 문제 
+        // 맞은 문제 이미지 보여주기
         getClassImg(item, optionIndex) {
             if (item.is_correct && item.select_answer == optionIndex) {
                 return 'correct-Img';
@@ -190,21 +190,21 @@ export default {
 @import "@/css/common.css";
 
 .correct {
-  border-color: rgb(22, 245, 22);
-  color: rgb(16, 184, 16);
+  border-color: #70CA77;
+  color: #70CA77;
 }
 
 .wrong {
-  border-color: red;
-  color: red;
+  border-color: #F00;
+  color: #F00;
 }
 
 .correct-Img {
     opacity: 0.5;
     border-radius: 5px;
     border: solid 2px;
-    border-color: rgb(22, 245, 22);
-    color: rgb(16, 184, 16);
+    border-color: #70CA77;
+    color: #70CA77;
 }
 
 .wrong-Img {
