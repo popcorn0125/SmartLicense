@@ -2,7 +2,7 @@
     <TopBar />
     <div class="group">
         <div class="circle-container">
-            <div class="circle">
+            <div class="circle" id="CIRCLE">
                 <div class="inner-circle">
                     <span class="label">정답률</span>
                     <span class="value">{{ correctRate }}%</span>
@@ -153,6 +153,7 @@ export default {
                 data: postData,
             })
                 .then(response => {
+                    console.log(response.data);
                     if(response.data != null) {
                         vm.totalQuestionList = response.data.question;
                         vm.totalQCount = response.data.exam_record.question_count;
@@ -163,8 +164,8 @@ export default {
                         });
                         vm.wrongCount = vm.totalQCount - count;
                         vm.correctRate = ((count / vm.totalQCount) * 100).toFixed(1);
-                        const circleStyle = document.getElementById('circle');
-                        circleStyle.background = 'background: conic-gradient(#5471ff ' + 108 + 'deg, rgb(224, 224, 224) 0deg);'
+                        const circleStyle = document.getElementById('CIRCLE');
+                        circleStyle.style.background = `conic-gradient(#5471ff ${((vm.correctRate / 100) * 360).toFixed(1)}deg, rgb(224, 224, 224) 0deg)`;
 
                     } else {
                         vm.modalMsg = '문제 정보를 불러오는데 오류가 발생하였습니다. 잠시후 다시 시도해주세요.'
@@ -462,7 +463,7 @@ strong {
     display: flex;
     border-radius: 50%;
     position: relative;
-    background: conic-gradient(#5471ff 108deg, rgb(224, 224, 224) 0deg);
+    /* background: conic-gradient(#5471ff 108deg, rgb(224, 224, 224) 0deg); */
 }
 .inner-circle {
     width: 90%;
