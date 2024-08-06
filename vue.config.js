@@ -21,6 +21,10 @@ module.exports = defineConfig({
       '/mode': {
         target: 'http://localhost:8080',
         changeOrigin: true
+      },
+      '/incorrectNote': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
       }
     }
   }
