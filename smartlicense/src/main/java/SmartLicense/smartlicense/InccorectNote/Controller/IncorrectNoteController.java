@@ -43,4 +43,22 @@ public class IncorrectNoteController {
 
         return incorrectNoteSerive.getExamRecords(memberId, page, itemsPerPage);
     }
+
+    @PostMapping("/deleteExamRecord")
+    public void deleteExamRecord(@RequestBody Map<String, Object> params){
+        String memberId = (String) params.get("memberId");
+        int idx = (int) params.get("examRecordIdx");
+
+        incorrectNoteSerive.passiveExamRecord(memberId, idx);
+    }
+
+    @PostMapping("/searchRecord")
+    public Map<String, Object> searchRecord(@RequestBody Map<String, Object> params){
+        String memberId = (String) params.get("memberId");
+        String searchQuery = (String) params.get("searchQuery");
+        int page = (int) params.get("page");
+        int itemsPerPage = (int) params.get("itemsPerPage");
+
+        return incorrectNoteSerive.searchExamRecords(memberId, searchQuery, page, itemsPerPage);
+    }
 }
