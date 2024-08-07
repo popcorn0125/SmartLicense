@@ -191,7 +191,7 @@ export default {
       // 합격 여부 확인하는 부분
       const scoreSum = vm.Score.reduce((acc, val) => acc + val, 0);
       const qNumberSum = vm.subjectQnumber.reduce((acc, val) => acc + val, 0);
-      const isPass = scoreSum >= qNumberSum * 0.6 && vm.Score.every((score, index) => score >= vm.Qnumber[index] * 0.4);
+      const isPass = (scoreSum >= (qNumberSum * 0.6)) && vm.Score.every((score, index) => score >= vm.subjectQnumber[index] * 0.4);
 
       // 불합격일 경우
       if(isPass === true) {
