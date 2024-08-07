@@ -44,5 +44,4 @@
         WHERE member_id = #{member_id}
             AND start_test_date = #{start_test_date}
     </select>
-
 </mapper>

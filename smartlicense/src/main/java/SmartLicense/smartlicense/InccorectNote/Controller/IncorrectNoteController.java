@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*******************
  * 날짜 : 2024.08.06
@@ -34,4 +35,12 @@ public class IncorrectNoteController {
         return ResponseEntity.ok(incorrectNoteSerive.incorrectNoteLoad(params));
     }
 
+    @PostMapping("/loadExamRecord")
+    public Map<String, Object> loadExamRecord(@RequestBody Map<String, Object> request) {
+        String memberId = (String) request.get("memberId");
+        int page = (int) request.get("page");
+        int itemsPerPage = (int) request.get("itemsPerPage");
+
+        return incorrectNoteSerive.getExamRecords(memberId, page, itemsPerPage);
+    }
 }
