@@ -11,39 +11,58 @@
         <input class="input" type="search" placeholder="세부자격을 검색하세요." />
     </div>
     <div class="table-container">
+        <div v-if="isLoading">
+            <p>로딩 중...</p>
+        </div>
         <div v-for="(item, index) in paginatedItems" :key="index" class="table-row">
             <div class="history_info">
                 <div class="license_info">
-                    <span>{{ item.examDate }}</span>&nbsp;<span>{{ item.qualification }}</span>
+                    <span>{{ item.exam_date }}</span>&nbsp;<span>{{ item.detail_license_name }}</span>
                 </div>
                 <div class="detail_info">
-                    <span>과목 수 <strong>{{ item.subNum }}</strong></span>&nbsp;|&nbsp;<span>문제 수 <strong>{{ item.qNum }}</strong></span>&nbsp;|&nbsp;<strong>{{ item.mode }}</strong>&nbsp;|&nbsp;<span>점수 <strong>{{ item.score }}</strong></span>&nbsp;|&nbsp;<strong>{{ item.passed }}</strong>
+                    <span>과목 수 <strong>{{ item.subject_count }}</strong></span>&nbsp;|&nbsp;<span>문제 수 <strong>{{
+            item.question_count
+        }}</strong></span>&nbsp;|&nbsp;<strong>{{ item.mode }}</strong>&nbsp;|&nbsp;<span>정답 갯수
+                        <strong>{{ item.correct_count }}</strong></span>&nbsp;|&nbsp;<strong
+                        :class="{ 'passed': item.is_pass != 0, 'failed': item.is_pass == 0 }">
+                        {{ item.is_pass == 0 ? '불합격' : '합격' }}
+                    </strong>
                 </div>
                 <div class="date_info">
-                    <span>응시일 2024.07.18</span>
+                    <span>응시일 {{ formatDate(item.start_test_date) }}</span>
                 </div>
             </div>
-            <div class="delete_history">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#03020a" class="bi bi-trash" viewBox="0 0 16 16">
-                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+            <div class="delete_history" >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#03020a" class="bi bi-trash"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                    <path
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
                 </svg>
             </div>
         </div>
     </div>
     <ul class="wrapper">
-        <li class="icon black" @click="prevPage">
+        <li class="icon black" @click="firstPage">
             <span>
-                <svg viewBox="0 0 16 16" class="bi bi-chevron-double-left" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" fill-rule="evenodd"></path>
-                    <path d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" fill-rule="evenodd"></path>
+                <svg viewBox="0 0 16 16" class="bi bi-chevron-double-left" fill="currentColor" height="16" width="16"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+                        fill-rule="evenodd"></path>
+                    <path
+                        d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+                        fill-rule="evenodd"></path>
                 </svg>
             </span>
         </li>
         <li class="icon black" @click="prevPage">
             <span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-chevron-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
                 </svg>
             </span>
         </li>
@@ -52,16 +71,23 @@
         </li>
         <li class="icon black" @click="nextPage">
             <span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-chevron-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" />
                 </svg>
             </span>
         </li>
-        <li class="icon black" @click="nextPage">
+        <li class="icon black" @click="lastPage">
             <span>
-                <svg viewBox="0 0 16 16" class="bi bi-chevron-double-right" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" fill-rule="evenodd"></path>
-                    <path d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" fill-rule="evenodd"></path>
+                <svg viewBox="0 0 16 16" class="bi bi-chevron-double-right" fill="currentColor" height="16" width="16"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"
+                        fill-rule="evenodd"></path>
+                    <path
+                        d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"
+                        fill-rule="evenodd"></path>
                 </svg>
             </span>
         </li>
@@ -69,67 +95,92 @@
     <BottomBar />
 </template>
 
-
 <script>
 import TopBar from '../components/TopBar.vue';
 import BottomBar from '../components/BottomBar.vue';
+import axios from 'axios';
 
 export default {
-    name : 'MyHistoryPage',
+    name: 'MyHistoryPage',
     components: {
         TopBar,
         BottomBar
     },
     data() {
         return {
-            items: [
-                { qualification: '정보처리기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '초음파비파괴검사기능사', examDate: '2024년 4월 24일', mode: '시험', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '불합격' },
-                { qualification: '담배원료가공기계정비기능사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보처리기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보처리기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보처리기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보처리기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보통신설비기능사2급', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '아스팔트피니셔운전기능사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보처리기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보기술산업기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보처리기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보처리기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보처리기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '전산응용토목제도기능사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '귀금속공예다기능기술자', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '제지산업기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '미용장', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '미용장', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                { qualification: '정보처리기사', examDate: '2024년 4월 24일', mode: '연습', remainingTime: '07:15', score: 90, submitDate: '2024.07.18', subNum: 5, qNum: 100, passed: '합격' },
-                // 필요한 만큼 더 추가
-            ],
-            currentPage: 1,
-            itemsPerPage: 6
+            memberId: '',
+            items: [],
+            currentPage: 1, // 현재 페이지
+            itemsPerPage: 6, // 페이지당 표시할 항목 수
+            totalItems: 0, // 총 항목 수
+            isLoading: false // 로딩 상태
         };
     },
     computed: {
-        totalPages() {
-            return Math.ceil(this.items.length / this.itemsPerPage);
-        },
         paginatedItems() {
-            const start = (this.currentPage - 1) * this.itemsPerPage;
-            const end = start + this.itemsPerPage;
-            return this.items.slice(start, end);
+            if (this.items.length === 0 || this.currentPage < 1) {
+                return [];
+            }
+            return this.items;
         }
     },
     methods: {
-        prevPage() {
+        async firstPage() {
+            this.currentPage = 1;
+            await this.loadExamRecord();
+        },
+        async prevPage() {
             if (this.currentPage > 1) {
                 this.currentPage--;
+                await this.loadExamRecord();
             }
         },
-        nextPage() {
-            if (this.currentPage < this.totalPages) {
+        async nextPage() {
+            if (this.currentPage < Math.ceil(this.totalItems / this.itemsPerPage)) {
                 this.currentPage++;
+                await this.loadExamRecord();
             }
         },
+        async lastPage() {
+            this.currentPage = Math.ceil(this.totalItems / this.itemsPerPage);
+            await this.loadExamRecord();
+        },
+        async loadExamRecord() {
+            this.isLoading = true;
+            try {
+                const response = await axios.post("/incorrectNote/loadExamRecord", {
+                    memberId: this.memberId,
+                    page: this.currentPage,
+                    itemsPerPage: this.itemsPerPage
+                }, {
+                    headers: { 'Content-Type': 'application/json; charset=UTF-8' }
+                });
+
+                if (response.data.records && Array.isArray(response.data.records)) {
+                    this.items = [...response.data.records];
+                    this.totalItems = response.data.total;
+                } else {
+                    console.error("올바르지 않은 데이터 구조", response.data);
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                this.isLoading = false;
+            }
+        },
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const hour = date.getHours();
+            const minute = date.getMinutes();
+            return `${year}. ${month}. ${day} ${hour}시 ${minute}분`;
+        }
+    },
+    mounted() {
+        this.memberId = sessionStorage.getItem('USER_ID');
+        this.loadExamRecord();
     }
 };
 </script>
@@ -289,5 +340,13 @@ strong {
     fill: #9e9ea7;
     width: 1rem;
     height: 1rem;
+}
+
+.passed {
+    color: #70CA77;
+}
+
+.failed {
+    color: #f00;
 }
 </style>

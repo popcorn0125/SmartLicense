@@ -97,7 +97,8 @@ CREATE TABLE exam_record
     question_count INT,
     is_pass CHAR(1),
     create_date TIMESTAMP DEFAULT NOW(),
-    detail_license_name VARCHAR(100)
+    detail_license_name VARCHAR(100),
+    is_active CHAR(1) NOT NULL
 );
 
 CREATE TABLE user_select_answer
