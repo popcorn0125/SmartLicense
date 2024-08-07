@@ -61,6 +61,15 @@
                     <img :class="getClassImg(item, item.option4)" v-if="item.option4.includes('https://ifh.cc')" :src="item.option4">
                     <div :class="getClass(item, item.option4)" v-else>{{ 4 }}.&nbsp;{{ item.option4 }}</div>
                 </div>
+                <div class="description-container">
+                    <div @click="openDescription(index)">해설보기</div>
+                    <div class="description" v-show="isOpenDescription[index]">
+                        <div class="description-title">해설</div>
+                        <p >
+                            <text class="textformat">{{ item.description }}</text>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -102,12 +111,19 @@ export default {
             isShowModal : false,
             modalMsg : '',
             member_id : sessionStorage.getItem('USER_ID'),
+            isOpenDescription : [],
+            exam_record_idx : '',
         };
     },
     computed: {
        
     },
     methods: {
+        // 해설 보기 클릭시 해설 보여주기
+        openDescription(index) {
+            const vm = this;
+            vm.isOpenDescription[index] = vm.isOpenDescription[index] == false ? true : false;
+        },
         // 맞은 문제
         getClass(item, optionIndex) {
             if (item.is_correct && item.select_answer == optionIndex) {
@@ -142,9 +158,7 @@ export default {
             const vm = this;
             const postData = {
                 member_id : vm.member_id,
-                detail_license : '정보처리기사',
-                start_test_date : '2024-8-5 17:13:30',
-                exam_date : '2022년 03월 05일'
+                exam_record_idx : vm.exam_record_idx
             };
             axios({
                 method : 'post',
@@ -153,7 +167,6 @@ export default {
                 data: postData,
             })
                 .then(response => {
-                    console.log(response.data);
                     if(response.data != null) {
                         vm.totalQuestionList = response.data.question;
                         vm.totalQCount = response.data.exam_record.question_count;
@@ -166,20 +179,22 @@ export default {
                         vm.correctRate = ((count / vm.totalQCount) * 100).toFixed(1);
                         const circleStyle = document.getElementById('CIRCLE');
                         circleStyle.style.background = `conic-gradient(#5471ff ${((vm.correctRate / 100) * 360).toFixed(1)}deg, rgb(224, 224, 224) 0deg)`;
+                        // totalQuestionList의 길이에 맞춰 isOpenDescription 배열을 초기화
+                        vm.isOpenDescription = vm.totalQuestionList.map(() => false);
 
                     } else {
                         vm.modalMsg = '문제 정보를 불러오는데 오류가 발생하였습니다. 잠시후 다시 시도해주세요.'
                         vm.isShowModal = true;
                     }
                 })
-                .catch(error => {
-                    console.log(error);
+                .catch(() => {
                     vm.modalMsg = '잠시후 다시 시도해주세요';
                     vm.isShowModal = true;
                 })
         }
     },
     mounted() {
+        this.exam_record_idx = this.$route.query.where;
         this.incorrectNoteLoad(); // 응시한 문제 로드
     }
 };
@@ -424,11 +439,13 @@ strong {
   font-weight: 800;
   text-align: center;
 }
+
 .cookie-para2 {
   font-size: 11px;
   font-weight: 400;
   color: rgb(51, 51, 51);
 }
+
 .button-wrapper2 {
   width: 50%;
   height: auto;
@@ -437,6 +454,7 @@ strong {
   justify-content: center;
   gap: 20px;
 }
+
 .cookie-button2 {
   width: 100%;
   padding: 8px 0;
@@ -444,6 +462,7 @@ strong {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .accept2 {
   background-color: rgb(34, 34, 34);
   color: white;
@@ -456,6 +475,7 @@ strong {
     justify-content: center;
     align-items: center;
 }
+
 .circle {
     font-size: 10px;
     width: 50px;
@@ -465,6 +485,7 @@ strong {
     position: relative;
     /* background: conic-gradient(#5471ff 108deg, rgb(224, 224, 224) 0deg); */
 }
+
 .inner-circle {
     width: 90%;
     height: 90%;
@@ -499,12 +520,14 @@ strong {
     padding: 10px 15px;
     font-family: Arial, sans-serif;
 }
+
 .header-container div {
     font-size: 0.8em;
     font-weight: bold;
     color: #1d4ed8;
     text-align: center;
 }
+
 .header-container div:first-child {
     color: #ababac;
     font-size: 0.5em;
@@ -512,5 +535,36 @@ strong {
     text-align: center;
 }
 
+/* 해설 보기 */
+.description-container {
+    margin: 12px 0 7px 0;
+    font-size: 0.7em;
+    text-align: center;
+}
 
+.description {
+    text-align: left;
+    width: 100%;
+}
+
+.description-title{
+    color: #0d0c22;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.description p {
+    font-size: 0.8em;
+    margin-top: 5px;
+    text-align: left;
+    width: 100%;
+    height: auto;
+    color: #ababac;
+    border: none;
+    outline: none;
+}
+
+.textformat {
+    white-space: pre-wrap;
+}
 </style>
