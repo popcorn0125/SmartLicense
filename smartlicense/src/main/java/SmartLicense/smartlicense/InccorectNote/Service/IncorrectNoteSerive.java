@@ -32,8 +32,9 @@ public class IncorrectNoteSerive {
      * *****************/
     public HashMap<String, Object> incorrectNoteLoad(HashMap<String, Object> params) {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("exam_record", incorrectNoteDao.getExamRecord(params));
-        result.put("question", incorrectNoteDao.incorrectNoteLoad(params));
+        HashMap<String, Object> param = incorrectNoteDao.getExamRecord(params);
+        result.put("exam_record", param);
+        result.put("question", incorrectNoteDao.incorrectNoteLoad(param));
         return result;
     }
 

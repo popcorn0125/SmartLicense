@@ -19,7 +19,7 @@
     <select id="incorrectNoteLoad" parameterType="HashMap" resultType="HashMap">
         SELECT s.subject_name as subject, sq.exam_date as examDate, dl.detail_license_name as qualification,
                 q.question as question, q.option1 as option1, q.option2 as option2, q.option3 as option3, q.option4 as option4,
-                q.answer as answer, q.image as imagePath,
+                q.answer as answer, q.image as imagePath, q.question_description as description,
                 usa.select_answer as select_answer, usa.is_correct as is_correct
         FROM license l
             JOIN detail_license dl ON l.license_idx = dl.license_idx
@@ -39,9 +39,9 @@
 	내용 :  총 문제 수, 남은 시간 불러오기
     -->
     <select id="getExamRecord" parameterType="HashMap" resultType="HashMap">
-        SELECT question_count, remaining_time
+        SELECT question_count, remaining_time, detail_license_name as detail_license, start_test_date, exam_date, member_id
         FROM exam_record
-        WHERE member_id = #{member_id}
-            AND start_test_date = #{start_test_date}
+        WHERE exam_record_idx = #{exam_record_idx}
     </select>
+
 </mapper>
