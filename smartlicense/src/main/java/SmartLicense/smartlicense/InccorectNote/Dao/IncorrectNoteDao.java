@@ -3,6 +3,8 @@ package SmartLicense.smartlicense.InccorectNote.Dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.springframework.security.core.parameters.P;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +35,18 @@ public interface IncorrectNoteDao {
      * *****************/
     HashMap<String, Object> getExamRecord(HashMap<String, Object> params);
 
-    @Select("SELECT * FROM exam_record WHERE member_id = #{memberId} ORDER BY start_test_date DESC LIMIT #{offset}, #{limit}")
+    @Select("SELECT * FROM exam_record WHERE member_id = #{memberId} AND is_active = 1 ORDER BY start_test_date DESC LIMIT #{offset}, #{limit}")
     List<Map<String, Object>> fetchExamRecords(@Param("memberId") String memberId, @Param("offset") int offset, @Param("limit") int limit);
 
-    @Select("SELECT COUNT(*) FROM exam_record WHERE member_id = #{memberId}")
+    @Select("SELECT COUNT(*) FROM exam_record WHERE member_id = #{memberId} AND is_active = 1")
     int countTotalRecords(@Param("memberId") String memberId);
+
+    @Update("update exam_record set is_active = 0 where member_id =#{memberId} and exam_record_idx = #{idx}")
+    int updateExamRecord(@Param("memberId") String memberId, @Param("idx") int idx);
+
+    @Select("SELECT * FROM exam_record WHERE member_id = #{memberId} AND detail_license_name LIKE CONCAT('%', #{searchQuery}, '%') AND is_active = 1 ORDER BY start_test_date DESC LIMIT #{offset}, #{limit}")
+    List<Map<String, Object>> searchExamRecords(@Param("memberId") String memberId, @Param("searchQuery") String searchQuery, @Param("offset") int offset, @Param("limit") int limit);
+
+    @Select("SELECT COUNT(*) FROM exam_record WHERE member_id = #{memberId} AND detail_license_name LIKE CONCAT('%', #{searchQuery}, '%') AND is_active = 1")
+    int countTotalRecord(@Param("memberId") String memberId, @Param("searchQuery") String searchQuery);
 }

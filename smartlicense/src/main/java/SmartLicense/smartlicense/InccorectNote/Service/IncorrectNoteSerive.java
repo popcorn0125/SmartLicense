@@ -48,4 +48,20 @@ public class IncorrectNoteSerive {
 
         return response;
     }
+
+    public void passiveExamRecord(String memberId, int idx){
+        incorrectNoteDao.updateExamRecord(memberId, idx);
+    }
+
+    public Map<String, Object> searchExamRecords(String memberId, String searchQuery, int page, int itemsPerPage) {
+        int offset = (page - 1) * itemsPerPage;
+        List<Map<String, Object>> records = incorrectNoteDao.searchExamRecords(memberId, searchQuery, offset, itemsPerPage);
+        int total = incorrectNoteDao.countTotalRecord(memberId, searchQuery);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("records", records);
+        response.put("total", total);
+
+        return response;
+    }
 }
