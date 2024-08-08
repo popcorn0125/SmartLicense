@@ -171,7 +171,7 @@ export default {
       await axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/mode/userSelectAnswer",
+        url: "/mode/userSelectAnswer",
         data : postData,
       })
         .then(response => {
@@ -214,7 +214,7 @@ export default {
       axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/mode/storeExamRecord",
+        url: "/mode/storeExamRecord",
         data : recordData,
       })
         .then(response => {
@@ -253,7 +253,7 @@ export default {
       axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/mode/userSelectAnswer",
+        url: "/mode/userSelectAnswer",
         data : postData,
       })
         .then(response => {
@@ -320,7 +320,7 @@ export default {
       axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/mode/testModeLoadExam",
+        url: "/mode/testModeLoadExam",
         data: data,
       })
         .then(response => {

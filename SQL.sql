@@ -121,9 +121,6 @@ ADD FOREIGN KEY R_17 (member_id) REFERENCES member (member_id);
 ALTER TABLE exam_record
 ADD FOREIGN KEY R_20 (member_id) REFERENCES member (member_id);
 
-ALTER TABLE exam_record
-ADD FOREIGN KEY R_32 (session_question_idx) REFERENCES session_question (session_question_idx);
-
 ALTER TABLE login_log_info
 ADD FOREIGN KEY R_16 (member_id) REFERENCES member (member_id);
 

@@ -138,7 +138,7 @@ export default {
       await axios({
         method: 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/mode/userSelectAnswer",
+        url: "/mode/userSelectAnswer",
         data: postData,
       })
         .then(response => {
@@ -164,7 +164,7 @@ export default {
         start_test_date: this.start_test_date
       };
 
-      axios.post('https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/mode/practiceModeLoadExam', criteria)
+      axios.post('/mode/practiceModeLoadExam', criteria)
         .then(response => {
           this.problems = [],
           this.problems = response.data;

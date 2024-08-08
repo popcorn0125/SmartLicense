@@ -88,7 +88,7 @@ export default {
         axios({
           method : 'post',
           header: { 'Content-Type': 'application/json; charset=UTF-8' },
-          url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/api/loadUserInfo",
+          url: "/api/loadUserInfo",
           data : data,
         })
           .then(response => {
@@ -118,7 +118,7 @@ export default {
         axios({
           method : 'post',
           header: { 'Content-Type': 'application/json; charset=UTF-8' },
-          url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/memberLogin/logout",
+          url: "/memberLogin/logout",
           data : {},
         })
           .then(response => {
