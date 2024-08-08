@@ -39,7 +39,7 @@ export default {
             axios({
                 method : 'post',
                 header: { 'Content-Type': 'application/json; charset=UTF-8' },
-                url: "/memberLogin/userPWCheck",
+                url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/memberLogin/userPWCheck",
                 data : vm.member,
             })
                 .then(response => {

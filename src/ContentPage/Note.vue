@@ -163,7 +163,7 @@ export default {
             axios({
                 method : 'post',
                 header: { 'Content-Type': 'application/json; charset=UTF-8' },
-                url: "/incorrectNote/incorrectNoteLoad",
+                url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/incorrectNote/incorrectNoteLoad",
                 data: postData,
             })
                 .then(response => {

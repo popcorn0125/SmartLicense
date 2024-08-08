@@ -141,7 +141,7 @@ export default {
       axios({
         method: 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "/mode/storeExamRecordPractice",
+        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/mode/storeExamRecordPractice",
         data: recordData,
       })
         .then(response => {
@@ -171,7 +171,7 @@ export default {
       axios({
         method: 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "/mode/loadPracticeScore",
+        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/mode/loadPracticeScore",
         data: postData,
       })
         .then(response => {

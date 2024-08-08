@@ -23,7 +23,7 @@ module.exports = defineConfig({
         changeOrigin: true
       },
       '/incorrectNote': {
-        target: 'http://localhost:8080',
+        target: 'https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app',
         changeOrigin: true
       }
     }

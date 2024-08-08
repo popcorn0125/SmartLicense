@@ -109,7 +109,7 @@ export default {
             };
 
             try {
-                const response = await axios.post('/api/findByID', userInfo);
+                const response = await axios.post('https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/api/findByID', userInfo);
                 console.log("asdfasdf:", response.data)
                 this.serverVerificationCode = response.data.verificationCode;
                 this.userID = response.data.userID;

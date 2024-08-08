@@ -53,7 +53,7 @@ export default {
                 newPassword: this.newPw
             };
 
-            axios.post('/api/resetPassword', payload)
+            axios.post('https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/api/resetPassword', payload)
                 .then(response => {
                     alert(response.data);
                     this.$router.push({ name: 'LoginPage' });

@@ -226,7 +226,7 @@ export default {
       axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "/api/isDuplicateId",
+        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/api/isDuplicateId",
         data: data,
       })
         .then(function(response) {
@@ -262,7 +262,7 @@ export default {
       axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "/api/isDuplicateNickName",
+        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/api/isDuplicateNickName",
         data: data,
       })
         .then(function(response) {
@@ -292,7 +292,7 @@ export default {
       axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "/api/sendSMS",
+        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/api/sendSMS",
       })
         .then(function(response) {
           vm.showVerificationCode = true;
@@ -315,7 +315,7 @@ export default {
       axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "/api/isNumberCheck",
+        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/api/isNumberCheck",
         data: data,
       })
         .then(function(response){
@@ -478,7 +478,7 @@ export default {
       axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },
-        url: "/api/signup",
+        url: "https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app/api/signup",
         data: data,
       })
         .then(function(response) {
