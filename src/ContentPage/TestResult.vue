@@ -45,7 +45,7 @@
           <div class="result-box"><span>{{ Score[index] }}</span> / {{ Qnumber[index] }}</div>
         </div>
           <div class="summary__cta">
-            <button class="btn btn__continue" @click="goToMyPage">마이페이지로 가기</button>
+            <button class="btn btn__continue" @click="goToMyHistoryPage">기록 페이지로 가기</button>
           </div>
         </div>
       </div>
@@ -73,8 +73,8 @@ export default {
   },
 
   methods:{
-    goToMyPage(){
-      this.$router.push({ name : 'MyPage'});
+    goToMyHistoryPage(){
+      this.$router.push({ name : 'MyHistoryPage'});
     },
     isPassedScore(index) {
       return this.Score[index] >= this.Qnumber[index] * 0.4;

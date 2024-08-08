@@ -71,6 +71,7 @@ export default {
 
     goToCC() {
       if(localStorage.getItem("GUEST") !== null) {
+        this.$cookies.set('GUEST', 1);
         this.$router.push({ name: 'CategoryChoice' });
       } else {
         axios({
@@ -82,6 +83,7 @@ export default {
           .then(response => {
             if(response.data.result > 0) {
               localStorage.setItem('GUEST',response.data.guestId);
+              this.$cookies.set('GUEST', 1);
               this.$router.push({ name: 'CategoryChoice' });
             } else{
               console.log('게스트로그인 실패');
