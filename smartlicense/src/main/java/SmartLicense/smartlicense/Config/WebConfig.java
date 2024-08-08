@@ -15,9 +15,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://web-smartlicense-1272llwyzbyro.sel5.cloudtype.app")
-                .allowedMethods("GET", "POST")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+//                .allowedOrigins("https://web-smartlicense-1272llwyzbyro.sel5.cloudtype.app")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "POST");
+//                .allowedHeaders("*")
+//                .allowCredentials(true);
     }
 }
