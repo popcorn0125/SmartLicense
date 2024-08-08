@@ -7,19 +7,19 @@ module.exports = defineConfig({
     // 프록시 설정
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app',
         changeOrigin: true
       },
       '/memberLogin': {
-        target: 'http://localhost:8080',
+        target: 'https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app',
         changeOrigin: true
       },
       '/solveProblem': {
-        target: 'http://localhost:8080',
+        target: 'https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app',
         changeOrigin: true
       },
       '/mode': {
-        target: 'http://localhost:8080',
+        target: 'https://port-0-smartlicense-back-1272llwyzbyro.sel5.cloudtype.app',
         changeOrigin: true
       },
       '/incorrectNote': {
