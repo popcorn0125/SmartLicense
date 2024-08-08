@@ -334,6 +334,7 @@ export default {
     justify-content: center;
     align-items: center;
     font-size: .8em;
+    height: 16%;
 }
 
 .history_info {

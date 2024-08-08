@@ -121,13 +121,10 @@ export default {
           url: "/memberLogin/logout",
           data : {},
         })
-          .then(response => {
-            if(response.data > 0) {
+          .then(() => {
               sessionStorage.clear();
               vm.$router.push({ name: 'LoginPage' });
-            } else {
-              console.log('다시 로그아웃을 해주세요');
-            }
+            
           })
           .catch(error => {
             console.log(error);

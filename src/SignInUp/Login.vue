@@ -21,7 +21,7 @@
       <hr>
       <br>
       <button class="withoutlogin" type="button" @click="goToCC()">로그인 없이 시작</button>
-      <text class="noLoginMessage">로그인 없이 시작하면 문제를 푼 기록과 랭킹을 저장 또는 확인할 수 없습니다.</text>
+      <text class="noLoginMessage">로그인 없이 시작할 경우, 기록이 저장되지 않아 나중에 확인할 수 없습니다.</text>
     </form>
   </div>
 
