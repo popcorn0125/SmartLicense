@@ -16,7 +16,7 @@
             <p>로딩 중...</p>
         </div>
         <div v-for="(item, index) in paginatedItems" :key="index" class="table-row">
-            <div class="history_info">
+            <div class="history_info" @click="goIncorrectNote(item.exam_record_idx)">
                 <div class="license_info">
                     <span>{{ item.exam_date }}</span>&nbsp;<span>{{ item.detail_license_name }}</span>
                 </div>
@@ -202,7 +202,6 @@ export default {
                 if (response.data.records && Array.isArray(response.data.records)) {
                     this.items = [...response.data.records];
                     this.totalItems = response.data.total;
-                    console.log(this.items)
                 } else {
                     console.error("올바르지 않은 데이터 구조", response.data);
                 }
@@ -242,7 +241,6 @@ export default {
             }
         },
         async handleEnter() {
-            console.log("enter 키 눌림 현재 입력된 값: ", this.searchQuery);
             this.$refs.searchInput.blur();
             await this.searchRecords();
         },
@@ -268,8 +266,6 @@ export default {
                     if (this.currentPage > totalPages) {
                         this.currentPage = 1;
                         await this.searchRecords();
-                    } else {
-                        console.log(this.items);
                     }
                 } else {
                     console.error("올바르지 않은 데이터 구조", response.data);
@@ -279,6 +275,10 @@ export default {
             } finally {
                 this.isLoading = false;
             }
+        },
+
+        goIncorrectNote(exam_record_idx){
+            this.$router.push({name: 'IncorrectNote', query : { where: exam_record_idx}});
         }
     },
     mounted() {

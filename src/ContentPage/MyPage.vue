@@ -33,7 +33,7 @@
                 정보 수정
             </button>
         </div>
-        <div class="card">
+        <!-- <div class="card">
           <p>공지사항</p>
         </div>
         <div class="card">
@@ -47,7 +47,7 @@
         </div>
         <div class="card">
           <p>앱 버전</p>
-        </div>
+        </div> -->
         <div class="logout"><a @click="logout()">로그아웃</a></div>
     </div>
     <BottomBar />
