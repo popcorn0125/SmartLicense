@@ -188,7 +188,7 @@ export default {
     },
     // 전화번호 유효성 검사( 숫자 11자리)
     validatePhoneNumber(phoneNumber) {
-      return /^01([0|1|6|7|8|9])?([0-9]{3,4})?([0-9]{4})$/.test(phoneNumber);
+      return /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/.test(phoneNumber);
     },
     // 비밀번호 입력 감지
     pwChange() {
