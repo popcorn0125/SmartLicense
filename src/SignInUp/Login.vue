@@ -279,7 +279,6 @@ button {
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  text-align: left;
   margin-top: 1em;
 }
 
