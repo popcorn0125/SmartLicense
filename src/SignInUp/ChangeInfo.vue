@@ -124,6 +124,18 @@
     </div>
   </div>
   
+  <!-- 에러 모달 -->
+  <div class="modal" v-if="isErrorModal">
+        <div class="cookies-card3">
+            <p class="cookie-heading3">{{ errorModalTitle }}</p>
+            <p class="cookie-para3">
+                {{ errorModalMsg }}
+            </p>
+            <div class="button-wrapper3">
+                <button class="accept3 cookie-button3" @click="errorModalClose()">확인</button>
+            </div>
+        </div>
+    </div>
 
   <BottomBar />
 </template>
@@ -167,6 +179,11 @@ export default {
       
       modalStatus : 0, // 0이면 현재 페이지, 1이면 다음페이지로 이동
 
+      isErrorModal : false, // 에러 모달 창 실행 여부
+      errorModalTitle : '', // 에러 모달 제목
+      errorModalMsg : '', // 에러 모달 메세지
+
+      isAccountDelete : 0, // 탈퇴 여부
     }
   },
   methods: {
@@ -276,8 +293,8 @@ export default {
             vm.nickNameDuplicateCheck = true;
           }
         })
-        .catch(function(error) {
-          console.log(error);
+        .catch(function() {
+          vm.errorModalContent();
         })
     },
 
@@ -308,7 +325,6 @@ export default {
         data: vm.member,
       })
         .then(response => {
-          console.log(response.data);
           if(response.data > 0) {
             vm.modalMsg = '회원님의 정보가 성공적으로 수정되었습니다.';
             vm.modalStatus = 1
@@ -319,8 +335,7 @@ export default {
             vm.isUpdateSuccessful = true;
           }
         })
-        .catch(error => {
-          console.log(error);
+        .catch(() => {
           vm.modalMsg = '오류가 발생하였습니다. 잠시후 다시 시도해주세요.';
           vm.modalStatus = 0;
           vm.isUpdateSuccessful = true;
@@ -343,13 +358,15 @@ export default {
       })
         .then(response => {
           if(response.data > 0 ) {
-            alert("그동안 이용해주셔서 감사합니다.");
+            vm.isAccountDelete = 1;
+            vm.errorModalTitle = '계정 탈퇴';
+            vm.errorModalMsg = '회원님의 계정이 정상적으로 탈퇴되었습니다. 그동안 이용해주셔서 감사합니다.'
+            vm.isErrorModal = true;
             sessionStorage.clear();
-            vm.$router.push({name : 'LoginPage'});
           }
         })
-        .catch(error => {
-          console.log(error);
+        .catch(() => {
+          vm.errorModalContent();
         })
     },
 
@@ -371,12 +388,29 @@ export default {
             vm.beforeUpdateMember.member_nickname = response.data.member_nickname;
             vm.beforeUpdateMember.member_phone_number = response.data.member_phone_number;
           } else {
-            console.log('정보를 불러오는데 실패하였습니다.');
+            vm.errorModalTitle = '알림';
+            vm.errorModalMsg = '정보를 불러오는데 실패하였습니다.';
+            vm.isErrorModal = true;
           }
         })
-        .catch(error => {
-          console.log(error);
+        .catch(() => {
+          vm.errorModalContent();
         })
+    },
+
+    // 에러 발생시 오류 모달창 활성화
+    errorModalContent() {
+        this.errorModalTitle = '에러 발생'
+        this.errorModalMsg = '오류가 발생했습니다. 잠시후 다시 시도해 주세요.';
+        this.isErrorModal = true;
+    },
+
+    // 에러 모달창이 나타났을 때는 에러 모달창 닫기, 탈퇴완료 모달창 발생시 로그인 페이지로 이동
+    errorModalClose() {
+      this.isErrorModal = false;
+      if(this.isAccountDelete == 1) {
+        this.$router.push({name : 'LoginPage'});
+      }
     }
   },
 
@@ -764,6 +798,60 @@ input:focus {
 .accept2 {
   background-color: rgb(34, 34, 34);
   color: white;
+}
+
+/* 에러 모달 css */
+.cookies-card3 {
+    width: 70%;
+    height: fit-content;
+    background-color: rgb(255, 250, 250);
+    border-radius: 10px;
+    border: 1px solid rgb(206, 206, 206);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 15px;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
+}
+
+.cookie-heading3 {
+    color: rgb(34, 34, 34);
+    font-weight: 800;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.cookie-para3 {
+    font-size: 1em;
+    font-weight: 400;
+    color: rgb(51, 51, 51);
+}
+
+.button-wrapper3 {
+    width: 50%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.cookie-button3 {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.accept3 {
+    background-color: rgb(34, 34, 34);
+    color: white;
+    font-size: 1em;
 }
 
 </style>
