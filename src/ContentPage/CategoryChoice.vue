@@ -58,19 +58,30 @@
         </div>
         <div class="subject_wrap" v-show="isShow">
             <div v-for="(subject, index) in subjects" :key="index">
-                <input 
-                    :id="'checkBox' + index"
-                    type="checkbox" 
-                    :class="'sub' + (index + 1)" 
-                    :value="subject.subject_name"
-                    :checked="selectedSubjects.includes(subject.subject_name)"
+                <input :id="'checkBox' + index" type="checkbox" :class="'sub' + (index + 1)"
+                    :value="subject.subject_name" :checked="selectedSubjects.includes(subject.subject_name)"
                     @change="toggleSubject(subject.subject_name)">
-                <label :for="'checkBox' + index">{{ subject.subject_number }}과목 </label>: <label :for="'checkBox' + index">{{ subject.subject_name }}</label>(<label :for="'checkBox' + index">{{
+                <label :for="'checkBox' + index">{{ subject.subject_number }}과목 </label>: <label
+                    :for="'checkBox' + index">{{ subject.subject_name }}</label>(<label :for="'checkBox' + index">{{
                     subject.question_total_count + "문항)" }}</label>
             </div>
         </div>
         <button class="go_solve" v-show="isShow" @click="goSolve">문제 풀기</button>
     </div>
+
+    <!-- 에러 모달 -->
+    <div class="modal" v-if="isErrorModal">
+        <div class="cookies-card2">
+            <p class="cookie-heading2">에러 발생</p>
+            <p class="cookie-para2">
+                {{ modalMsg }}
+            </p>
+            <div class="button-wrapper2">
+                <button class="accept2 cookie-button2" @click="modalCheck()">확인</button>
+            </div>
+        </div>
+    </div>
+
     <BottomBar />
 </template>
 
@@ -97,7 +108,10 @@ export default {
             options3: [],
             subjects: [],
             isShow: false,
-            selectedSubjects: []
+            selectedSubjects: [],
+
+            isErrorModal: false, // 에러 모달 v-if
+            modalMsg: '오류가 발생했습니다. 잠시후 다시 시도해 주세요.'
         };
     },
     methods: {
@@ -180,8 +194,8 @@ export default {
                 .then(response => {
                     this.options1 = response.data.map(item => item.license_name);  // 여기에 데이터 매핑을 추가
                 })
-                .catch(error => {
-                    console.log(error);
+                .catch(()=> {
+                    this.isErrorModal = true;
                 });
         },
 
@@ -195,8 +209,8 @@ export default {
                 .then(response => {
                     this.options2 = response.data.map(item => item.detail_license_name);  // 여기에 데이터 매핑을 추가
                 })
-                .catch(error => {
-                    console.log(error);
+                .catch(()=> {
+                    this.isErrorModal = true;
                 });
         },
 
@@ -211,8 +225,8 @@ export default {
                     this.options3 = response.data.map(item => item.exam_date);  // 여기에 데이터 매핑을 추가
                     this.subjects = response.data; // subjects 배열을 업데이트
                 })
-                .catch(error => {
-                    console.log(error);
+                .catch(() => {
+                    this.isErrorModal = true;
                 });
         },
 
@@ -232,8 +246,8 @@ export default {
                     this.selectedSubjects = response.data.map(item => item.subject_name);
                     this.isShow = this.subjects.length > 0; // 과목 정보가 있을 때만 표시
                 })
-                .catch(error => {
-                    console.log(error);
+                .catch(()=> {
+                    this.isErrorModal = true;
                 });
         }
 
@@ -452,5 +466,70 @@ label:first-child span {
 
 label:last-child span {
     border-radius: 0 .375em .375em 0;
+}
+
+
+/* 에러 모달 css */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cookies-card2 {
+  width: 70%;
+  height: fit-content;
+  background-color: rgb(255, 250, 250);
+  border-radius: 10px;
+  border: 1px solid rgb(206, 206, 206);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 15px;
+  position: relative;
+  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
+}
+
+.cookie-heading2 {
+  color: rgb(34, 34, 34);
+  font-weight: 800;
+  text-align: center;
+  font-size: 1.2em;
+}
+.cookie-para2 {
+  font-size: 1em;
+  font-weight: 400;
+  color: rgb(51, 51, 51);
+}
+.button-wrapper2 {
+  width: 50%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.cookie-button2 {
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.accept2 {
+  background-color: rgb(34, 34, 34);
+  color: white;
+  font-size: 1em;
 }
 </style>
