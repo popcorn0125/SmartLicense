@@ -1,7 +1,9 @@
 <template>
   <div id="splash_screen">
     <h1 class="splash_logo">Smart License</h1>
+    <div class="loader"></div>
   </div>
+  
 </template>
 
 <script>
@@ -24,7 +26,7 @@ export default {
           clearInterval(interval);
           this.$router.push({ name: 'LoginPage' });
         }
-      }, 10); // 10 > 1초 // 100 > 10초
+      }, 5); // 10 > 1초 // 100 > 10초
     }
   },
 
@@ -47,5 +49,25 @@ export default {
 .splash_logo{
   color: aliceblue;
   font-size: 1.5em;
+}
+
+.loader {
+  border: 4px solid rgba(0, 0, 0, .3);
+  border-left-color: transparent;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  animation: spin89345 1s linear infinite;
+  margin-top: 100px;
+}
+
+@keyframes spin89345 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
