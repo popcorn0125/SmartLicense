@@ -46,8 +46,8 @@
         </div>
     </div>
     <ul class="wrapper">
-        <li class="icon black" @click="firstPage">
-            <span>
+        <li class="icon black" @click="firstPage" >
+            <span v-show="currentPage !== 1">
                 <svg viewBox="0 0 16 16" class="bi bi-chevron-double-left" fill="currentColor" height="16" width="16"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -59,8 +59,8 @@
                 </svg>
             </span>
         </li>
-        <li class="icon black" @click="prevPage">
-            <span>
+        <li class="icon black" @click="prevPage" >
+            <span v-show="currentPage !== 1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-chevron-left" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
@@ -72,7 +72,7 @@
             <span>{{ currentPage }}</span>
         </li>
         <li class="icon black" @click="nextPage">
-            <span>
+            <span v-show="Math.ceil(totalItems / itemsPerPage) !== currentPage">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-chevron-right" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
@@ -81,7 +81,7 @@
             </span>
         </li>
         <li class="icon black" @click="lastPage">
-            <span>
+            <span v-show="Math.ceil(totalItems / itemsPerPage) !== currentPage">
                 <svg viewBox="0 0 16 16" class="bi bi-chevron-double-right" fill="currentColor" height="16" width="16"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
