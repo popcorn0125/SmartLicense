@@ -41,7 +41,7 @@ public interface IncorrectNoteDao {
     @Select("SELECT COUNT(*) FROM exam_record WHERE member_id = #{memberId} AND is_active = 1")
     int countTotalRecords(@Param("memberId") String memberId);
 
-    @Update("update exam_record set is_active = 0 where member_id =#{memberId} and exam_record_iddx = #{idx}")
+    @Update("update exam_record set is_active = 0 where member_id =#{memberId} and exam_record_idx = #{idx}")
     int updateExamRecord(@Param("memberId") String memberId, @Param("idx") int idx);
 
     @Select("SELECT * FROM exam_record WHERE member_id = #{memberId} AND (detail_license_name LIKE (CONCAT('%', #{searchQuery}, '%')) OR (exam_date LIKE CONCAT('%', #{searchQuery}, '%'))) AND is_active = 1 ORDER BY exam_record_idx DESC LIMIT #{offset}, #{limit}")
