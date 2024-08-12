@@ -21,9 +21,10 @@
                     <span>{{ item.exam_date }}</span>&nbsp;<span>{{ item.detail_license_name }}</span>
                 </div>
                 <div class="detail_info">
-                    <span>과목 수 <strong>{{ item.subject_count }}</strong></span>&nbsp;|&nbsp;<span>문제 수 <strong>{{
+                    <strong :class="{'practiceColor': item.mode === '연습', 'testColor': item.mode === '시험'}">{{ item.mode }}</strong>&nbsp;|&nbsp;<span>과목 수 <strong>{{ item.subject_count
+                            }}</strong></span>&nbsp;|&nbsp;<span>문제 수 <strong>{{
             item.question_count
-        }}</strong></span>&nbsp;|&nbsp;<strong>{{ item.mode }}</strong>&nbsp;|&nbsp;<span>정답 갯수
+        }}</strong></span>&nbsp;|&nbsp;<span>정답 갯수
                         <strong>{{ item.correct_count }}</strong></span>&nbsp;|&nbsp;<strong
                         :class="{ 'passed': item.is_pass != 0, 'failed': item.is_pass == 0 }">
                         {{ item.is_pass == 0 ? '불합격' : '합격' }}
@@ -277,8 +278,8 @@ export default {
             }
         },
 
-        goIncorrectNote(exam_record_idx){
-            this.$router.push({name: 'IncorrectNote', query : { where: exam_record_idx}});
+        goIncorrectNote(exam_record_idx) {
+            this.$router.push({ name: 'IncorrectNote', query: { where: exam_record_idx } });
         }
     },
     mounted() {
@@ -329,11 +330,11 @@ export default {
     width: 95%;
     border-radius: 5px;
     background-color: #f9f9f9;
-    padding: 1em;
+    padding: .7em;
     margin: .3em 0 .3em 0;
     justify-content: center;
     align-items: center;
-    font-size: .8em;
+    font-size: .9em;
     height: 16%;
 }
 
@@ -557,5 +558,14 @@ strong {
     border-radius: 0.375rem;
     border: 1px solid #D1D5DB;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.practiceColor{
+    color: #a36518;
+    font-weight: 800;
+}
+.testColor{
+    color: #5471ff;
+    font-weight: 800;
 }
 </style>
