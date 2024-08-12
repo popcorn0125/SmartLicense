@@ -25,14 +25,17 @@
     </form>
   </div>
 
-  <!---------알림 모달 창--------->
+  <!-- 에러 모달 -->
   <div class="modal" v-if="isModalVisivle">
-    <div class="modal-content">
-      <p>{{ Description }}</p>
-      <div class="btn_collection" @click="closeModal()">
-        확인
-    </div>
-    </div>
+      <div class="cookies-card2">
+          <p class="cookie-heading2">{{ modalTitle }}</p>
+          <p class="cookie-para2">
+              {{ modalMsg }}
+          </p>
+          <div class="button-wrapper2">
+              <button class="accept2 cookie-button2" @click="closeModal()">확인</button>
+          </div>
+      </div>
   </div>
 </template>
 
@@ -46,8 +49,11 @@ export default {
   },
   data() {
     return {
-      Description : '',
-      isModalVisivle : false, // 모달창 열기 여부
+      isErrorModal : false, // 에러 모달 창 실행 여부
+      modalTitle : '', // 모달 제목
+      modalMsg : '', // 모달 메세지
+      isLoginSuccess : 0, // 로그인 성공 여부
+
       showIdMsg : false, // 아이디를 입력하세요 메세지  (true : 보임, false : 안보임)
       showPwMsg : false, // 비밀번호를 입력하세요 메세지 (true : 보임, false : 안보임)
       userId : "", // 사용자 ID
@@ -58,6 +64,9 @@ export default {
   methods: {
     closeModal() {
       this.isModalVisivle = false;
+      if(this.isLoginSuccess == 1) {
+        this.$router.push({ name: 'CategoryChoice' });
+      }
     },
     // 아이디 입력을 감지 했을 경우
     changeId() {
@@ -86,11 +95,14 @@ export default {
               this.$cookies.set('GUEST', 1);
               this.$router.push({ name: 'CategoryChoice' });
             } else{
-              console.log('게스트로그인 실패');
+              this.modalTitle = '게스트로그인 실패';
+              this.modalMsg = '게스트로그인에 실패하였습니다. 잠시후 다시 시도해주세요.';
+              this.isErrorModal = true;
+              this.isLoginSuccess = 0;
             }
           })
-          .catch(error => {
-            console.log(error);
+          .catch(() => {
+            this.errorModalContent();
           });
       }
     },
@@ -124,19 +136,30 @@ export default {
       })
         .then(function(response){
           if(response.data.result == 0) {
-            vm.Description = response.data.message;
+            vm.modalTitle = '로그인 실패';
+            vm.modalMsg = response.data.message;
+            vm.isLoginSuccess = 0;
             vm.isModalVisivle = true;
           }
           if(response.data.result == 1) {
             sessionStorage.setItem('JSESSIONID', response.data.JSESSIONID);
             sessionStorage.setItem('USER_ID', response.data.USER_ID);
-            vm.$router.push({ name: 'CategoryChoice' });
+            vm.modalTitle = '로그인 성공';
+            vm.modalMsg = '로그인에 성공하였습니다.';
+            vm.isLoginSuccess = 1;
+            vm.isModalVisivle = true;
           }
         })
         .catch(function(){
-          vm.Description = '죄송하지만 예기치 않은 오류가 발생했습니다. 나중에 다시 시도해주세요.'
-          vm.isModalVisivle = true;
+          vm.errorModalContent();
         });
+    },
+
+    // 에러 발생시 오류 모달창 활성화
+    errorModalContent() {
+        this.modalTitle = '에러 발생'
+        this.modalMsg = '오류가 발생했습니다. 잠시후 다시 시도해 주세요.';
+        this.isErrorModal = true;
     },
 
   },
@@ -293,29 +316,72 @@ button {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  border-radius: 5px;
-  width: 80%;
-  max-width: 500px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  display: block;
-  text-align: center;
+
+/* 에러 모달 css */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-.btn_collection {
-  display: flex;
-  width: 50%;
-  border-radius: 5px;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background-color: #353535;
-  color: #fff;
-  padding: 10px;
-  margin: 10px auto;
+.cookies-card2 {
+    width: 70%;
+    height: fit-content;
+    background-color: rgb(255, 250, 250);
+    border-radius: 10px;
+    border: 1px solid rgb(206, 206, 206);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 15px;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
+}
+
+.cookie-heading2 {
+    color: rgb(34, 34, 34);
+    font-weight: 800;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.cookie-para2 {
+    font-size: 1em;
+    font-weight: 400;
+    color: rgb(51, 51, 51);
+}
+
+.button-wrapper2 {
+    width: 50%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.cookie-button2 {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.accept2 {
+    background-color: rgb(34, 34, 34);
+    color: white;
+    font-size: 1em;
 }
 </style>
