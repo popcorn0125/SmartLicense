@@ -117,8 +117,8 @@
 
         </div>
         <div class="actions">
-          <button class="desactivate" type="button" @click="deleteAccount()">Desactivate</button>
-          <button class="cancel" type="button" @click="isShowModal = false">Cancel</button>
+          <button class="desactivate" type="button" @click="deleteAccount()">탈퇴하기</button>
+          <button class="cancel" type="button" @click="isShowModal = false">취소</button>
         </div>
       </div>
     </div>
@@ -547,64 +547,6 @@ input:focus {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* .modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 15px;
-  border: 1px solid #888;
-  border-radius: 5px;
-  width: 80%;
-  max-width: 500px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  justify-content: center;
-  height: 30%;
-}
-
-.modal-content > p{
-  font-size: .7em;
-  height: 25%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content > p > strong{
-  color: #F00;
-}
-
-.del-btn-wrap{
-  height: 50%;
-  width: 100%;
-}
-.del-btn-wrap > button{
-  margin-top: 2em;
-  width: 30%;
-  height: 45%;
-  padding: 5px;
-  border: none;
-  border-radius: 8px;
-  color: #ffffff;
-  font-size: 0.7em;
-  box-shadow: rgba(0, 0, 0, 0.06) 0px 1px 1px,
-    rgba(0, 0, 0, 0.09) 0px 1px 1px, rgba(0, 0, 0, 0.09) 0px 1px 2px,
-    rgba(0, 0, 0, 0.09) 0px 1px 4px, rgba(0, 0, 0, 0.09) 0px 1px 8px;
-
-}
-.ok{
-  text-align: center;
-  background-color: #888;
-  vertical-align: middle;
-  margin-right: 1em;
-}
-.cancel{
-  text-align: center;
-  background-color: #000;
-  vertical-align: middle;
-  margin-left: 1em;
-} */
 .card {
   overflow: hidden;
   position: relative;
@@ -823,6 +765,5 @@ input:focus {
   background-color: rgb(34, 34, 34);
   color: white;
 }
-
 
 </style>

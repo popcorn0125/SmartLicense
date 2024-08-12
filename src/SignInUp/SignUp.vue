@@ -106,8 +106,6 @@ export default {
 
       showVerificationCode : false, // 전화번호를 입력 후 인증번호 요청 클릭시 인증번호를 입력하는 input이 나오기 위한 변수.
 
-
-
     }
   },
   methods: {
@@ -232,13 +230,11 @@ export default {
         .then(function(response) {
           const userId = document.getElementById('userID');
           if(response.data > 0) {
-            // alert("이미 존재하는 아이디 입니다.");
             vm.idMsg = '이미 존재하는 아이디 입니다.';
             userId.style.color = "#F00";
 
             vm.idDuplicateCheck = false;
           } else {
-            // alert("사용가능한 아이디 입니다.");
             vm.idMsg = '사용가능한 아이디 입니다.';
             userId.style.color = '#70CA77'
             vm.idDuplicateCheck = true;
@@ -333,59 +329,49 @@ export default {
 
     // 아무것도 입력하지 않고 회원가입 클릭했을 경우
     isEmpty() {
-      console.log("isEmpty() 실행");
       var result = true;
       const vm = this;
       if(vm.id == '') {
         document.getElementById('userID').style.color = '#F00';
         vm.idMsg = '아이디를 입력해주세요.';
-        console.log('1');
         result = false;
       } else if( vm.idDuplicateCheck === false) {
         document.getElementById('userID').style.color = '#F00';
         vm.idMsg = '아이디 중복여부를 확인해주세요.';
-        console.log('2');
         result = false;
       }
       if(vm.pw == '') {
         document.getElementById('password').style.color = '#F00';
         vm.pwMsg = '비밀번호를 입력해주세요.';
-        console.log('3');
         result = false;
       }
       if(vm.pwCheck == '') {
         document.getElementById('passwordCheck').style.color = '#F00';
         vm.pwCheckMsg = '비밀번호를 재입력 해주세요';
-        console.log('4');
         result = false;
       }
       if(vm.name == '') {
         document.getElementById('name').style.color = '#F00';
         vm.nameMsg = '이름을 입력해주세요';
-        console.log('5');
         result = false;
       }
       if(vm.nickname == '') {
         document.getElementById('nickname').style.color = '#F00';
         vm.nickNameMsg = '닉네임을 입력해주세요.';
-        console.log('6');
         result = false;
       } else if(vm.nickNameDuplicateCheck === false) {
         document.getElementById('nickname').style.color = '#F00';
         vm.nickNameMsg = '닉네임 중복확인을 진행해주세요.';
-        console.log('7');
         result = false;
       }
       if(vm.gender == '') {
         document.getElementById('gender').style.color = '#F00';
         vm.genderMsg = '성별을 선택해주세요.';
-        console.log('8');
         result = false;
       }
       if(vm.phonenumber == '') {
         document.getElementById('phone').style.color = '#F00';
         vm.phoneMsg = '전화번호를 입력해주세요.';
-        console.log('9');
         result = false;
       } else if(vm.showVerificationCode === false && vm.isPhoneNumCheck === false) {
         document.getElementById('phone').style.color = '#F00';
@@ -394,12 +380,10 @@ export default {
       if(vm.checknumber == '') {
         document.getElementById('checknumber').style.color = '#F00';
         vm.pnCheckMsg = '인증번호를 입력하고 확인을 진행 해주세요.';
-        console.log('10');
         result = false;
       }
 
       if(result === false) return result;
-      console.log('확인 ', result);
       return true;
     },
 
@@ -407,53 +391,39 @@ export default {
     signUp() {
       const vm = this;
       let tf = vm.isEmpty();
+
       if (tf === false) return;
-      // if(vm.id === '') {
-      //   document.getElementById('userID').style.color = '#F00';
-      //   vm.idMsg = '아이디를 입력해주세요.';
-      //   return;
-      // }
-      console.log("signup() 실행");
+
       if( vm.idDuplicateCheck === false) {
         document.getElementById('userID').style.color = '#F00';
         vm.idMsg = '아이디 중복여부를 확인해주세요.';
         return;
       }
+
       if(vm.strongPassword(vm.pw) === false) {
         document.getElementById('password').style.color = '#F00';
         vm.pwMsg = '비밀번호를 입력해주세요.';
         return ;
       }
-      // if(vm.pwCheck === '') {
-      //   document.getElementById('passwordCheck').style.color = '#F00';
-      //   vm.pwCheckMsg = '비밀번호를 재입력 해주세요';
-      //   return;
-      // }
+
       if(vm.isMatch(vm.pw, vm.pwCheck) === false) {
         document.getElementById('passwordCheck').style.color = '#F00';
         vm.pwCheckMsg = '비밀번호가 일치하지 않습니다.';
         return ;
       }
+
       if(vm.validateName(vm.name) === false) {
         document.getElementById('name').style.color = '#F00';
         vm.nameMsg = '이름을 입력해주세요';
         return ;
       }
-      // if(vm.nickname === '') {
-      //   document.getElementById('nickname').style.color = '#F00';
-      //   vm.nickNameMsg = '닉네임을 입력해주세요.';
-      //   return ;
-      // }
+
       if(vm.isDuplicateNickName(vm.nickname) === false) {
         document.getElementById('nickname').style.color = '#F00';
         vm.nickNameMsg = '닉네임 중복확인을 진행해주세요.';
         return ;
       }
-      // if(vm.gender === '') {
-      //   document.getElementById('gender').style.color = '#F00';
-      //   vm.genderMsg = '성별을 선택해주세요.';
-      //   return;
-      // }
+
       if(vm.validatePhoneNumber(vm.phonenumber) === false) {
         document.getElementById('phone').style.color = '#F00';
         vm.phoneMsg = '전화번호를 입력해주세요.';
@@ -474,7 +444,7 @@ export default {
         nickname : vm.nickname,
         gender : vm.gender
       };
-      console.log('유효성검사 끝');
+
       axios({
         method : 'post',
         header: { 'Content-Type': 'application/json; charset=UTF-8' },

@@ -110,7 +110,6 @@ export default {
 
             try {
                 const response = await axios.post('/api/findByID', userInfo);
-                console.log("asdfasdf:", response.data)
                 this.serverVerificationCode = response.data.verificationCode;
                 this.userID = response.data.userID;
                 alert("인증 번호는 " + this.serverVerificationCode + " 입니다.");

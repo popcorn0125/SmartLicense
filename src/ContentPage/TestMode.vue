@@ -174,13 +174,7 @@ export default {
         url: "/mode/userSelectAnswer",
         data : postData,
       })
-        .then(response => {
-          if(response.data.result > 0) {
-            console.log('저장 성공');
-          } else {
-            console.log('저장 실패');
-          }
-        })
+        .then({})
         .catch(error => {
           console.log(error);
         });
@@ -197,6 +191,7 @@ export default {
       if(isPass === true) {
         vm.Pass = '1';
       }
+
       const recordData = {
         mode : vm.$cookies.get('mode'),
         remaining_time : remainingTime,
@@ -209,7 +204,7 @@ export default {
         question_count : vm.totalQuestionList.length,
         is_pass : vm.Pass
       };
-      console.log('recordData', recordData);
+
       // 응시 시험 기록 저장
       axios({
         method : 'post',
@@ -257,9 +252,7 @@ export default {
         data : postData,
       })
         .then(response => {
-          if(response.data.result > 0) {
-            console.log('저장 성공');
-          } else {
+          if (response.data.result == 0) {
             console.log('저장 실패');
           }
         })
@@ -286,13 +279,10 @@ export default {
         vm.subjectQnumber.push(vm.subjectQnumberSum);
         vm.correctSum = 0;
         vm.subjectQnumberSum = 0;
-        console.log('subjectQnumber',vm.subjectQnumber);
-        console.log('Score', vm.Score);
       }
       vm.imagePath = vm.totalQuestionList[vm.Qnumber -1].image;
       vm.selectedOption = '';
       vm.isCorret = 0;
-
     },
 
     // 타이머 시작
@@ -346,7 +336,6 @@ export default {
           this.startTimer();
           this.selectedOption = '';
           this.isCorret = 0;
-          // console.log(response.data);
         })
         .catch(function(error){
           console.log(error);
@@ -362,8 +351,6 @@ export default {
     } else {
       this.memberId = localStorage.getItem('GUEST');
     }
-    // // 타이머
-    // this.startTimer();
   },
   beforeUnmount() {
     clearInterval(this.timer);

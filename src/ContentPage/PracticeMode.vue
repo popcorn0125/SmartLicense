@@ -142,9 +142,7 @@ export default {
         data: postData,
       })
         .then(response => {
-          if (response.data.result > 0) {
-            console.log('저장 성공');
-          } else {
+          if (response.data.result == 0) {
             console.log('저장 실패');
           }
         })
@@ -207,7 +205,6 @@ export default {
       } else {
         this.viewResult();
       }
-
 
     },
 

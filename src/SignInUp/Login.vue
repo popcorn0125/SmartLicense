@@ -93,10 +93,6 @@ export default {
             console.log(error);
           });
       }
-      // const currentDate = new Date();
-      // const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}_${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
-      // sessionStorage.setItem("GUEST", 'Guest_' + formattedDate);
-      // this.$router.push({ name: 'CategoryChoice' });
     },
 
     // 로그인

@@ -93,7 +93,6 @@ export default {
         })
           .then(response => {
             if(response.data != null ) {
-              console.log(response.data)
               vm.UserName = response.data.member_name;
               vm.UserNickName = response.data.member_nickname;
               vm.todaySolvedProblems = response.data.total_count;

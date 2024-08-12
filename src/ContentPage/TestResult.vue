@@ -116,10 +116,7 @@ export default {
         .catch(error => {
           console.log(error);
         })
-           
     },
-
-
   },
   computed:{
     QnumberSum() {
@@ -141,7 +138,6 @@ export default {
       this.goToPageName = '홈으로 가기';
     }
     this.loadExamRecord();
-    
   }
 }
 </script>

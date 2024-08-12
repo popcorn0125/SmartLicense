@@ -99,7 +99,6 @@ export default {
       } else {
         this.$router.push({ name: 'MyHistoryPage' });
         this.storeExamRecord();
-        // sessionStorage.clear();
         this.$cookies.remove('scoreResult');
       }
     },
@@ -136,7 +135,7 @@ export default {
         subject_count: this.$cookies.get('subject_count'),
         is_pass: isPass ? 1 : 0 // 1: 합격, 0: 불합격
       };
-      console.log('recordData', recordData);
+
       // 응시 시험 기록 저장
       axios({
         method: 'post',
@@ -145,11 +144,8 @@ export default {
         data: recordData,
       })
         .then(response => {
-          if (response.data > 0) {
-            // vm.$router.push({ name: 'TestResult' });  
-          } else {
-            // 제대로 저장하지 못했을 경우 
-            console.log('에러');
+          if (response.data.result == 0) {
+            console.log('저장 실패');
           }
         })
         .catch(error => {
@@ -204,7 +200,6 @@ export default {
     } else {
       this.memberId = localStorage.getItem('GUEST');
     }
-
     this.loadUserSelectAnswer();
   },
 }
