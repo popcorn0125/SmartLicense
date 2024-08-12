@@ -47,6 +47,19 @@
       <div class="timer">{{ formattedTime }}</div>
     </div>
   </div>
+
+   <!-- 에러 모달 -->
+   <div class="modal" v-if="isErrorModal">
+        <div class="cookies-card2">
+            <p class="cookie-heading2">{{ modalTitle }}</p>
+            <p class="cookie-para2">
+                {{ modalMsg }}
+            </p>
+            <div class="button-wrapper2">
+                <button class="accept2 cookie-button2" @click="isErrorModal =false">확인</button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -88,6 +101,10 @@ export default {
       subjectQnumber : [], // 과목별 총 문제수를 저장
       subjectQnumberSum : 0, // 과목별 문제수를 저장(1씩더하다가 과목명이 변경되면 Qnumber에 저장 후 0으로 초기화)
       Pass : '0', // 합격 여부
+
+      isErrorModal: false, // 에러 모달 v-if
+      modalTitle: '',
+      modalMsg: ''
     }
   },
   computed: {
@@ -153,8 +170,6 @@ export default {
       } else {
         vm.isCorret = 0; // 오답일때
       }
-      console.log('subjectQnumber',vm.subjectQnumber);
-      console.log('Score', vm.Score);
       vm.Score.push(vm.correctSum);
       vm.subjectQnumber.push(vm.subjectQnumberSum);
       vm.correctSum = 0;
@@ -175,8 +190,8 @@ export default {
         data : postData,
       })
         .then({})
-        .catch(error => {
-          console.log(error);
+        .catch(() => {
+          this.errorModalContent();
         });
       
       let remainingTime = vm.remainingTimeCal();
@@ -216,12 +231,11 @@ export default {
           if(response.data > 0) {
             vm.$router.push({ name: 'TestResult' });  
           } else {
-            // 제대로 저장하지 못했을 경우 
-            console.log('에러');
+            this.errorModalContent();
           }
         })
-        .catch(error=>{
-          console.log(error);
+        .catch(()=>{
+          this.errorModalContent();
         })
     },
     // 다음문제 버튼 클릭
@@ -253,11 +267,13 @@ export default {
       })
         .then(response => {
           if (response.data.result == 0) {
-            console.log('저장 실패');
+            this.modalTitle = '저장 실패';
+            this.modalMsg = '저장에 실패했습니다';
+            this.isErrorModal = true;
           }
         })
-        .catch(error => {
-          console.log(error);
+        .catch(() => {
+          this.errorModalContent();
         });
       
       vm.Qnumber += 1; // 문제번호
@@ -337,10 +353,16 @@ export default {
           this.selectedOption = '';
           this.isCorret = 0;
         })
-        .catch(function(error){
-          console.log(error);
+        .catch(()=>{
+          this.errorModalContent();
         });
-    }
+    },
+
+    errorModalContent() {
+      this.title = '에러 발생'
+      this.modalMsg = '오류가 발생했습니다. 잠시후 다시 시도해 주세요.';
+      this.isErrorModal = true;
+    },
     
   },
   mounted() {
@@ -590,5 +612,73 @@ export default {
   color: black;
   font-weight: bold;
   z-index: 10;
+}
+
+/* 에러 모달 css */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cookies-card2 {
+    width: 70%;
+    height: fit-content;
+    background-color: rgb(255, 250, 250);
+    border-radius: 10px;
+    border: 1px solid rgb(206, 206, 206);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 15px;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
+}
+
+.cookie-heading2 {
+    color: rgb(34, 34, 34);
+    font-weight: 800;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.cookie-para2 {
+    font-size: 1em;
+    font-weight: 400;
+    color: rgb(51, 51, 51);
+}
+
+.button-wrapper2 {
+    width: 50%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.cookie-button2 {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.accept2 {
+    background-color: rgb(34, 34, 34);
+    color: white;
+    font-size: 1em;
 }
 </style>

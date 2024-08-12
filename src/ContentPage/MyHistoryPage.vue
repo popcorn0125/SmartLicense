@@ -21,7 +21,8 @@
                     <span>{{ item.exam_date }}</span>&nbsp;<span>{{ item.detail_license_name }}</span>
                 </div>
                 <div class="detail_info">
-                    <strong :class="{'practiceColor': item.mode === '연습', 'testColor': item.mode === '시험'}">{{ item.mode }}</strong>&nbsp;|&nbsp;<span>과목 수 <strong>{{ item.subject_count
+                    <strong :class="{ 'practiceColor': item.mode === '연습', 'testColor': item.mode === '시험' }">{{ item.mode
+                        }}</strong>&nbsp;|&nbsp;<span>과목 수 <strong>{{ item.subject_count
                             }}</strong></span>&nbsp;|&nbsp;<span>문제 수 <strong>{{
             item.question_count
         }}</strong></span>&nbsp;|&nbsp;<span>정답 갯수
@@ -46,7 +47,7 @@
         </div>
     </div>
     <ul class="wrapper">
-        <li class="icon black" @click="firstPage" >
+        <li class="icon black" @click="firstPage">
             <span v-show="currentPage !== 1">
                 <svg viewBox="0 0 16 16" class="bi bi-chevron-double-left" fill="currentColor" height="16" width="16"
                     xmlns="http://www.w3.org/2000/svg">
@@ -59,7 +60,7 @@
                 </svg>
             </span>
         </li>
-        <li class="icon black" @click="prevPage" >
+        <li class="icon black" @click="prevPage">
             <span v-show="currentPage !== 1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-chevron-left" viewBox="0 0 16 16">
@@ -119,6 +120,19 @@
             </div>
         </div>
     </div>
+
+    <!-- 에러 모달 -->
+    <div class="modal" v-if="isErrorModal">
+        <div class="cookies-card2">
+            <p class="cookie-heading2">{{ modalTitle }}</p>
+            <p class="cookie-para2">
+                {{ modalMsg }}
+            </p>
+            <div class="button-wrapper2">
+                <button class="accept2 cookie-button2" @click="isErrorModal =false">확인</button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -146,6 +160,10 @@ export default {
 
             searchQuery: '',
             filteredItems: [],
+
+            isErrorModal: false,
+            modalMsg: '',
+            modalTitle: ''
         };
     },
     computed: {
@@ -204,10 +222,12 @@ export default {
                     this.items = [...response.data.records];
                     this.totalItems = response.data.total;
                 } else {
-                    console.error("올바르지 않은 데이터 구조", response.data);
+                    this.modalTitle = '에러 발생';
+                    this.modalMsg = '올바르지 않은 데이터 구조입니다.';
+                    this.isErrorModal = true;
                 }
-            } catch (error) {
-                console.log(error);
+            } catch {
+                this.errorModalContent();
             } finally {
                 this.isLoading = false;
             }
@@ -237,8 +257,8 @@ export default {
                 this.isShowModal = false;
                 if (this.items.length == 0) { this.currentPage-- }
                 this.loadExamRecord(); // 새로고침
-            } catch (error) {
-                console.log(error);
+            } catch {
+                this.errorModalContent();
             }
         },
         async handleEnter() {
@@ -269,10 +289,12 @@ export default {
                         await this.searchRecords();
                     }
                 } else {
-                    console.error("올바르지 않은 데이터 구조", response.data);
+                    this.modalTitle = '에러 발생';
+                    this.modalMsg = '올바르지 않은 데이터 구조입니다.';
+                    this.isErrorModal = true;
                 }
-            } catch (error) {
-                console.log(error);
+            } catch {
+                this.errorModalContent();
             } finally {
                 this.isLoading = false;
             }
@@ -280,7 +302,13 @@ export default {
 
         goIncorrectNote(exam_record_idx) {
             this.$router.push({ name: 'IncorrectNote', query: { where: exam_record_idx } });
-        }
+        },
+
+        errorModalContent() {
+            this.modalTitle = '에러 발생'
+            this.modalMsg = '오류가 발생했습니다. 잠시후 다시 시도해 주세요.';
+            this.isErrorModal = true;
+        },
     },
     mounted() {
         this.memberId = sessionStorage.getItem('USER_ID');
@@ -560,12 +588,81 @@ strong {
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.practiceColor{
+.practiceColor {
     color: #a36518;
     font-weight: 800;
 }
-.testColor{
+
+.testColor {
     color: #5471ff;
     font-weight: 800;
+}
+
+/* 에러 모달 css */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cookies-card2 {
+    width: 70%;
+    height: fit-content;
+    background-color: rgb(255, 250, 250);
+    border-radius: 10px;
+    border: 1px solid rgb(206, 206, 206);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 15px;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
+}
+
+.cookie-heading2 {
+    color: rgb(34, 34, 34);
+    font-weight: 800;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.cookie-para2 {
+    font-size: 1em;
+    font-weight: 400;
+    color: rgb(51, 51, 51);
+}
+
+.button-wrapper2 {
+    width: 50%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.cookie-button2 {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.accept2 {
+    background-color: rgb(34, 34, 34);
+    color: white;
+    font-size: 1em;
 }
 </style>
