@@ -59,13 +59,14 @@
         <div class="subject_wrap" v-show="isShow">
             <div v-for="(subject, index) in subjects" :key="index">
                 <input 
+                    :id="'checkBox' + index"
                     type="checkbox" 
                     :class="'sub' + (index + 1)" 
                     :value="subject.subject_name"
                     :checked="selectedSubjects.includes(subject.subject_name)"
                     @change="toggleSubject(subject.subject_name)">
-                <span>{{ subject.subject_number }}과목 </span>: <span>{{ subject.subject_name }}</span>(<span>{{
-                    subject.question_total_count }}</span>문항)
+                <label :for="'checkBox' + index">{{ subject.subject_number }}과목 </label>: <label :for="'checkBox' + index">{{ subject.subject_name }}</label>(<label :for="'checkBox' + index">{{
+                    subject.question_total_count + "문항)" }}</label>
             </div>
         </div>
         <button class="go_solve" v-show="isShow" @click="goSolve">문제 풀기</button>
@@ -149,13 +150,6 @@ export default {
             const formattedDateTime = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
             if (this.mode === '연습') {
-                // sessionStorage.setItem('license', this.selectedOption1);
-                // sessionStorage.setItem('detail_license', this.selectedOption2);
-                // sessionStorage.setItem('exam_date', this.selectedOption3);
-                // sessionStorage.setItem('mode', this.mode);
-                // sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
-                // sessionStorage.setItem('start_exam_date', formattedDateTime);
-                // sessionStorage.setItem('subject_count', this.selectedSubjects.length);
                 this.$cookies.set('license', this.selectedOption1);
                 this.$cookies.set('detail_license', this.selectedOption2);
                 this.$cookies.set('exam_date', this.selectedOption3);
@@ -166,11 +160,6 @@ export default {
                 this.$router.push({ name: 'PracticeMode' });
 
             } else if (this.mode === '시험') {
-                // sessionStorage.setItem('license', this.selectedOption1);
-                // sessionStorage.setItem('detail_license', this.selectedOption2);
-                // sessionStorage.setItem('exam_date', this.selectedOption3);
-                // sessionStorage.setItem('mode', this.mode);
-                // sessionStorage.setItem('selectedSubjects', JSON.stringify(this.selectedSubjects));
                 this.$cookies.set('license', this.selectedOption1);
                 this.$cookies.set('detail_license', this.selectedOption2);
                 this.$cookies.set('exam_date', this.selectedOption3);
