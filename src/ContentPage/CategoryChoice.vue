@@ -72,12 +72,12 @@
     <!-- 에러 모달 -->
     <div class="modal" v-if="isErrorModal">
         <div class="cookies-card2">
-            <p class="cookie-heading2">에러 발생</p>
+            <p class="cookie-heading2">{{ modalTitle }}</p>
             <p class="cookie-para2">
                 {{ modalMsg }}
             </p>
             <div class="button-wrapper2">
-                <button class="accept2 cookie-button2" @click="modalCheck()">확인</button>
+                <button class="accept2 cookie-button2" @click="isErrorModal =false">확인</button>
             </div>
         </div>
     </div>
@@ -111,7 +111,8 @@ export default {
             selectedSubjects: [],
 
             isErrorModal: false, // 에러 모달 v-if
-            modalMsg: '오류가 발생했습니다. 잠시후 다시 시도해 주세요.'
+            modalTitle: '',
+            modalMsg: ''
         };
     },
     methods: {
@@ -181,7 +182,9 @@ export default {
                 this.$cookies.set('selectedSubjects', JSON.stringify(this.selectedSubjects));
                 this.$router.push({ name: 'TestMode' });
             } else {
-                alert('모드를 선택해 주세요.');
+                this.isErrorModal = true;
+                this.modalTitle = '모드 선택';
+                this.modalMsg = '모드를 선택해주세요.'
             }
         },
 
@@ -194,8 +197,8 @@ export default {
                 .then(response => {
                     this.options1 = response.data.map(item => item.license_name);  // 여기에 데이터 매핑을 추가
                 })
-                .catch(()=> {
-                    this.isErrorModal = true;
+                .catch(() => {
+                    this.errorModalContent;
                 });
         },
 
@@ -209,8 +212,8 @@ export default {
                 .then(response => {
                     this.options2 = response.data.map(item => item.detail_license_name);  // 여기에 데이터 매핑을 추가
                 })
-                .catch(()=> {
-                    this.isErrorModal = true;
+                .catch(() => {
+                    this.errorModalContent;
                 });
         },
 
@@ -226,7 +229,7 @@ export default {
                     this.subjects = response.data; // subjects 배열을 업데이트
                 })
                 .catch(() => {
-                    this.isErrorModal = true;
+                    this.errorModalContent;
                 });
         },
 
@@ -246,10 +249,16 @@ export default {
                     this.selectedSubjects = response.data.map(item => item.subject_name);
                     this.isShow = this.subjects.length > 0; // 과목 정보가 있을 때만 표시
                 })
-                .catch(()=> {
-                    this.isErrorModal = true;
+                .catch(() => {
+                    this.errorModalContent;
                 });
-        }
+        },
+
+        errorModalContent() {
+            this.title = '에러 발생'
+            this.modalMsg = '오류가 발생했습니다. 잠시후 다시 시도해 주세요.';
+            this.isErrorModal = true;
+        },
 
     },
     watch: {
@@ -471,65 +480,69 @@ label:last-child span {
 
 /* 에러 모달 css */
 .modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .cookies-card2 {
-  width: 70%;
-  height: fit-content;
-  background-color: rgb(255, 250, 250);
-  border-radius: 10px;
-  border: 1px solid rgb(206, 206, 206);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  gap: 15px;
-  position: relative;
-  font-family: Arial, Helvetica, sans-serif;
-  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
+    width: 70%;
+    height: fit-content;
+    background-color: rgb(255, 250, 250);
+    border-radius: 10px;
+    border: 1px solid rgb(206, 206, 206);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 15px;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
 }
 
 .cookie-heading2 {
-  color: rgb(34, 34, 34);
-  font-weight: 800;
-  text-align: center;
-  font-size: 1.2em;
+    color: rgb(34, 34, 34);
+    font-weight: 800;
+    text-align: center;
+    font-size: 1.2em;
 }
+
 .cookie-para2 {
-  font-size: 1em;
-  font-weight: 400;
-  color: rgb(51, 51, 51);
+    font-size: 1em;
+    font-weight: 400;
+    color: rgb(51, 51, 51);
 }
+
 .button-wrapper2 {
-  width: 50%;
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+    width: 50%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
+
 .cookie-button2 {
-  width: 100%;
-  padding: 8px 0;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
+
 .accept2 {
-  background-color: rgb(34, 34, 34);
-  color: white;
-  font-size: 1em;
+    background-color: rgb(34, 34, 34);
+    color: white;
+    font-size: 1em;
 }
 </style>
