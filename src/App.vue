@@ -30,4 +30,22 @@ body {
   width: 100%;
   background-color: #F4F5F6;
 }
+
+::-webkit-scrollbar { 
+	width: 5px; 
+}
+::-webkit-scrollbar-track { /*없어도됨*/
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+    -webkit-border-radius: 10px;
+    border-radius: 10px; 
+}
+::-webkit-scrollbar-thumb { 
+    -webkit-border-radius: 10px;
+    border-radius: 10px; 
+    background: rgba(0,0,0,0.2); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive { 
+	background: rgba(0,0,0,0.3); 
+}
 </style>
