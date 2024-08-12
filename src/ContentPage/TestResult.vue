@@ -45,7 +45,7 @@
           <div class="result-box"><span>{{ Score[index] }}</span> / {{ Qnumber[index] }}</div>
         </div>
           <div class="summary__cta">
-            <button class="btn btn__continue" @click="goToMyHistoryPage">기록 페이지로 가기</button>
+            <button class="btn btn__continue" @click="goToMyHistoryPage">{{ goToPageName }}</button>
           </div>
         </div>
       </div>
@@ -69,12 +69,17 @@ export default {
       Qnumber: [],
       Score: [],
       remainTime: '', 
+      goToPageName : '기록 페이지로 가기',
     }
   },
 
   methods:{
     goToMyHistoryPage(){
-      this.$router.push({ name : 'MyHistoryPage'});
+      if(sessionStorage.getItem('USER_ID') != null) {
+        this.$router.push({ name : 'MyHistoryPage'});
+      } else {
+        this.$router.push({ name : 'CategoryChoice' });
+      }
     },
     isPassedScore(index) {
       return this.Score[index] >= this.Qnumber[index] * 0.4;
@@ -100,7 +105,6 @@ export default {
       })
         .then(response => {
           if(response.data.result > 0) {
-            console.log(response.data);
             vm.Subject = response.data.subject;
             vm.Qnumber = response.data.qnumber;
             vm.Score = response.data.score;
@@ -131,8 +135,10 @@ export default {
   mounted(){
     if((sessionStorage.getItem('JSESSIONID') != null && sessionStorage.getItem('USER_ID') != null)) {
       this.memberId = sessionStorage.getItem('USER_ID');
+      this.goToPageName = '기록 페이지로 가기';
     } else {
       this.memberId = localStorage.getItem('GUEST');
+      this.goToPageName = '홈으로 가기';
     }
     this.loadExamRecord();
     
