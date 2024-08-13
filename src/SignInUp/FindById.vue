@@ -29,6 +29,19 @@
             </div>
         </form>
     </div>
+
+    <!-- 에러 모달 -->
+    <div class="modal" v-if="isErrorModal">
+        <div class="cookies-card2">
+            <p class="cookie-heading2">{{ modalTitle }}</p>
+            <p class="cookie-para2">
+                {{ modalMsg }}
+            </p>
+            <div class="button-wrapper2">
+                <button class="accept2 cookie-button2" @click="isErrorModal = false">확인</button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -55,6 +68,10 @@ export default {
             nameMsg: '', // 이름 메세지
             phoneMsg: '', // 전화번호 메세지
             pnCheckMsg: '', // 인증번호 확인 메세지
+
+            isErrorModal : false, // 에러 모달 창 실행 여부
+            modalTitle : '', // 에러 모달 제목
+            modalMsg : '', // 에러 모달 메세지
         }
     },
     methods: {
@@ -112,10 +129,11 @@ export default {
                 const response = await axios.post('/api/findByID', userInfo);
                 this.serverVerificationCode = response.data.verificationCode;
                 this.userID = response.data.userID;
-                alert("인증 번호는 " + this.serverVerificationCode + " 입니다.");
-            } catch (error) {
-                console.error(error);
-                alert("사용자 정보를 확인할 수 없습니다.");
+                this.modalTitle = '인증번호'
+                this.modalMsg = "인증 번호는 " + this.serverVerificationCode + " 입니다."
+                this.isErrorModal = true;
+            } catch {
+                this.errorModalContent();
             }
         },
 
@@ -133,12 +151,21 @@ export default {
 
         async findId() {
             if (!this.isCodeVerified) {
-                alert("먼저 인증번호를 확인해 주세요.");
+                this.modalTitle = '알림';
+                this.modalMsg = '먼저 인증번호를 확인해 주세요.';
+                this.isErrorModal = true;
                 return;
             }
             this.isShow = true;
             this.success_message = true;
-        }
+        },
+
+        // 에러 발생시 오류 모달창 활성화
+        errorModalContent() {
+            this.modalTitle = '에러 발생'
+            this.modalMsg = '오류가 발생했습니다. 잠시후 다시 시도해 주세요.';
+            this.isErrorModal = true;
+        },
     }
 }
 </script>
@@ -266,5 +293,73 @@ button {
 
 .checkBTN {
     margin-top: 20px;
+}
+
+/* 에러 모달 css */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cookies-card2 {
+    width: 70%;
+    height: fit-content;
+    background-color: rgb(255, 250, 250);
+    border-radius: 10px;
+    border: 1px solid rgb(206, 206, 206);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 15px;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
+}
+
+.cookie-heading2 {
+    color: rgb(34, 34, 34);
+    font-weight: 800;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.cookie-para2 {
+    font-size: 1em;
+    font-weight: 400;
+    color: rgb(51, 51, 51);
+}
+
+.button-wrapper2 {
+    width: 50%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.cookie-button2 {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.accept2 {
+    background-color: rgb(34, 34, 34);
+    color: white;
+    font-size: 1em;
 }
 </style>

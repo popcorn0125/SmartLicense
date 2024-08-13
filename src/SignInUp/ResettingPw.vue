@@ -20,6 +20,19 @@
             </div>
         </form>
     </div>
+
+    <!-- 에러 모달 -->
+    <div class="modal" v-if="isErrorModal">
+        <div class="cookies-card2">
+            <p class="cookie-heading2">{{ modalTitle }}</p>
+            <p class="cookie-para2">
+                {{ modalMsg }}
+            </p>
+            <div class="button-wrapper2">
+                <button class="accept2 cookie-button2" @click="isSuccess()">확인</button>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 import TopBar from '@/components/TopBar.vue';
@@ -39,12 +52,19 @@ export default {
 
             userID: this.$route.query.userID,
 
+            isErrorModal : false, // 에러 모달 창 실행 여부
+            modalTitle : '', // 에러 모달 제목
+            modalMsg : '', // 에러 모달 메세지
+            isResetPw : 0, // 비밀번호 재설정 성공 여부
         }
     },
     methods: {
         resetPassword() {
             if (this.newPw !== this.newPwCheck) {
-                alert("비밀번호가 다릅니다")
+                this.modalTitle = '안내';
+                this.modalMsg = '비밀번호가 다릅니다. 다시 입력해주세요.';
+                this.isErrorModal = true;
+                this.isResetPw = 0;
                 return;
             }
 
@@ -54,13 +74,14 @@ export default {
             };
 
             axios.post('/api/resetPassword', payload)
-                .then(response => {
-                    alert(response.data);
-                    this.$router.push({ name: 'LoginPage' });
+                .then(() => {
+                    this.modalTitle = '재설정 완료';
+                    this.modalMsg = '비밀번호를 재설정하였습니다.';
+                    this.isErrorModal = true;
+                    this.isResetPw = 1;
                 })
-                .catch(error => {
-                    console.error(error);
-                    alert("비밀번호 재설정에 실패했습니다.");
+                .catch(() => {
+                    this.errorModalContent();
                 });
         },
         validatePassword() {
@@ -87,6 +108,21 @@ export default {
         strongPassword(password) {
             return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/.test(password);
         },
+
+        // 에러 발생시 오류 모달창 활성화
+        errorModalContent() {
+            this.modalTitle = '에러 발생'
+            this.modalMsg = '오류가 발생했습니다. 잠시후 다시 시도해 주세요.';
+            this.isErrorModal = true;
+        },
+
+        // 비밀번호 재설정 성공 여부
+        isSuccess() {
+            this.isErrorModal = false;
+            if(this.isResetPw == 1) {
+                this.$router.push({ name: 'LoginPage' });
+            }
+        }
     },
 
     computed: {
@@ -248,5 +284,73 @@ button {
 
 .checkBTN {
     margin-top: 20px;
+}
+
+/* 에러 모달 css */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cookies-card2 {
+    width: 70%;
+    height: fit-content;
+    background-color: rgb(255, 250, 250);
+    border-radius: 10px;
+    border: 1px solid rgb(206, 206, 206);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 15px;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.066);
+}
+
+.cookie-heading2 {
+    color: rgb(34, 34, 34);
+    font-weight: 800;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.cookie-para2 {
+    font-size: 1em;
+    font-weight: 400;
+    color: rgb(51, 51, 51);
+}
+
+.button-wrapper2 {
+    width: 50%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.cookie-button2 {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.accept2 {
+    background-color: rgb(34, 34, 34);
+    color: white;
+    font-size: 1em;
 }
 </style>
