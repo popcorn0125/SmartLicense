@@ -77,7 +77,7 @@
                 {{ modalMsg }}
             </p>
             <div class="button-wrapper2">
-                <button class="accept2 cookie-button2" @click="isErrorModal =false">확인</button>
+                <button class="accept2 cookie-button2" @click="isErrorModal = false">확인</button>
             </div>
         </div>
     </div>
@@ -164,6 +164,21 @@ export default {
             const now = new Date();
             const formattedDateTime = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
+            if (!this.mode) {
+                this.isErrorModal = true;
+                this.modalTitle = '모드 선택';
+                this.modalMsg = '모드를 선택해주세요.';
+                return;
+            }
+
+            if (this.selectedSubjects.length === 0) {
+                this.isErrorModal = true;
+                this.modalTitle = '과목 선택';
+                this.modalMsg = '최소 1과목 이상 선택해주세요.';
+                return;
+            }
+
+            // 연습 모드일 경우
             if (this.mode === '연습') {
                 this.$cookies.set('license', this.selectedOption1);
                 this.$cookies.set('detail_license', this.selectedOption2);
@@ -174,6 +189,7 @@ export default {
                 this.$cookies.set('subject_count', this.selectedSubjects.length);
                 this.$router.push({ name: 'PracticeMode' });
 
+                // 시험 모드일 경우
             } else if (this.mode === '시험') {
                 this.$cookies.set('license', this.selectedOption1);
                 this.$cookies.set('detail_license', this.selectedOption2);
@@ -181,10 +197,6 @@ export default {
                 this.$cookies.set('mode', this.mode);
                 this.$cookies.set('selectedSubjects', JSON.stringify(this.selectedSubjects));
                 this.$router.push({ name: 'TestMode' });
-            } else {
-                this.isErrorModal = true;
-                this.modalTitle = '모드 선택';
-                this.modalMsg = '모드를 선택해주세요.'
             }
         },
 
