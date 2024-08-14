@@ -17,19 +17,19 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://web-smartlicense-1272llwyzbyro.sel5.cloudtype.app")
-//                .allowedOrigins("*")
-                .allowedMethods("GET", "POST")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+//                .allowedOrigins("https://web-smartlicense-1272llwyzbyro.sel5.cloudtype.app")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "POST");
+//                .allowedHeaders("*")
+//                .allowCredentials(true);
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry interceptorRegistry) {
-        interceptorRegistry.addInterceptor(new AuthenticationInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/memberLogin/verify","/memberLogin/logout");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry interceptorRegistry) {
+//        interceptorRegistry.addInterceptor(new AuthenticationInterceptor())
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/memberLogin/verify","/memberLogin/logout", "/memberLogin/guestLogin");
+//    }
 
 
 }
