@@ -76,7 +76,7 @@
           시험모드는 시간내 문제를 풀고 제출하기를 눌러야 응시기록에 저장이 됩니다.<br><br>또한 시험 중간에 종료할 시 저장이 되지 않는점 유의 바랍니다.<br><br>문제풀기 버튼이 생성되면 바로 문제를 푸시면 됩니다.<br><br>여러분의 합격을 기원합니다.
         </p>
         <div class="loading_actions">
-          <a class="loading_read" @click="startTimer()">
+          <a class="loading_read" @click="startTimer()" v-if="!isLoadingSuccess">
             응시하기
           </a>
           <svg class="loading" viewBox="25 25 50 50" v-if="isLoadingSuccess">
