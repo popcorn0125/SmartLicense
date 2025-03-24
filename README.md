@@ -61,7 +61,7 @@ npm run serve
 ### 앱(Flutter WebView)
 ```bash
 # 프로젝트 클론
-git clone https://github.com/your-repo/smartlicense-app.git
+git clone https://github.com/popcorn0125/SmartLicense.git
 git checkout app
 
 # 패키지 설치
